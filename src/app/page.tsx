@@ -9,6 +9,7 @@ import Rooms from "@/components/home/rooms";
 import RoomsForm from "@/components/home/rooms-form";
 import { Stack } from "@mantine/core";
 import Sums from "@/components/home/sums";
+import useMii from "@/lib/hooks/queries/useMii";
 import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
 
 const RootPage = () => {

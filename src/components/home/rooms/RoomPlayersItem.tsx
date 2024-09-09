@@ -1,10 +1,11 @@
 import {
 	ActionIcon,
+	AspectRatio,
+	Box,
 	Button,
 	Group,
 	GroupProps,
-	Pill,
-	Stack,
+	Image,
 	Text,
 	useComputedColorScheme,
 	useMantineTheme,
@@ -12,8 +13,10 @@ import {
 import { IconCopy, IconCopyCheck, IconInfoCircle } from "@tabler/icons-react";
 
 import { Player } from "@/lib/types";
+import Rating from "./Rating";
 import { notifications } from "@mantine/notifications";
 import { useClipboard } from "@mantine/hooks";
+import useMii from "@/lib/hooks/queries/useMii";
 
 interface Props extends Omit<GroupProps, "children"> {
 	player: Player;
@@ -25,6 +28,8 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 	const computedColorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
 
 	const clipboard = useClipboard({ timeout: 2400 });
+
+	const { url } = useMii(player);
 
 	const handleCopyToClipboard = (type: string, value: string) => {
 		clipboard.copy(value);
@@ -44,21 +49,28 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 			px="md"
 			py="sm"
 			bg={filled ? (computedColorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[6]) : undefined}
-			justify="space-between"
 			align="center"
 			{...props}
 		>
-			<Stack
-				key={player.pid}
-				gap={0}
-			>
+			{url && (
+				<AspectRatio>
+					<Image
+						h={42}
+						mt={-4}
+						mr={-12}
+						src={url}
+						alt={`${player.name}'s mii`}
+					/>
+				</AspectRatio>
+			)}
+			<Box style={{ flexGrow: 1 }}>
 				<Text
 					fs={hasName ? "italic" : undefined}
 					fw={600}
 					truncate="end"
 					c={hasName ? "dimmed" : undefined}
 				>
-					{hasName ? "No Name Found" : player.name}
+					{hasName ? "No name found" : player.name}
 				</Text>
 				<Button
 					variant="transparent"
@@ -71,7 +83,7 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 				>
 					{player.fc}
 				</Button>
-			</Stack>
+			</Box>
 			{!player.ev ? (
 				<ActionIcon
 					variant="subtle"
@@ -81,14 +93,7 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 					<IconInfoCircle />
 				</ActionIcon>
 			) : (
-				<Group
-					justify="flex-end"
-					align="center"
-					gap="xs"
-				>
-					<Pill>{player.ev} VR</Pill>
-					<Pill>{player.eb} BR</Pill>
-				</Group>
+				<Rating values={[`${player.ev} VR`, `${player.eb} BR`]} />
 			)}
 		</Group>
 	);
