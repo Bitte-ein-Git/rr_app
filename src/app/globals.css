@@ -1,0 +1,14 @@
+@font-face {
+	font-family: CTMKF;
+	src: url(/ctmkf.woff2);
+}
+
+.tabler-icon {
+	stroke-width: 1.5;
+}
+
+.blur {
+	backdrop-filter: blur(12px) saturate(150%);
+	-webkit-backdrop-filter: blur(12px) saturate(150%);
+	background-color: rgba(var(--mantine-color-gray-light-color), 0.16);
+}

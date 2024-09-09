@@ -1,0 +1,13 @@
+.root {
+	cursor: pointer;
+	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+	border-radius: var(--mantine-radius-md);
+
+	&:hover {
+		background-color: var(--mantine-color-default-hover);
+	}
+}
+
+.input > * {
+	pointer-events: none;
+}

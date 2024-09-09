@@ -1,0 +1,15 @@
+.root {
+	position: relative;
+	overflow-y: hidden;
+	user-select: none;
+}
+
+.label {
+	text-transform: capitalize;
+	font-weight: 600;
+}
+
+.section {
+	position: absolute;
+	left: var(--mantine-spacing-xs);
+}
