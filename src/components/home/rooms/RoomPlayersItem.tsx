@@ -29,7 +29,7 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 
 	const clipboard = useClipboard({ timeout: 2400 });
 
-	const { url } = useMii(player);
+	const { image } = useMii(player);
 
 	const handleCopyToClipboard = (type: string, value: string) => {
 		clipboard.copy(value);
@@ -42,7 +42,7 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 		});
 	};
 
-	const hasName: boolean = !player.name.trim() || player.name === "no name";
+	const hasNoName: boolean = !player.name.trim() || player.name === "no name";
 
 	return (
 		<Group
@@ -52,25 +52,25 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 			align="center"
 			{...props}
 		>
-			{url && (
+			{image && (
 				<AspectRatio>
 					<Image
 						h={42}
 						mt={-4}
 						mr={-12}
-						src={url}
+						src={`data:image/png;base64,${image}`}
 						alt={`${player.name}'s mii`}
 					/>
 				</AspectRatio>
 			)}
 			<Box style={{ flexGrow: 1 }}>
 				<Text
-					fs={hasName ? "italic" : undefined}
+					fs={hasNoName ? "italic" : undefined}
 					fw={600}
 					truncate="end"
-					c={hasName ? "dimmed" : undefined}
+					c={hasNoName ? "dimmed" : undefined}
 				>
-					{hasName ? "No name found" : player.name}
+					{hasNoName ? "No name found" : player.name}
 				</Text>
 				<Button
 					variant="transparent"

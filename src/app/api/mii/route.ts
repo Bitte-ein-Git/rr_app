@@ -1,7 +1,7 @@
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
+import { arrayBufferToBase64, base64ToBlob, blobToBase64Async } from "@/lib/util";
 
 import { NextRequest } from "next/server";
-import { base64ToBlob } from "@/lib/util";
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		const formData: FormData = new FormData();
 		formData.append("platform", "wii");
-		formData.append("data", base64ToBlob(data), "mii.dat");
+		formData.append("data", new Blob([Buffer.from(data, "base64")]), "mii.dat");
 
 		const studioResponse: Response = await fetch(URL_EXTERNAL_MII_STUDIO, {
 			method: "POST",
@@ -42,16 +42,16 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 		searchParams.append("type", "face");
 		searchParams.append("width", "270");
 
-		return Response.json({ url: `${URL_EXTERNAL_MII_IMAGE}?${searchParams.toString()}` });
-
 		const imageResponse: Response = await fetch(`${URL_EXTERNAL_MII_IMAGE}?${searchParams.toString()}`);
-		const imageData = await imageResponse.json();
+		const imageBuffer = await imageResponse.arrayBuffer();
 
-		if (!imageResponse.ok || !imageData) {
+		if (!imageResponse.ok || !imageBuffer) {
 			return Response.error();
 		}
 
-		return Response.json({ mii: imageData });
+		return Response.json({
+			image: Buffer.from(imageBuffer).toString("base64"),
+		});
 	} catch (error) {
 		return Response.error();
 	}

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 const useMii = (
 	player: Player
 ): {
-	url: string | undefined;
+	image: string | undefined;
 	status: "pending" | "error" | "success";
 } => {
 	const queryFn = useCallback(async () => {
@@ -15,14 +15,12 @@ const useMii = (
 		return response.json();
 	}, [player.mii]);
 
-	const { data: mii, status } = useQuery<{ url: string }>({
+	const { data: mii, status } = useQuery<{ image: string }>({
 		queryKey: [QUERY_MII, player.fc],
 		queryFn,
 	});
 
-	console.log(mii);
-
-	return { url: mii?.url ?? "", status };
+	return { image: mii?.image, status };
 };
 
 export default useMii;
