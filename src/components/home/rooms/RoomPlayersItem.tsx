@@ -7,7 +7,9 @@ import {
 	GroupProps,
 	Image,
 	Pill,
+	Popover,
 	Text,
+	Tooltip,
 	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
@@ -15,8 +17,8 @@ import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_VRONLY } from "@/lib/constants";
 import { IconCopy, IconCopyCheck, IconInfoCircle } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
+import CyclingPill from "../../common/cycling-pill";
 import { Player } from "@/lib/types";
-import Rating from "./Rating";
 import { notifications } from "@mantine/notifications";
 import useMii from "@/lib/hooks/queries/useMii";
 
@@ -36,7 +38,7 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 
 	const clipboard = useClipboard({ timeout: 2400 });
 
-	const { image } = useMii(player);
+	const { imageData } = useMii(player);
 
 	const handleCopyToClipboard = (type: string, value: string) => {
 		clipboard.copy(value);
@@ -59,13 +61,13 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 			align="center"
 			{...props}
 		>
-			{image && (
+			{imageData && (
 				<AspectRatio>
 					<Image
 						h={42}
 						mt={-4}
 						mr={-12}
-						src={`data:image/png;base64,${image}`}
+						src={`data:image/png;base64,${imageData}`}
 						alt={`${player.name}'s mii`}
 					/>
 				</AspectRatio>
@@ -91,19 +93,8 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 					{player.fc}
 				</Button>
 			</Box>
-			{!player.ev ? (
-				<ActionIcon
-					variant="subtle"
-					size="lg"
-					color="gray"
-				>
-					<IconInfoCircle />
-				</ActionIcon>
-			) : vrOnly ? (
-				<Pill>{player.ev} VR</Pill>
-			) : (
-				<Rating values={[`${player.ev} VR`, `${player.eb} BR`]} />
-			)}
+			{player.ev &&
+				(vrOnly ? <Pill>{player.ev} VR</Pill> : <CyclingPill values={[`${player.ev} VR`, `${player.eb} BR`]} />)}
 		</Group>
 	);
 };

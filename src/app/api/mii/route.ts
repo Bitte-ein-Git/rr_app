@@ -49,7 +49,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 		}
 
 		return Response.json({
-			image: Buffer.from(imageBuffer).toString("base64"),
+			imageData: Buffer.from(imageBuffer).toString("base64"),
 		});
 	} catch (error) {
 		return Response.error();

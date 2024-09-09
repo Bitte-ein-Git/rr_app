@@ -5,23 +5,25 @@ import React from "react";
 
 interface Props extends Omit<BoxProps, "children"> {
 	values: string[];
+	duration?: number;
 }
 
-const Rating = ({ values, ...props }: Props) => {
-	const [active, toggleActive] = useToggle(values);
+const CyclingPill = ({ values, duration = 5000, ...props }: Props) => {
+	const [active, toggleActive] = useToggle(values.map((_, i) => i));
 
-	useInterval(toggleActive, 5000, { autoInvoke: true });
+	// TODO: Handle when VR is updated. Currently breaks cycling
+	useInterval(toggleActive, duration, { autoInvoke: true });
 
 	return (
 		<Box
 			pos="relative"
-			miw={76}
+			miw={78}
 			{...props}
 		>
-			{values.map(value => (
+			{values.map((value, index) => (
 				<Transition
 					key={value}
-					mounted={active === value}
+					mounted={active === index}
 					transition="fade"
 					duration={800}
 					timingFunction="ease"
@@ -44,4 +46,4 @@ const Rating = ({ values, ...props }: Props) => {
 	);
 };
 
-export default Rating;
+export default CyclingPill;
