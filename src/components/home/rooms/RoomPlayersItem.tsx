@@ -6,16 +6,18 @@ import {
 	Group,
 	GroupProps,
 	Image,
+	Pill,
 	Text,
 	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
+import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_VRONLY } from "@/lib/constants";
 import { IconCopy, IconCopyCheck, IconInfoCircle } from "@tabler/icons-react";
+import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
 import { Player } from "@/lib/types";
 import Rating from "./Rating";
 import { notifications } from "@mantine/notifications";
-import { useClipboard } from "@mantine/hooks";
 import useMii from "@/lib/hooks/queries/useMii";
 
 interface Props extends Omit<GroupProps, "children"> {
@@ -26,6 +28,11 @@ interface Props extends Omit<GroupProps, "children"> {
 const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 	const theme = useMantineTheme();
 	const computedColorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
+
+	const [vrOnly] = useLocalStorage<boolean>({
+		key: LOCALSTORAGE_VRONLY,
+		defaultValue: DEFAULT_SETTINGS_VRONLY,
+	});
 
 	const clipboard = useClipboard({ timeout: 2400 });
 
@@ -92,6 +99,8 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 				>
 					<IconInfoCircle />
 				</ActionIcon>
+			) : vrOnly ? (
+				<Pill>{player.ev} VR</Pill>
 			) : (
 				<Rating values={[`${player.ev} VR`, `${player.eb} BR`]} />
 			)}

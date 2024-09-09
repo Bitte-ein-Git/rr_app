@@ -1,8 +1,9 @@
 import { MantineSize } from "@mantine/core";
 
 /* Settings Defaults */
-export const SETTINGS_COLORSCHEME: "light" | "dark" = "light";
-export const SETTINGS_REFRESHINTERVAL: number = 120;
+export const DEFAULT_SETTINGS_COLORSCHEME: "light" | "dark" = "light";
+export const DEFAULT_SETTINGS_REFRESHINTERVAL: number = 120;
+export const DEFAULT_SETTINGS_VRONLY: boolean = false;
 
 /* Layout & Sizes */
 export const APPSHELL_HEADER_HEIGHT: number = 56;
@@ -28,6 +29,7 @@ export const QUERY_MII: string = "mii";
 
 /* Local Storage Keys */
 export const LOCALSTORAGE_REFRESHINTERVAL: string = "settings-refresh-interval";
+export const LOCALSTORAGE_VRONLY: string = "settings-vr-only";
 export const LOCALSTORAGE_RETROREWINDVERSION: string = "about-retrorewind-version";
 
 /* Form Select Data */
