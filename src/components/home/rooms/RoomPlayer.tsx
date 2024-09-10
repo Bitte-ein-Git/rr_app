@@ -8,6 +8,7 @@ import {
 	Image,
 	Pill,
 	Popover,
+	Stack,
 	Text,
 	Tooltip,
 	useComputedColorScheme,
@@ -27,7 +28,7 @@ interface Props extends Omit<GroupProps, "children"> {
 	filled: boolean;
 }
 
-const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
+const RoomPlayer = ({ player, filled, ...props }: Props) => {
 	const theme = useMantineTheme();
 	const computedColorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
 
@@ -72,7 +73,12 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 					/>
 				</AspectRatio>
 			)}
-			<Box style={{ flexGrow: 1 }}>
+			<Stack
+				style={{ flexGrow: 1 }}
+				justify="center"
+				align="flex-start"
+				gap={0}
+			>
 				<Text
 					fs={hasNoName ? "italic" : undefined}
 					fw={600}
@@ -92,11 +98,11 @@ const RoomPlayersItem = ({ player, filled, ...props }: Props) => {
 				>
 					{player.fc}
 				</Button>
-			</Box>
+			</Stack>
 			{player.ev &&
 				(vrOnly ? <Pill>{player.ev} VR</Pill> : <CyclingPill values={[`${player.ev} VR`, `${player.eb} BR`]} />)}
 		</Group>
 	);
 };
 
-export default RoomPlayersItem;
+export default RoomPlayer;

@@ -1,6 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
-
-import { NextRequest } from "next/server";
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
@@ -21,7 +20,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 		const studioJson = await studioResponse.json();
 
 		if (!studioResponse.ok || !studioJson) {
-			return Response.error();
+			return NextResponse.error();
 		}
 
 		const searchParams: URLSearchParams = new URLSearchParams();
@@ -45,13 +44,13 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 		const imageBuffer = await imageResponse.arrayBuffer();
 
 		if (!imageResponse.ok || !imageBuffer) {
-			return Response.error();
+			return NextResponse.error();
 		}
 
-		return Response.json({
+		return NextResponse.json({
 			imageData: Buffer.from(imageBuffer).toString("base64"),
 		});
 	} catch (error) {
-		return Response.error();
+		return NextResponse.error();
 	}
 };

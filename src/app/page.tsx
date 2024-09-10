@@ -3,12 +3,12 @@
 import { NoRoomsAlert, ServerUnreachableAlert } from "@/components/home/alerts";
 import { RoomsFormProvider, useRoomsForm } from "@/lib/form-contexts/RoomsFormContext";
 
-import Loading from "@/components/home/loading";
+import Loading from "@/components/common/loading";
 import React from "react";
 import Rooms from "@/components/home/rooms";
 import RoomsForm from "@/components/home/rooms-form";
 import { Stack } from "@mantine/core";
-import Sums from "@/components/home/sums";
+import Status from "@/components/common/status";
 import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
 
 const RootPage = () => {
@@ -23,13 +23,13 @@ const RootPage = () => {
 	});
 
 	if (status === "pending") {
-		return <Loading />;
+		return <Loading>Fetching rooms..</Loading>;
 	}
 
 	return (
 		<RoomsFormProvider form={roomsForm}>
 			<Stack gap="lg">
-				<Sums rooms={rooms} />
+				<Status rooms={rooms} />
 				<RoomsForm />
 
 				{(status === "error" || rooms === undefined) && <ServerUnreachableAlert />}

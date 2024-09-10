@@ -1,16 +1,21 @@
-import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (): Promise<Response> => {
+import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
+import { revalidatePath } from "next/cache";
+
+export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
 		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS);
 		const data = await response.json();
 
 		if (!data) {
-			return Response.error();
+			return NextResponse.error();
 		}
 
-		return Response.json(data);
+		revalidatePath(request.url);
+
+		return NextResponse.json(data);
 	} catch (error) {
-		return Response.error();
+		return NextResponse.error();
 	}
 };

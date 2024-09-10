@@ -6,7 +6,7 @@ interface Props extends GroupProps {
 	rooms?: Room[];
 }
 
-const Sums = ({ rooms, ...props }: Props) => {
+const Status = ({ rooms, ...props }: Props) => {
 	return (
 		<Group
 			gap="xs"
@@ -32,4 +32,4 @@ const Sums = ({ rooms, ...props }: Props) => {
 	);
 };
 
-export default Sums;
+export default Status;

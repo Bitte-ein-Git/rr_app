@@ -17,7 +17,7 @@ const CyclingPill = ({ values, duration = 5000, ...props }: Props) => {
 	return (
 		<Box
 			pos="relative"
-			miw={78}
+			miw={80}
 			{...props}
 		>
 			{values.map((value, index) => (
