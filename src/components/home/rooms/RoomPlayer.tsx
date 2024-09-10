@@ -1,21 +1,17 @@
 import {
-	ActionIcon,
 	AspectRatio,
-	Box,
 	Button,
 	Group,
 	GroupProps,
 	Image,
 	Pill,
-	Popover,
 	Stack,
 	Text,
-	Tooltip,
 	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
 import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_VRONLY } from "@/lib/constants";
-import { IconCopy, IconCopyCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconCopy, IconCopyCheck } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
 import CyclingPill from "../../common/cycling-pill";
