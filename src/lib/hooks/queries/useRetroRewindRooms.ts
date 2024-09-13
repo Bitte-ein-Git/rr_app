@@ -1,5 +1,9 @@
 import { FetchStatus, Query, QueryKey, QueryObserverResult, RefetchOptions, useQuery } from "@tanstack/react-query";
-import { LOCALSTORAGE_REFRESHINTERVAL, QUERY_RETROREWIND_ROOMS, URL_INTERNAL_RETROREWIND_ROOMS } from "../../constants";
+import {
+	LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,
+	QUERY_RETROREWIND_ROOMS,
+	URL_INTERNAL_RETROREWIND_ROOMS,
+} from "../../constants";
 
 import { Room } from "../../types";
 import { useCallback } from "react";
@@ -17,7 +21,7 @@ const useRetroRewindRooms = (): {
 	fetchStatus: FetchStatus;
 	refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<Room[], Error>>;
 } => {
-	const [refreshInterval] = useLocalStorage<number>({ key: LOCALSTORAGE_REFRESHINTERVAL });
+	const [refreshInterval] = useLocalStorage<number>({ key: LOCALSTORAGE_SETTINGS_REFRESHINTERVAL });
 
 	const refetchInterval = useCallback(
 		(query: Query<Room[], Error, Room[], QueryKey>): number | false | undefined => {

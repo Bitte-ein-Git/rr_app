@@ -12,7 +12,7 @@ const AboutItem = ({ icon: AboutItemIcon, label, value, ...props }: Props) => {
 	return (
 		<Group
 			align="start"
-			gap="lg"
+			gap="sm"
 			{...props}
 		>
 			<ThemeIcon

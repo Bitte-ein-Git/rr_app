@@ -1,6 +1,7 @@
 import AboutItem from "./AboutItem";
 import AboutModal from "./AboutModal";
+import AboutSectionTitle from "./AboutSectionTitle";
 
-export { AboutItem };
+export { AboutSectionTitle, AboutItem };
 
 export default AboutModal;
