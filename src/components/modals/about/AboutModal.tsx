@@ -1,12 +1,16 @@
 import { Button, Group, Stack } from "@mantine/core";
-import { IconCode, IconGitBranch, IconPackage, IconSteeringWheel } from "@tabler/icons-react";
+import { IconCode, IconGitBranch, IconHelmet, IconPackage, IconSteeringWheel } from "@tabler/icons-react";
 
 import { AboutItem } from ".";
 import { modals } from "@mantine/modals";
+import useAppVersion from "@/lib/hooks/queries/useAppVersion";
 import useRetroRewindVersion from "@/lib/hooks/queries/useRetroRewindVersion";
+import useWheelWizardVersion from "@/lib/hooks/queries/useWheelWizardVersion";
 
 const AboutModal = () => {
-	const { version } = useRetroRewindVersion();
+	const { version: appVersion } = useAppVersion();
+	const { version: retroRewindVersion } = useRetroRewindVersion();
+	const { version: wheelWizardVersion } = useWheelWizardVersion();
 
 	return (
 		<Stack>
@@ -23,12 +27,17 @@ const AboutModal = () => {
 			<AboutItem
 				icon={IconGitBranch}
 				label="Application version"
-				value="0.1.0"
+				value={appVersion}
+			/>
+			<AboutItem
+				icon={IconHelmet}
+				label="Retro Rewind version"
+				value={retroRewindVersion}
 			/>
 			<AboutItem
 				icon={IconSteeringWheel}
-				label="Retro Rewind version"
-				value={version}
+				label="Wheel Wizard version"
+				value={wheelWizardVersion}
 			/>
 			<Group
 				justify="flex-end"

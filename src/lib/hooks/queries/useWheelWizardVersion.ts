@@ -13,7 +13,7 @@ const queryFn = async () => {
 	return response.json();
 };
 
-const useRetroRewindVersion = (): {
+const useWheelWizardVersion = (): {
 	version: string | undefined;
 	status: "pending" | "error" | "success";
 } => {
@@ -36,4 +36,4 @@ const useRetroRewindVersion = (): {
 	return { version: wheelWizardVersion, status };
 };
 
-export default useRetroRewindVersion;
+export default useWheelWizardVersion;
