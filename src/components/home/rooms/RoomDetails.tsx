@@ -1,9 +1,8 @@
 import { Box, BoxProps, Group, Text, ThemeIcon, useComputedColorScheme, useMantineTheme } from "@mantine/core";
+import { RoomModeBadge, RoomTypeBadge } from "./badges";
 
 import { IconUsers } from "@tabler/icons-react";
 import { Room } from "@/lib/types";
-import RoomModeBadge from "./RoomModeBadge";
-import RoomTypeBadge from "./RoomTypeBadge";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import dayjs from "dayjs";
 import relativetime from "dayjs/plugin/relativeTime";

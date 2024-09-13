@@ -1,14 +1,13 @@
 import { Divider, Paper, PaperProps, Stack } from "@mantine/core";
+import { RoomDetails, RoomPlayer } from ".";
 
 import { Room } from "@/lib/types";
-import RoomDetails from "./room-details";
-import { RoomPlayersItem } from ".";
 
 interface Props extends PaperProps {
 	room: Room;
 }
 
-const RoomsItem = ({ room, ...props }: Props) => {
+const RoomItem = ({ room, ...props }: Props) => {
 	return (
 		<Paper
 			style={{ overflow: "hidden" }}
@@ -22,7 +21,7 @@ const RoomsItem = ({ room, ...props }: Props) => {
 				{Object.values(room.players)
 					.sort(({ ev: ev1 }, { ev: ev2 }) => parseInt(ev2) - parseInt(ev1))
 					.map((player, index) => (
-						<RoomPlayersItem
+						<RoomPlayer
 							key={player.pid}
 							player={player}
 							filled={index % 2 === 1}
@@ -33,4 +32,4 @@ const RoomsItem = ({ room, ...props }: Props) => {
 	);
 };
 
-export default RoomsItem;
+export default RoomItem;

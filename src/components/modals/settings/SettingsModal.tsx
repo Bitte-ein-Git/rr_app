@@ -1,5 +1,11 @@
 import { Button, Group, Select, Stack, Switch, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
-import { LOCALSTORAGE_REFRESHINTERVAL, SETTINGS_COLORSCHEME, SETTINGS_REFRESHINTERVAL } from "../../../lib/constants";
+import {
+	DEFAULT_SETTINGS_COLORSCHEME,
+	DEFAULT_SETTINGS_REFRESHINTERVAL,
+	DEFAULT_SETTINGS_VRONLY,
+	LOCALSTORAGE_REFRESHINTERVAL,
+	LOCALSTORAGE_VRONLY,
+} from "../../../lib/constants";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 
 import { CompoundInput } from ".";
@@ -35,18 +41,24 @@ const intervals = [
 
 const SettingsModal = () => {
 	const { setColorScheme } = useMantineColorScheme();
-	const computedColorScheme = useComputedColorScheme(SETTINGS_COLORSCHEME, { getInitialValueInEffect: true });
+	const computedColorScheme = useComputedColorScheme(DEFAULT_SETTINGS_COLORSCHEME, { getInitialValueInEffect: true });
 
 	const [refreshInterval, setRefreshInterval] = useLocalStorage<number>({
 		key: LOCALSTORAGE_REFRESHINTERVAL,
-		defaultValue: SETTINGS_REFRESHINTERVAL,
+		defaultValue: DEFAULT_SETTINGS_REFRESHINTERVAL,
+	});
+
+	const [vrOnly, setVROnly] = useLocalStorage<boolean>({
+		key: LOCALSTORAGE_VRONLY,
+		defaultValue: DEFAULT_SETTINGS_VRONLY,
 	});
 
 	const [dropdownOpened, { close, open }] = useDisclosure();
 
 	const handleReset = () => {
-		setColorScheme("light");
-		setRefreshInterval(120);
+		setColorScheme(DEFAULT_SETTINGS_COLORSCHEME);
+		setRefreshInterval(DEFAULT_SETTINGS_REFRESHINTERVAL);
+		setVROnly(DEFAULT_SETTINGS_VRONLY);
 	};
 
 	useEffect(() => {
@@ -77,10 +89,24 @@ const SettingsModal = () => {
 					w={88}
 					data={intervals}
 					value={refreshInterval.toString()}
+					allowDeselect={false}
 					onChange={v => setRefreshInterval(parseInt(v as string))}
 					withCheckIcon={false}
 					dropdownOpened={dropdownOpened}
 					onDropdownClose={close}
+				/>
+			</CompoundInput>
+			<CompoundInput
+				label="Only show VR"
+				description="Disable cycling of VR and BR ratings"
+				onClick={() => setVROnly(!vrOnly)}
+			>
+				<Switch
+					onLabel="ON"
+					offLabel="OFF"
+					size="md"
+					checked={vrOnly}
+					onChange={() => setVROnly(!vrOnly)}
 				/>
 			</CompoundInput>
 			<Group

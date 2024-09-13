@@ -2,7 +2,7 @@ import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-respon
 
 import { NoPlayersAlert } from "../alerts";
 import { Room } from "@/lib/types";
-import RoomsItem from "./RoomsItem";
+import { RoomItem } from ".";
 import useRoomsFilter from "@/lib/hooks/useRoomsFilter";
 
 interface Props extends Omit<ResponsiveMasonryProps, "children"> {
@@ -25,7 +25,7 @@ const Rooms = ({ rooms, ...props }: Props) => {
 				{data
 					.sort((a, b) => Object.keys(b.players).length - Object.keys(a.players).length)
 					.map(room => (
-						<RoomsItem
+						<RoomItem
 							key={room.id}
 							room={room}
 						/>

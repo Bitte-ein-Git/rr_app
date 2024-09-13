@@ -8,6 +8,7 @@ interface Player {
 	fc: string;
 	ev: string;
 	eb: string;
+	mii: { data: string; name: string }[];
 }
 
 export default Player;

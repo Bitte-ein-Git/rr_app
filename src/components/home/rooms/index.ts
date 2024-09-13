@@ -1,7 +1,8 @@
-import RoomPlayersItem from "./RoomPlayersItem";
+import RoomDetails from "./RoomDetails";
+import RoomItem from "./RoomItem";
+import RoomPlayer from "./RoomPlayer";
 import Rooms from "./Rooms";
-import RoomsItem from "./RoomsItem";
 
-export { RoomsItem, RoomPlayersItem };
+export { RoomItem, RoomDetails, RoomPlayer };
 
 export default Rooms;
