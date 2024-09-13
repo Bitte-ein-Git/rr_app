@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Logo](https://retrorewind-status.vercel.app/favicon.ico)
 
-## Getting Started
+# Retro Rewind · Status & Rooms
 
-First, run the development server:
+![GitHub Release](https://img.shields.io/github/v/release/odysseusdev/retrorewind-status?include_prereleases&color=%2304bb08)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/odysseusdev/retrorewind-status)
+![GitHub contributors](https://img.shields.io/github/contributors/odysseusdev/retrorewind-status)
+
+A web application for viewing rooms and tracking players currently playing ZPL's Mario Kart Wii mod [Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind).
+
+## Screenshots
+
+![App screenshot](https://retrorewind-status.vercel.app/screenshot-01.png)
+
+## Features
+
+-   Fetch currently active rooms, including dynamic auto-refreshing
+-   Search by player name
+-   Sort by room name, player count or average VR/BR
+-   Responsive design and dark mode
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/odysseusdev/retrorewind-status
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd retrorewind-status
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Install dependencies
 
-## Learn More
+```bash
+yarn install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributors
 
-## Deploy on Vercel
+![Contributors](https://contrib.rocks/image?repo=odysseusdev/retrorewind-status)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are currently not being accepted. Although this repository is public, this is currently a personal development project.
+
+## Related software
+
+[Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind)
+
+[Wheel Wizard](https://github.com/patchzyy/WheelWizard)
+
+[Dolphin Emulator](https://dolphin-emu.org/)
