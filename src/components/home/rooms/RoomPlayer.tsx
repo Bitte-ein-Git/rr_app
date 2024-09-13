@@ -56,21 +56,24 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 			py="sm"
 			bg={filled ? (computedColorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[6]) : undefined}
 			align="center"
+			wrap="nowrap"
+			gap="sm"
 			{...props}
 		>
 			{imageData && (
 				<AspectRatio>
 					<Image
+						w={42}
 						h={42}
-						mt={-4}
-						mr={-12}
+						mt={-6}
+						mx={-6}
 						src={`data:image/png;base64,${imageData}`}
 						alt={`${player.name}'s mii`}
 					/>
 				</AspectRatio>
 			)}
 			<Stack
-				style={{ flexGrow: 1 }}
+				style={{ flexGrow: 1, overflow: "hidden" }}
 				justify="center"
 				align="flex-start"
 				gap={0}
@@ -96,7 +99,14 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 				</Button>
 			</Stack>
 			{player.ev &&
-				(vrOnly ? <Pill>{player.ev} VR</Pill> : <CyclingPill values={[`${player.ev} VR`, `${player.eb} BR`]} />)}
+				(vrOnly ? (
+					<Pill>{player.ev} VR</Pill>
+				) : (
+					<CyclingPill
+						miw={80}
+						values={[`${player.ev} VR`, `${player.eb} BR`]}
+					/>
+				))}
 		</Group>
 	);
 };

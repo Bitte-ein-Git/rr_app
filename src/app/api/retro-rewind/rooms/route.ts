@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
 
+export const revalidate = 0; // Never cache
+
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
 		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS);
