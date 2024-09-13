@@ -3,8 +3,8 @@ import {
 	DEFAULT_SETTINGS_COLORSCHEME,
 	DEFAULT_SETTINGS_REFRESHINTERVAL,
 	DEFAULT_SETTINGS_VRONLY,
-	LOCALSTORAGE_REFRESHINTERVAL,
-	LOCALSTORAGE_VRONLY,
+	LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,
+	LOCALSTORAGE_SETTINGS_VRONLY,
 } from "../../../lib/constants";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
 
@@ -44,12 +44,12 @@ const SettingsModal = () => {
 	const computedColorScheme = useComputedColorScheme(DEFAULT_SETTINGS_COLORSCHEME, { getInitialValueInEffect: true });
 
 	const [refreshInterval, setRefreshInterval] = useLocalStorage<number>({
-		key: LOCALSTORAGE_REFRESHINTERVAL,
+		key: LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,
 		defaultValue: DEFAULT_SETTINGS_REFRESHINTERVAL,
 	});
 
 	const [vrOnly, setVROnly] = useLocalStorage<boolean>({
-		key: LOCALSTORAGE_VRONLY,
+		key: LOCALSTORAGE_SETTINGS_VRONLY,
 		defaultValue: DEFAULT_SETTINGS_VRONLY,
 	});
 

@@ -1,4 +1,8 @@
-import { LOCALSTORAGE_RETROREWINDVERSION, QUERY_RETROREWIND_VERSION, URL_INTERNAL_RETROREWIND_VERSION } from "../../constants";
+import {
+	LOCALSTORAGE_ABOUT_RETROREWINDVERSION,
+	QUERY_RETROREWIND_VERSION,
+	URL_INTERNAL_RETROREWIND_VERSION,
+} from "../../constants";
 
 import { useEffect } from "react";
 import { useLocalStorage } from "@mantine/hooks";
@@ -14,7 +18,7 @@ const useRetroRewindVersion = (): {
 	status: "pending" | "error" | "success";
 } => {
 	const [retroRewindVersion, setRetroRewindVersion] = useLocalStorage<string | undefined>({
-		key: LOCALSTORAGE_RETROREWINDVERSION,
+		key: LOCALSTORAGE_ABOUT_RETROREWINDVERSION,
 	});
 
 	const { data, status } = useQuery({

@@ -10,7 +10,7 @@ import {
 	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
-import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_VRONLY } from "@/lib/constants";
+import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_SETTINGS_VRONLY } from "@/lib/constants";
 import { IconCopy, IconCopyCheck } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
@@ -29,7 +29,7 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 	const computedColorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
 
 	const [vrOnly] = useLocalStorage<boolean>({
-		key: LOCALSTORAGE_VRONLY,
+		key: LOCALSTORAGE_SETTINGS_VRONLY,
 		defaultValue: DEFAULT_SETTINGS_VRONLY,
 	});
 
