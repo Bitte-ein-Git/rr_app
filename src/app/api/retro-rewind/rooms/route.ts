@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { RetroRewindRoomsQuery } from "@/lib/types";
 import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +17,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		revalidatePath(request.url);
 
-		return NextResponse.json(data);
+		return NextResponse.json<RetroRewindRoomsQuery>(data);
 	} catch (error) {
 		return NextResponse.error();
 	}

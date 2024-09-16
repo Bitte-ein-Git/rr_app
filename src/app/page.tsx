@@ -18,7 +18,7 @@ const RootPage = () => {
 		initialValues: {
 			query: "",
 			sortProperty: "players",
-			sortDescending: false,
+			sortDescending: true,
 		},
 	});
 

@@ -1,5 +1,6 @@
 import { LOCALSTORAGE_ABOUT_APPVERSION, QUERY_APP_VERSION, URL_INTERNAL_APP_VERSION } from "../../constants";
 
+import { AppVersionQuery } from "@/lib/types";
 import { useEffect } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +18,7 @@ const useAppVersion = (): {
 		key: LOCALSTORAGE_ABOUT_APPVERSION,
 	});
 
-	const { data, status } = useQuery({
+	const { data, status } = useQuery<AppVersionQuery>({
 		queryKey: [QUERY_APP_VERSION],
 		queryFn,
 		refetchInterval: false,

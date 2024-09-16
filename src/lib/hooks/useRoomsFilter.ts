@@ -18,12 +18,7 @@ const useRoomsFilter = (rooms: Room[]) => {
 
 		// Search query
 		if (form.getValues().query) {
-			const simpleRooms: SimpleRoom[] = rooms.map<SimpleRoom>(room => ({
-				id: room.id,
-				players: Object.values(room.players),
-			}));
-
-			results = new Fuse(simpleRooms, { keys: ["players.name", "players.fc"], threshold: 0.4 })
+			results = new Fuse(results, { keys: ["players.name", "players.fc"], threshold: 0.4 })
 				.search(form.getValues().query)
 				.map(result => rooms.find(room => room.id === result.item.id)!);
 		}
@@ -37,19 +32,13 @@ const useRoomsFilter = (rooms: Room[]) => {
 				case "id":
 					return a.id.localeCompare(b.id);
 				case "created":
-					return new Date(a.created).getTime() - new Date(b.created).getTime();
+					return new Date(b.created).getTime() - new Date(a.created).getTime();
 				case "players":
 					return Object.keys(a.players).length - Object.keys(b.players).length;
 				case "ev":
-					return (
-						average(Object.values(a.players).map(p => parseInt(p.ev))) -
-						average(Object.values(b.players).map(p => parseInt(p.ev)))
-					);
+					return average(a.players.map(p => parseInt(p.ev))) - average(b.players.map(p => parseInt(p.ev)));
 				case "eb":
-					return (
-						average(Object.values(a.players).map(p => parseInt(p.eb))) -
-						average(Object.values(b.players).map(p => parseInt(p.eb)))
-					);
+					return average(a.players.map(p => parseInt(p.eb))) - average(b.players.map(p => parseInt(p.eb)));
 				default:
 					return 0;
 			}

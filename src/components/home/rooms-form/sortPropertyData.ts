@@ -7,10 +7,10 @@ const sortPropertyData: { label: string; value: string }[] = [
 		label: "Room name",
 		value: "id",
 	},
-	// {
-	// 	label: "Room lifetime",
-	// 	value: "created",
-	// },
+	{
+		label: "Room lifetime",
+		value: "created",
+	},
 	{
 		label: "Player count",
 		value: "players",

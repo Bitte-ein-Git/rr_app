@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
 
+import { MiiQuery } from "@/lib/types";
+
 export const revalidate = 60 * 60 * 24 * 7 * 4; // Cache for 4 weeks
 
 export const GET = async (request: NextRequest): Promise<Response> => {
@@ -49,7 +51,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 			return NextResponse.error();
 		}
 
-		return NextResponse.json({
+		return NextResponse.json<MiiQuery>({
 			imageData: Buffer.from(imageBuffer).toString("base64"),
 		});
 	} catch (error) {

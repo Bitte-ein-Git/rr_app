@@ -18,11 +18,11 @@ const RoomItem = ({ room, ...props }: Props) => {
 			<RoomDetails room={room} />
 			<Divider />
 			<Stack gap={4}>
-				{Object.values(room.players)
+				{[...room.players]
 					.sort(({ ev: ev1 }, { ev: ev2 }) => parseInt(ev2) - parseInt(ev1))
 					.map((player, index) => (
 						<RoomPlayer
-							key={player.pid}
+							key={player.fc}
 							player={player}
 							filled={index % 2 === 1}
 						/>

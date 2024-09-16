@@ -22,14 +22,12 @@ const Rooms = ({ rooms, ...props }: Props) => {
 			{...props}
 		>
 			<Masonry gutter="1.5rem">
-				{data
-					.sort((a, b) => Object.keys(b.players).length - Object.keys(a.players).length)
-					.map(room => (
-						<RoomItem
-							key={room.id}
-							room={room}
-						/>
-					))}
+				{data.map(room => (
+					<RoomItem
+						key={room.id}
+						room={room}
+					/>
+				))}
 			</Masonry>
 		</ResponsiveMasonry>
 	);

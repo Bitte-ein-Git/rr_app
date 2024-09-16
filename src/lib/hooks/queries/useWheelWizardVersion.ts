@@ -4,6 +4,7 @@ import {
 	URL_INTERNAL_WHEELWIZARD_VERSION,
 } from "../../constants";
 
+import { WheelWizardVersionQuery } from "@/lib/types";
 import { useEffect } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +22,7 @@ const useWheelWizardVersion = (): {
 		key: LOCALSTORAGE_ABOUT_WHEELWIZARDVERSION,
 	});
 
-	const { data, status } = useQuery({
+	const { data, status } = useQuery<WheelWizardVersionQuery>({
 		queryKey: [QUERY_WHEELWIZARD_VERSION],
 		queryFn,
 		refetchInterval: false,

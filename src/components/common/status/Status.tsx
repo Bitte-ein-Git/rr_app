@@ -26,7 +26,7 @@ const Status = ({ rooms, ...props }: Props) => {
 				radius="sm"
 				color="gray"
 			>
-				{rooms?.reduce((total, { players }) => total + Object.values(players).length, 0) ?? 0} players
+				{rooms?.reduce((total, { players }) => total + players.length, 0) ?? 0} players
 			</Badge>
 		</Group>
 	);

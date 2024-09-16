@@ -63,7 +63,7 @@ const RoomDetails = ({ room, ...props }: Props) => {
 						size="sm"
 						c="dimmed"
 					>
-						{Object.values(room.players).length} / 12
+						{room.players.length} / 12
 					</Text>
 				</Group>
 				<Text
