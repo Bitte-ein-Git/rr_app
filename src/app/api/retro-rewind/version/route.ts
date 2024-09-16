@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_RETROREWIND_VERSION } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
 
-export const revalidate = 60 * 60; // Cache for 1 day
+export const revalidate = 60 * 60 * 24; // Cache for 1 day
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
 
-export const revalidate = 60 * 60 * 7; // Cache for 1 week
+export const revalidate = 60 * 60 * 24 * 7 * 4; // Cache for 4 weeks
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
