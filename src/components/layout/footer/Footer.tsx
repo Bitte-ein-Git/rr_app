@@ -2,9 +2,10 @@
 
 import { APPSHELL_CONTAINER_SIZE, APPSHELL_FOOTER_HEIGHT, URL_EXTERNAL_APP_REPOSITORY } from "@/lib/constants";
 import { Container, Group, Text, Transition } from "@mantine/core";
-import { IconArrowUp, IconBrandGithub } from "@tabler/icons-react";
+import { IconArrowUp, IconBrandGithub, IconUser, IconUsersGroup } from "@tabler/icons-react";
 
 import { FooterIcon } from ".";
+import FooterTab from "./FooterTab";
 import useScrollToTop from "@/lib/hooks/useScrollToTop";
 
 const Footer = () => {
@@ -13,9 +14,32 @@ const Footer = () => {
 	const year: number = new Date().getFullYear();
 
 	return (
-		<Container size={APPSHELL_CONTAINER_SIZE}>
+		<Container
+			h={APPSHELL_FOOTER_HEIGHT}
+			size={APPSHELL_CONTAINER_SIZE}
+		>
 			<Group
-				h={APPSHELL_FOOTER_HEIGHT}
+				h={64}
+				justify="center"
+				align="stretch"
+				px="xl"
+				grow
+			>
+				<FooterTab
+					icon={IconUsersGroup}
+					href="/rooms"
+				>
+					Rooms
+				</FooterTab>
+				<FooterTab
+					icon={IconUser}
+					href="/players"
+				>
+					Players
+				</FooterTab>
+			</Group>
+			<Group
+				h={32}
 				justify="space-between"
 				align="center"
 			>

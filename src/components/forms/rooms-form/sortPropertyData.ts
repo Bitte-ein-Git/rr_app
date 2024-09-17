@@ -1,27 +1,23 @@
 const sortPropertyData: { label: string; value: string }[] = [
 	{
-		label: "Relavance",
-		value: "relevance",
-	},
-	{
 		label: "Room name",
-		value: "id",
+		value: "roomName",
 	},
 	{
 		label: "Room lifetime",
-		value: "created",
+		value: "lifetime",
 	},
 	{
 		label: "Player count",
-		value: "players",
+		value: "playerCount",
 	},
 	{
 		label: "Average VR",
-		value: "ev",
+		value: "playerVR",
 	},
 	{
 		label: "Average BR",
-		value: "eb",
+		value: "playerBR",
 	},
 ];
 

@@ -14,7 +14,7 @@ import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_SETTINGS_VRONLY } from "@/lib/con
 import { IconCopy, IconCopyCheck } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
-import CyclingPill from "../../common/cycling-pill";
+import CyclingPill from "../common/cycling-pill";
 import { Player } from "@/lib/types";
 import { notifications } from "@mantine/notifications";
 import useMii from "@/lib/hooks/queries/useMii";

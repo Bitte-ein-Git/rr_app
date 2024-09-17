@@ -2,7 +2,6 @@ import { MiiQuery, Player } from "@/lib/types";
 import { QUERY_MII, URL_INTERNAL_MII } from "@/lib/constants";
 
 import { useCallback } from "react";
-import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 
 const useMii = (

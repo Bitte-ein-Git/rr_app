@@ -1,8 +1,8 @@
 import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-responsive-masonry";
 
-import { NoPlayersAlert } from "../alerts";
+import { NoPlayersAlert } from "../common/alerts";
 import { Room } from "@/lib/types";
-import { RoomItem } from ".";
+import RoomItem from "./RoomItem";
 import useRoomsFilter from "@/lib/hooks/useRoomsFilter";
 
 interface Props extends Omit<ResponsiveMasonryProps, "children"> {

@@ -1,7 +1,8 @@
 import { Divider, Paper, PaperProps, Stack } from "@mantine/core";
-import { RoomDetails, RoomPlayer } from ".";
 
 import { Room } from "@/lib/types";
+import RoomDetails from "./RoomDetails";
+import RoomPlayer from "./RoomPlayer";
 
 interface Props extends PaperProps {
 	room: Room;
