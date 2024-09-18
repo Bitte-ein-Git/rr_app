@@ -7,14 +7,16 @@ import {
 	Pill,
 	Stack,
 	Text,
+	ThemeIcon,
+	Tooltip,
 	useComputedColorScheme,
 	useMantineTheme,
 } from "@mantine/core";
 import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_SETTINGS_VRONLY } from "@/lib/constants";
-import { IconCopy, IconCopyCheck } from "@tabler/icons-react";
+import { IconCopy, IconCopyCheck, IconHelp, IconQuestionMark } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
-import CyclingPill from "../common/cycling-pill";
+import CyclingPill from "../cycling-pill";
 import { Player } from "@/lib/types";
 import { notifications } from "@mantine/notifications";
 import useMii from "@/lib/hooks/queries/useMii";
@@ -24,7 +26,7 @@ interface Props extends Omit<GroupProps, "children"> {
 	filled: boolean;
 }
 
-const RoomPlayer = ({ player, filled, ...props }: Props) => {
+const PlayerItem = ({ player, filled, ...props }: Props) => {
 	const theme = useMantineTheme();
 	const computedColorScheme = useComputedColorScheme("light", { getInitialValueInEffect: true });
 
@@ -98,17 +100,32 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 					{player.fc}
 				</Button>
 			</Stack>
-			{player.ev &&
-				(vrOnly ? (
+			{player.ev ? (
+				vrOnly ? (
 					<Pill>{player.ev} VR</Pill>
 				) : (
 					<CyclingPill
 						miw={80}
 						values={[`${player.ev} VR`, `${player.eb} BR`]}
 					/>
-				))}
+				)
+			) : (
+				<Tooltip
+					maw={156}
+					label="VR/BR not available in private rooms"
+					multiline
+					position="left"
+				>
+					<ThemeIcon
+						variant="subtle"
+						color="gray"
+					>
+						<IconHelp />
+					</ThemeIcon>
+				</Tooltip>
+			)}
 		</Group>
 	);
 };
 
-export default RoomPlayer;
+export default PlayerItem;

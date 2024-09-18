@@ -1,18 +1,12 @@
-import { Badge, Group, GroupProps, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Group, GroupProps, TextInput, ThemeIcon } from "@mantine/core";
+import { IconSearch, IconX } from "@tabler/icons-react";
 
-import { IconSearch } from "@tabler/icons-react";
-import { useHotkeys } from "@mantine/hooks";
 import { usePlayersFormContext } from "@/lib/contexts/PlayersFormContext";
-import { useRef } from "react";
 
 interface Props extends Omit<GroupProps, "children"> {}
 
 const SearchForm = ({ ...props }: Props) => {
 	const form = usePlayersFormContext();
-
-	const ref = useRef<HTMLInputElement>(null);
-
-	useHotkeys([["mod+K", () => ref.current?.focus(), { preventDefault: true }]]);
 
 	return (
 		<Group
@@ -20,25 +14,28 @@ const SearchForm = ({ ...props }: Props) => {
 			{...props}
 		>
 			<TextInput
-				ref={ref}
-				placeholder="Search"
-				leftSection={<IconSearch size={16} />}
-				rightSection={
-					<Badge
-						variant="light"
-						radius="xs"
+				placeholder="Search.."
+				leftSection={
+					<ThemeIcon
+						variant="transparent"
+						size="md"
 						color="gray"
 					>
-						<Text
-							inherit
-							tt="none"
-						>
-							Ctrl + K
-						</Text>
-					</Badge>
+						<IconSearch size={20} />
+					</ThemeIcon>
 				}
-				rightSectionWidth={70}
-				rightSectionProps={{ style: { right: 8 } }}
+				rightSection={
+					form.getValues().query.length > 0 && (
+						<ActionIcon
+							variant="transparent"
+							size="md"
+							color="gray"
+							onClick={() => form.setFieldValue("query", "")}
+						>
+							<IconX size={20} />
+						</ActionIcon>
+					)
+				}
 				{...form.getInputProps("query")}
 			/>
 		</Group>

@@ -3,7 +3,7 @@ import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-respon
 import { NoPlayersAlert } from "../common/alerts";
 import { Room } from "@/lib/types";
 import RoomItem from "./RoomItem";
-import useRoomsFilter from "@/lib/hooks/useRoomsFilter";
+import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
 interface Props extends Omit<ResponsiveMasonryProps, "children"> {
 	rooms: Room[];

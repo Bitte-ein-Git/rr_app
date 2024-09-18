@@ -1,7 +1,7 @@
-import { Room } from "../types";
-import { average } from "../util";
+import { Room } from "../../types";
+import { average } from "../../util";
 import { useMemo } from "react";
-import { useRoomsFormContext } from "../contexts/RoomsFormContext";
+import { useRoomsFormContext } from "../../contexts/RoomsFormContext";
 
 const useRoomsFilter = (rooms: Room[]) => {
 	const form = useRoomsFormContext();
@@ -22,9 +22,15 @@ const useRoomsFilter = (rooms: Room[]) => {
 				case "players":
 					return Object.keys(a.players).length - Object.keys(b.players).length;
 				case "vr":
-					return average(a.players.map(p => Number(p.ev))) - average(b.players.map(p => Number(p.ev)));
+					return (
+						average(a.players.map(p => (!p.ev ? Number.NEGATIVE_INFINITY : Number(p.ev)))) -
+						average(b.players.map(p => (!p.ev ? Number.NEGATIVE_INFINITY : Number(p.ev))))
+					);
 				case "br":
-					return average(a.players.map(p => Number(p.eb))) - average(b.players.map(p => Number(p.eb)));
+					return (
+						average(a.players.map(p => (!p.eb ? Number.NEGATIVE_INFINITY : Number(p.eb)))) -
+						average(b.players.map(p => (!p.eb ? Number.NEGATIVE_INFINITY : Number(p.eb))))
+					);
 				default:
 					return 0;
 			}

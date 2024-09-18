@@ -1,8 +1,8 @@
-import { Player, Room } from "../types";
+import { Player, Room } from "../../types";
 
 import Fuse from "fuse.js";
 import { useMemo } from "react";
-import { usePlayersFormContext } from "../contexts/PlayersFormContext";
+import { usePlayersFormContext } from "../../contexts/PlayersFormContext";
 
 const usePlayersFilter = (rooms: Room[]) => {
 	const form = usePlayersFormContext();
@@ -28,9 +28,13 @@ const usePlayersFilter = (rooms: Room[]) => {
 				case "name":
 					return a.name.localeCompare(b.name);
 				case "vr":
-					return Number(a.ev) - Number(b.ev);
+					return (
+						(!a.ev ? Number.NEGATIVE_INFINITY : Number(a.ev)) - (!b.ev ? Number.NEGATIVE_INFINITY : Number(b.ev))
+					);
 				case "br":
-					return Number(a.eb) - Number(b.eb);
+					return (
+						(!a.eb ? Number.NEGATIVE_INFINITY : Number(a.eb)) - (!b.eb ? Number.NEGATIVE_INFINITY : Number(b.eb))
+					);
 				default:
 					return 0;
 			}

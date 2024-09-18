@@ -1,8 +1,8 @@
 import { Divider, Paper, PaperProps, Stack } from "@mantine/core";
 
+import PlayerItem from "../common/player-item/PlayerItem";
 import { Room } from "@/lib/types";
 import RoomDetails from "./RoomDetails";
-import RoomPlayer from "./RoomPlayer";
 
 interface Props extends PaperProps {
 	room: Room;
@@ -22,7 +22,7 @@ const RoomItem = ({ room, ...props }: Props) => {
 				{[...room.players]
 					.sort(({ ev: ev1 }, { ev: ev2 }) => parseInt(ev2) - parseInt(ev1))
 					.map((player, index) => (
-						<RoomPlayer
+						<PlayerItem
 							key={player.fc}
 							player={player}
 							filled={index % 2 === 1}

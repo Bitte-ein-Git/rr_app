@@ -2,10 +2,32 @@ import { ActionIcon, Group, GroupProps, Select, Tooltip } from "@mantine/core";
 import { IconSortAscending2, IconSortDescending2 } from "@tabler/icons-react";
 import { useEffect, useMemo } from "react";
 
-import sortByData from "./sortByData";
 import { useRoomsFormContext } from "@/lib/contexts/RoomsFormContext";
 
 interface Props extends Omit<GroupProps, "children"> {}
+
+const sortByData: { label: string; value: string }[] = [
+	{
+		label: "Room name",
+		value: "name",
+	},
+	{
+		label: "Lifetime",
+		value: "lifetime",
+	},
+	{
+		label: "Player count",
+		value: "players",
+	},
+	{
+		label: "Average VR",
+		value: "vr",
+	},
+	{
+		label: "Average BR",
+		value: "br",
+	},
+];
 
 const SortForm = ({ ...props }: Props) => {
 	const form = useRoomsFormContext();
