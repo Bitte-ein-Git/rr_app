@@ -23,7 +23,6 @@ const Footer = () => {
 				h={64}
 				justify="center"
 				align="stretch"
-				px="xl"
 				py={4}
 				grow
 			>

@@ -3,7 +3,7 @@ import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants
 
 import { MiiQuery } from "@/lib/types";
 
-const cache: { [key: string]: { imageData: string; lastFetched: Date } } = {};
+const cache: { [key: string]: string } = {};
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
