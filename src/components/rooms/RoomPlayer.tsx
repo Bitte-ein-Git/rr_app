@@ -53,7 +53,7 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 	return (
 		<Group
 			px="md"
-			py="sm"
+			py="xs"
 			bg={filled ? (computedColorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[6]) : undefined}
 			align="center"
 			wrap="nowrap"
@@ -84,7 +84,7 @@ const RoomPlayer = ({ player, filled, ...props }: Props) => {
 					truncate="end"
 					c={hasNoName ? "dimmed" : undefined}
 				>
-					{hasNoName ? "No name found" : player.name}
+					{hasNoName ? "Player" : player.name}
 				</Text>
 				<Button
 					variant="transparent"

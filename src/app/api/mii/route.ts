@@ -3,7 +3,7 @@ import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants
 
 import { MiiQuery } from "@/lib/types";
 
-export const revalidate = 60 * 60 * 24 * 7 * 4; // Cache for 4 weeks
+const cache: { [key: string]: { imageData: string; lastFetched: Date } } = {};
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
@@ -11,6 +11,10 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		if (!data) {
 			return Response.error();
+		}
+
+		if (cache[data]) {
+			return NextResponse.json({ imageData: cache[data] });
 		}
 
 		const formData: FormData = new FormData();
@@ -51,8 +55,12 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 			return NextResponse.error();
 		}
 
+		const imageData = Buffer.from(imageBuffer).toString("base64");
+
+		cache[data] = imageData;
+
 		return NextResponse.json<MiiQuery>({
-			imageData: Buffer.from(imageBuffer).toString("base64"),
+			imageData,
 		});
 	} catch (error) {
 		return NextResponse.error();

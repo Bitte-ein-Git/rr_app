@@ -21,8 +21,8 @@ const FooterTab = ({ icon: FooterTabIcon, href, children, ...props }: Props) => 
 			component={Link}
 			variant="subtle"
 			h="100%"
+			color="gray"
 			href={href}
-			color={active ? theme.primaryColor : "gray"}
 			{...props}
 		>
 			<Stack
@@ -36,7 +36,12 @@ const FooterTab = ({ icon: FooterTabIcon, href, children, ...props }: Props) => 
 				>
 					<FooterTabIcon />
 				</ThemeIcon>
-				<Text size="xs">{children}</Text>
+				<Text
+					size="xs"
+					c={active ? theme.primaryColor : undefined}
+				>
+					{children}
+				</Text>
 			</Stack>
 		</Button>
 	);

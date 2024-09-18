@@ -1,32 +1,34 @@
-import { Badge, Text, TextInput } from "@mantine/core";
+import { Paper, PaperProps, Stack } from "@mantine/core";
 
-import { IconSearch } from "@tabler/icons-react";
 import React from "react";
+import { Room } from "@/lib/types";
+import RoomPlayer from "../rooms/RoomPlayer";
+import usePlayersFilter from "@/lib/hooks/usePlayersFilter";
 
-const Players = () => {
+interface Props extends PaperProps {
+	rooms: Room[];
+}
+
+const Players = ({ rooms, ...props }: Props) => {
+	const data = usePlayersFilter(rooms);
+
 	return (
-		<TextInput
-			placeholder="Search"
-			leftSection={<IconSearch size={16} />}
-			rightSection={
-				<Badge
-					variant="light"
-					radius="xs"
-					color="gray"
-				>
-					<Text
-						inherit
-						tt="none"
-					>
-						Ctrl + K
-					</Text>
-				</Badge>
-			}
-			rightSectionWidth={70}
-			rightSectionProps={{ style: { right: 8 } }}
-			value=""
-			onChange={() => null}
-		/>
+		<Paper
+			style={{ overflow: "hidden" }}
+			radius="md"
+			withBorder
+			{...props}
+		>
+			<Stack gap={0}>
+				{data.map((player, index) => (
+					<RoomPlayer
+						key={player.fc}
+						player={player}
+						filled={index % 2 === 1}
+					/>
+				))}
+			</Stack>
+		</Paper>
 	);
 };
 

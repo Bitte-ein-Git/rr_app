@@ -1,4 +1,5 @@
 import "@mantine/core/styles.css";
+import "@mantine/nprogress/styles.css";
 import "@mantine/notifications/styles.css";
 import "./globals.css";
 
@@ -19,6 +20,7 @@ import type { Metadata } from "next";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import QueryClientProvider from "@/lib/providers/QueryClientProvider";
+import { RouterTransition } from "@/components/layout/RouterTransition";
 import { theme } from "@/lib/theme";
 
 export const metadata: Metadata = {
@@ -47,6 +49,7 @@ const RootLayout = ({
 						theme={theme}
 						defaultColorScheme="light"
 					>
+						<RouterTransition />
 						<Notifications limit={1} />
 						<ModalsProvider
 							labels={{ cancel: "Dismiss", confirm: "Confirm" }}

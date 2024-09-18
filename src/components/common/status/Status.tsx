@@ -9,6 +9,7 @@ interface Props extends GroupProps {
 const Status = ({ rooms, ...props }: Props) => {
 	return (
 		<Group
+			h={30}
 			gap="xs"
 			justify="flex-end"
 			align="center"

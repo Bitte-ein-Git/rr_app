@@ -18,7 +18,7 @@ const RoomItem = ({ room, ...props }: Props) => {
 		>
 			<RoomDetails room={room} />
 			<Divider />
-			<Stack gap={4}>
+			<Stack gap={0}>
 				{[...room.players]
 					.sort(({ ev: ev1 }, { ev: ev2 }) => parseInt(ev2) - parseInt(ev1))
 					.map((player, index) => (

@@ -1,7 +1,7 @@
 import { Room } from "../types";
 import { average } from "../util";
 import { useMemo } from "react";
-import { useRoomsFormContext } from "../form-contexts/RoomsFormContext";
+import { useRoomsFormContext } from "../contexts/RoomsFormContext";
 
 const useRoomsFilter = (rooms: Room[]) => {
 	const form = useRoomsFormContext();
@@ -15,16 +15,16 @@ const useRoomsFilter = (rooms: Room[]) => {
 		// Sort
 		results = [...results].sort((a, b) => {
 			switch (form.getValues().sortBy) {
-				case "roomName":
+				case "name":
 					return a.id.localeCompare(b.id);
 				case "lifetime":
 					return new Date(b.created).getTime() - new Date(a.created).getTime();
-				case "playerCount":
+				case "players":
 					return Object.keys(a.players).length - Object.keys(b.players).length;
-				case "playerVR":
-					return average(a.players.map(p => parseInt(p.ev))) - average(b.players.map(p => parseInt(p.ev)));
-				case "playerBR":
-					return average(a.players.map(p => parseInt(p.eb))) - average(b.players.map(p => parseInt(p.eb)));
+				case "vr":
+					return average(a.players.map(p => Number(p.ev))) - average(b.players.map(p => Number(p.ev)));
+				case "br":
+					return average(a.players.map(p => Number(p.eb))) - average(b.players.map(p => Number(p.eb)));
 				default:
 					return 0;
 			}

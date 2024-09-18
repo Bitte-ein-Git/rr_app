@@ -8,7 +8,7 @@ export const DEFAULT_SETTINGS_VRONLY: boolean = false;
 /* Layout & Sizes */
 export const APPSHELL_HEADER_HEIGHT: number = 56;
 export const APPSHELL_FOOTER_HEIGHT: number = 32 + 64;
-export const APPSHELL_CONTAINER_SIZE: MantineSize = "xl";
+export const APPSHELL_CONTAINER_SIZE: MantineSize = "lg";
 
 /* Internal Endpoints */
 export const URL_INTERNAL_APP_VERSION: string = "/api/application/version";

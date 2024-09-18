@@ -15,7 +15,8 @@ const Footer = () => {
 
 	return (
 		<Container
-			h={APPSHELL_FOOTER_HEIGHT}
+			h={`calc(${APPSHELL_FOOTER_HEIGHT} + env(safe-area-inset-bottom, 0))`}
+			pb="env(safe-area-inset-bottom, 0)"
 			size={APPSHELL_CONTAINER_SIZE}
 		>
 			<Group
@@ -23,6 +24,7 @@ const Footer = () => {
 				justify="center"
 				align="stretch"
 				px="xl"
+				py={4}
 				grow
 			>
 				<FooterTab

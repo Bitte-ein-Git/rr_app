@@ -1,22 +1,22 @@
 "use client";
 
 import { Group, Stack } from "@mantine/core";
-import { RoomsFormProvider, useRoomsForm } from "@/lib/contexts/RoomsFormContext";
+import { PlayersFormProvider, usePlayersForm } from "@/lib/contexts/PlayersFormContext";
+import { SearchForm, SortForm } from "@/components/players/form";
 
 import Loading from "@/components/common/loading";
 import { NoPlayersAlert } from "@/components/common/alerts";
+import Players from "@/components/players/Players";
 import React from "react";
-import Rooms from "@/components/rooms/Rooms";
-import SortForm from "@/components/rooms/form";
 import Status from "@/components/common/status";
 import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
 
-const RoomsPage = () => {
-	const form = useRoomsForm({
+const PlayersPage = () => {
+	const form = usePlayersForm({
 		initialValues: {
-			filters: [],
-			sortBy: "players",
-			reverseSortDirection: true,
+			query: "",
+			sortBy: "name",
+			reverseSortDirection: false,
 		},
 	});
 
@@ -27,16 +27,17 @@ const RoomsPage = () => {
 	}
 
 	return (
-		<RoomsFormProvider form={form}>
+		<PlayersFormProvider form={form}>
 			<Stack gap="sm">
 				<Group justify="space-between">
 					<Status rooms={rooms} />
 					<SortForm />
 				</Group>
-				{!rooms ? <NoPlayersAlert /> : <Rooms rooms={rooms} />}
+				<SearchForm />
+				{!rooms ? <NoPlayersAlert /> : <Players rooms={rooms} />}
 			</Stack>
-		</RoomsFormProvider>
+		</PlayersFormProvider>
 	);
 };
 
-export default RoomsPage;
+export default PlayersPage;
