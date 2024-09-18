@@ -13,7 +13,7 @@ import {
 	useMantineTheme,
 } from "@mantine/core";
 import { DEFAULT_SETTINGS_VRONLY, LOCALSTORAGE_SETTINGS_VRONLY } from "@/lib/constants";
-import { IconCopy, IconCopyCheck, IconHelp, IconQuestionMark } from "@tabler/icons-react";
+import { IconCopy, IconCopyCheck, IconHelp } from "@tabler/icons-react";
 import { useClipboard, useLocalStorage } from "@mantine/hooks";
 
 import CyclingPill from "../cycling-pill";
