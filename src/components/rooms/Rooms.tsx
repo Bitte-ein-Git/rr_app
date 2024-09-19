@@ -1,9 +1,9 @@
 import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-responsive-masonry";
 
-import { NoPlayersAlert } from "../alerts";
+import { NoPlayersAlert } from "../common/alerts";
 import { Room } from "@/lib/types";
-import { RoomItem } from ".";
-import useRoomsFilter from "@/lib/hooks/useRoomsFilter";
+import RoomItem from "./RoomItem";
+import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
 interface Props extends Omit<ResponsiveMasonryProps, "children"> {
 	rooms: Room[];
@@ -22,14 +22,12 @@ const Rooms = ({ rooms, ...props }: Props) => {
 			{...props}
 		>
 			<Masonry gutter="1.5rem">
-				{data
-					.sort((a, b) => Object.keys(b.players).length - Object.keys(a.players).length)
-					.map(room => (
-						<RoomItem
-							key={room.id}
-							room={room}
-						/>
-					))}
+				{data.map(room => (
+					<RoomItem
+						key={room.id}
+						room={room}
+					/>
+				))}
 			</Masonry>
 		</ResponsiveMasonry>
 	);

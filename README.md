@@ -1,6 +1,6 @@
 ![Logo](https://retrorewind-status.vercel.app/favicon.ico)
 
-# Retro Rewind · Status & Rooms
+# Retro Rewind · Players & Rooms
 
 ![GitHub Release](https://img.shields.io/github/v/release/odysseusdev/retrorewind-status?include_prereleases&color=%2304bb08)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/odysseusdev/retrorewind-status)
@@ -10,7 +10,8 @@ A web application for viewing rooms and tracking players currently playing ZPL's
 
 ## Screenshots
 
-![App screenshot](https://retrorewind-status.vercel.app/screenshot-01.png)
+![Desktop screenshot](https://retrorewind-status.vercel.app/screenshot-desktop.png)
+![Mobile screenshot](https://retrorewind-status.vercel.app/screenshot-mobile.png)
 
 ## Features
 
@@ -51,7 +52,7 @@ yarn dev
 
 ## Contributing
 
-Contributions are currently not being accepted. Although this repository is public, this is currently a personal development project.
+Contributions are currently NOT being accepted. Although this repository is public, this is currently a personal development project.
 
 ## Related software
 

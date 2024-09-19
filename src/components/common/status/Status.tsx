@@ -9,6 +9,7 @@ interface Props extends GroupProps {
 const Status = ({ rooms, ...props }: Props) => {
 	return (
 		<Group
+			h={30}
 			gap="xs"
 			justify="flex-end"
 			align="center"
@@ -26,7 +27,7 @@ const Status = ({ rooms, ...props }: Props) => {
 				radius="sm"
 				color="gray"
 			>
-				{rooms?.reduce((total, { players }) => total + Object.values(players).length, 0) ?? 0} players
+				{rooms?.reduce((total, { players }) => total + players.length, 0) ?? 0} players
 			</Badge>
 		</Group>
 	);

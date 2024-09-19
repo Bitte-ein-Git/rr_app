@@ -1,4 +1,4 @@
-import { Player } from "..";
+import { Player } from ".";
 
 interface Room {
 	id: string;
@@ -8,7 +8,7 @@ interface Room {
 	suspend: boolean;
 	host: string;
 	rk: string;
-	players: { [key: string]: Player };
+	players: Player[];
 }
 
 export default Room;

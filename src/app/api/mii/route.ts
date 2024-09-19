@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
 
-export const revalidate = 60 * 60 * 7; // Cache for 1 week
+import { MiiQuery } from "@/lib/types";
+
+const cache: { [key: string]: string } = {};
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
@@ -9,6 +11,10 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		if (!data) {
 			return Response.error();
+		}
+
+		if (cache[data]) {
+			return NextResponse.json({ imageData: cache[data] });
 		}
 
 		const formData: FormData = new FormData();
@@ -49,8 +55,12 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 			return NextResponse.error();
 		}
 
-		return NextResponse.json({
-			imageData: Buffer.from(imageBuffer).toString("base64"),
+		const imageData = Buffer.from(imageBuffer).toString("base64");
+
+		cache[data] = imageData;
+
+		return NextResponse.json<MiiQuery>({
+			imageData,
 		});
 	} catch (error) {
 		return NextResponse.error();

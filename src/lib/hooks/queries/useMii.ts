@@ -1,6 +1,6 @@
+import { MiiQuery, Player } from "@/lib/types";
 import { QUERY_MII, URL_INTERNAL_MII } from "@/lib/constants";
 
-import { Player } from "@/lib/types";
 import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,7 +15,7 @@ const useMii = (
 		return response.json();
 	}, [player.mii]);
 
-	const { data, status } = useQuery<{ imageData: string }>({
+	const { data, status } = useQuery<MiiQuery>({
 		queryKey: [QUERY_MII, player.fc],
 		queryFn,
 	});

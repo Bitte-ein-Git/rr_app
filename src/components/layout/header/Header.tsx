@@ -71,7 +71,7 @@ const Header = () => {
 							size="xs"
 							c="dimmed"
 						>
-							Status &amp; Rooms
+							Players &amp; Rooms
 						</Text>
 					</Box>
 				</Group>
@@ -79,7 +79,7 @@ const Header = () => {
 					<Tooltip
 						label={
 							<>
-								<Text>Fetch rooms</Text>
+								<Text inherit>Fetch latest data</Text>
 								{duration && (
 									<Text
 										fs="italic"

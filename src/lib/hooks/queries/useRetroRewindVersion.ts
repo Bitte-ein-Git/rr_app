@@ -4,6 +4,7 @@ import {
 	URL_INTERNAL_RETROREWIND_VERSION,
 } from "../../constants";
 
+import { RetroRewindVersionQuery } from "@/lib/types";
 import { useEffect } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +22,7 @@ const useRetroRewindVersion = (): {
 		key: LOCALSTORAGE_ABOUT_RETROREWINDVERSION,
 	});
 
-	const { data, status } = useQuery({
+	const { data, status } = useQuery<RetroRewindVersionQuery>({
 		queryKey: [QUERY_RETROREWIND_VERSION],
 		queryFn,
 		refetchInterval: false,
