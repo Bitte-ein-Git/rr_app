@@ -1,8 +1,14 @@
 "use client";
 
-import { APPSHELL_CONTAINER_SIZE, APPSHELL_FOOTER_HEIGHT, URL_EXTERNAL_APP_REPOSITORY } from "@/lib/constants";
+import {
+	APPSHELL_CONTAINER_SIZE,
+	APPSHELL_FOOTER_HEIGHT,
+	URL_EXTERNAL_APP_REPOSITORY,
+	URL_EXTERNAL_RETROREWIND_WIKI,
+	URL_EXTERNAL_WHEELWIZARD_REPOSITORY,
+} from "@/lib/constants";
 import { Container, Group, Text, Transition } from "@mantine/core";
-import { IconArrowUp, IconBrandGithub, IconUser, IconUsersGroup } from "@tabler/icons-react";
+import { IconArrowUp, IconBrandGithub, IconHelmet, IconSteeringWheel, IconUser, IconUsersGroup } from "@tabler/icons-react";
 
 import { FooterIcon } from ".";
 import FooterTab from "./FooterTab";
@@ -36,7 +42,7 @@ const Footer = () => {
 					icon={IconUser}
 					href="/players"
 				>
-					Players
+					Active Players
 				</FooterTab>
 			</Group>
 			<Group
@@ -50,7 +56,7 @@ const Footer = () => {
 				>
 					&copy; odysseus. · 2024{year !== 2024 && ` - ${year}`} · All rights reserved.
 				</Text>
-				<Group gap="xs">
+				<Group gap={4}>
 					<Transition
 						transition="slide-up"
 						exitDuration={100}
@@ -65,6 +71,16 @@ const Footer = () => {
 							/>
 						)}
 					</Transition>
+					<FooterIcon
+						label="Retro Rewind"
+						icon={IconHelmet}
+						href={URL_EXTERNAL_RETROREWIND_WIKI}
+					/>
+					<FooterIcon
+						label="Wheel Wizard"
+						icon={IconSteeringWheel}
+						href={URL_EXTERNAL_WHEELWIZARD_REPOSITORY}
+					/>
 					<FooterIcon
 						label="GitHub"
 						icon={IconBrandGithub}

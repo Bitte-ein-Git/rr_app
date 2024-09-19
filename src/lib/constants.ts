@@ -24,6 +24,8 @@ export const URL_EXTERNAL_MII_IMAGE = "https://studio.mii.nintendo.com/miis/imag
 export const URL_EXTERNAL_MII_STUDIO: string = "https://qrcode.rc24.xyz/cgi-bin/studio.cgi";
 export const URL_EXTERNAL_RETROREWIND_ROOMS: string = "http://zplwii.xyz/api/groups";
 export const URL_EXTERNAL_RETROREWIND_VERSION = "https://update.zplwii.xyz/RetroRewind/RetroRewindVersion.txt";
+export const URL_EXTERNAL_RETROREWIND_WIKI = "https://wiki.tockdom.com/wiki/Retro_Rewind";
+export const URL_EXTERNAL_WHEELWIZARD_REPOSITORY = "https://github.com/patchzyy/WheelWizard";
 export const URL_EXTERNAL_WHEELWIZARD_VERSION = "https://api.github.com/repos/patchzyy/WheelWizard/releases/latest";
 
 /* React Query Keys */

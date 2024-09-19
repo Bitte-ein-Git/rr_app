@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Stack } from "@mantine/core";
+import { Group, Stack, Title } from "@mantine/core";
 import { RoomsFormProvider, useRoomsForm } from "@/lib/contexts/RoomsFormContext";
 
 import Loading from "@/components/common/loading";
@@ -29,6 +29,7 @@ const RoomsPage = () => {
 	return (
 		<RoomsFormProvider form={form}>
 			<Stack gap="sm">
+				<Title size={32}>Rooms</Title>
 				<Group justify="space-between">
 					<Status rooms={rooms} />
 					<SortForm />

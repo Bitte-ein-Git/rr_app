@@ -50,7 +50,11 @@ const RootLayout = ({
 						defaultColorScheme="light"
 					>
 						<RouterTransition />
-						<Notifications limit={1} />
+						<Notifications
+							mb={APPSHELL_FOOTER_HEIGHT}
+							position="bottom-center"
+							limit={1}
+						/>
 						<ModalsProvider
 							labels={{ cancel: "Dismiss", confirm: "Confirm" }}
 							modalProps={{

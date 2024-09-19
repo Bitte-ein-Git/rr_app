@@ -44,8 +44,8 @@ const PlayerItem = ({ player, filled, ...props }: Props) => {
 		notifications.clean();
 		notifications.show({
 			title: `Copied ${type}`,
-			message: `Copied ${value} to clipboard.`,
-			autoClose: 2000,
+			message: `${value} copied to clipboard`,
+			autoClose: 1600,
 			withBorder: true,
 		});
 	};
