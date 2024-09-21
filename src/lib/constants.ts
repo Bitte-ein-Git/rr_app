@@ -7,8 +7,8 @@ export const DEFAULT_SETTINGS_VRONLY: boolean = false;
 
 /* Layout & Sizes */
 export const APPSHELL_HEADER_HEIGHT: number = 56;
-export const APPSHELL_FOOTER_HEIGHT: number = 32;
-export const APPSHELL_CONTAINER_SIZE: MantineSize = "xl";
+export const APPSHELL_FOOTER_HEIGHT: number = 32 + 64;
+export const APPSHELL_CONTAINER_SIZE: MantineSize = "lg";
 
 /* Internal Endpoints */
 export const URL_INTERNAL_APP_VERSION: string = "/api/application/version";
@@ -24,20 +24,13 @@ export const URL_EXTERNAL_MII_IMAGE = "https://studio.mii.nintendo.com/miis/imag
 export const URL_EXTERNAL_MII_STUDIO: string = "https://qrcode.rc24.xyz/cgi-bin/studio.cgi";
 export const URL_EXTERNAL_RETROREWIND_ROOMS: string = "http://zplwii.xyz/api/groups";
 export const URL_EXTERNAL_RETROREWIND_VERSION = "https://update.zplwii.xyz/RetroRewind/RetroRewindVersion.txt";
+export const URL_EXTERNAL_RETROREWIND_WIKI = "https://wiki.tockdom.com/wiki/Retro_Rewind";
+export const URL_EXTERNAL_WHEELWIZARD_REPOSITORY = "https://github.com/patchzyy/WheelWizard";
 export const URL_EXTERNAL_WHEELWIZARD_VERSION = "https://api.github.com/repos/patchzyy/WheelWizard/releases/latest";
 
-/* React Query Keys */
-export const QUERY_APP_VERSION: string = "app-version";
-export const QUERY_MII: string = "mii";
-export const QUERY_RETROREWIND_ROOMS: string = "retrorewind-rooms";
-export const QUERY_RETROREWIND_VERSION: string = "retrorewind-version";
-export const QUERY_WHEELWIZARD_VERSION: string = "wheelwizard-version";
-
 /* Local Storage Keys */
+export const LOCALSTORAGE_MIIS: string = "miis";
 export const LOCALSTORAGE_SETTINGS_REFRESHINTERVAL: string = "settings-refresh-interval";
 export const LOCALSTORAGE_SETTINGS_VRONLY: string = "settings-vr-only";
-export const LOCALSTORAGE_ABOUT_APPVERSION: string = "about-app-version";
-export const LOCALSTORAGE_ABOUT_RETROREWINDVERSION: string = "about-retrorewind-version";
-export const LOCALSTORAGE_ABOUT_WHEELWIZARDVERSION: string = "about-wheelwizard-version";
 
 /* Form Select Data */

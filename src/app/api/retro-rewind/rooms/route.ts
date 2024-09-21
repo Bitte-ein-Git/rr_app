@@ -1,22 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-
+import { FetchedRoom } from "@/lib/types/server";
+import { NextResponse } from "next/server";
+import { Room } from "@/lib/types";
 import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
-import { revalidatePath } from "next/cache";
 
-export const revalidate = 0; // Never cache
-
-export const GET = async (request: NextRequest): Promise<Response> => {
+export const GET = async (): Promise<Response> => {
 	try {
-		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS);
-		const data = await response.json();
+		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS, { next: { revalidate: 15 } });
+		const body: FetchedRoom[] = await response.json();
 
-		if (!data) {
+		if (!body) {
 			return NextResponse.error();
 		}
 
-		revalidatePath(request.url);
+		const rooms = body.map<Room>(room => ({
+			...room,
+			players: Object.values(room.players).map(player => ({ ...player, mii: player.mii[0].data })),
+		}));
 
-		return NextResponse.json(data);
+		return NextResponse.json(rooms);
 	} catch (error) {
 		return NextResponse.error();
 	}

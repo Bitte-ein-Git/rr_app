@@ -1,16 +1,16 @@
+"use client";
+
 import { AboutItem, AboutSectionTitle } from ".";
 import { Button, Grid, Group } from "@mantine/core";
 import { IconCode, IconGitBranch, IconHelmet, IconPackage, IconSteeringWheel } from "@tabler/icons-react";
 
 import { modals } from "@mantine/modals";
-import useAppVersion from "@/lib/hooks/queries/useAppVersion";
-import useRetroRewindVersion from "@/lib/hooks/queries/useRetroRewindVersion";
-import useWheelWizardVersion from "@/lib/hooks/queries/useWheelWizardVersion";
+import useVersion from "@/lib/hooks/swr/useVersion";
 
 const AboutModal = () => {
-	const { version: appVersion } = useAppVersion();
-	const { version: retroRewindVersion } = useRetroRewindVersion();
-	const { version: wheelWizardVersion } = useWheelWizardVersion();
+	const appVersion = useVersion("app");
+	const retroRewindVersion = useVersion("retro-rewind");
+	const wheelWizardVersion = useVersion("wheel-wizard");
 
 	return (
 		<Grid>
@@ -28,7 +28,7 @@ const AboutModal = () => {
 				<AboutItem
 					icon={IconGitBranch}
 					label="Latest release"
-					value={appVersion}
+					value={appVersion.isLoading ? "Fetching.." : appVersion.data?.version}
 				/>
 			</Grid.Col>
 			<Grid.Col span={{ base: 12 }}>
@@ -45,14 +45,14 @@ const AboutModal = () => {
 				<AboutItem
 					icon={IconHelmet}
 					label="Retro Rewind"
-					value={`v${retroRewindVersion}`}
+					value={retroRewindVersion.isLoading ? "Fetching.." : `v${retroRewindVersion.data?.version}`}
 				/>
 			</Grid.Col>
 			<Grid.Col span={{ base: 6 }}>
 				<AboutItem
 					icon={IconSteeringWheel}
 					label="Wheel Wizard"
-					value={`v${wheelWizardVersion}`}
+					value={wheelWizardVersion.isLoading ? "Fetching.." : `v${wheelWizardVersion.data?.version}`}
 				/>
 			</Grid.Col>
 			<Grid.Col span={{ base: 12 }}>

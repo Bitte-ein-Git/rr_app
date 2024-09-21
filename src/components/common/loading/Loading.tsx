@@ -5,11 +5,7 @@ interface Props extends StackProps {}
 const Loading = ({ children, ...props }: Props) => {
 	return (
 		<Stack
-			h="100dvh"
-			w="100vw"
-			pos="fixed"
-			top={0}
-			left={0}
+			mt="xl"
 			justify="center"
 			align="center"
 			gap="lg"

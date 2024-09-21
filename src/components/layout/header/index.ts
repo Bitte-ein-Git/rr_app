@@ -1,6 +1,8 @@
 import Header from "./Header";
-import MenuItem from "./MenuItem";
+import HeaderMenu from "./HeaderMenu";
+import HeaderMenuItem from "./HeaderMenuItem";
+import HeaderRoomsRefresh from "./HeaderRoomsRefresh";
 
-export { MenuItem };
+export { HeaderRoomsRefresh, HeaderMenu, HeaderMenuItem };
 
 export default Header;
