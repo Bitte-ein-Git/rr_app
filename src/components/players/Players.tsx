@@ -1,7 +1,9 @@
 "use client";
 
-import { Paper, PaperProps, Stack, Text } from "@mantine/core";
+import { IconAlertCircle, IconAlertTriangle } from "@tabler/icons-react";
+import { Paper, PaperProps, Stack } from "@mantine/core";
 
+import Alert from "../common/alert";
 import Loading from "../common/loading";
 import { PlayerItem } from ".";
 import React from "react";
@@ -20,11 +22,25 @@ const Players = ({ ...props }: Props) => {
 	}
 
 	if (error) {
-		return <Text>{JSON.stringify(error)}</Text>;
+		return (
+			<Alert
+				color="red"
+				icon={IconAlertCircle}
+				title="It appears Retro Rewind is currently unreachable."
+				subtitle="It may be undergoing maintenance."
+			/>
+		);
 	}
 
 	if (players.length === 0) {
-		return <Text>No players online.</Text>;
+		return (
+			<Alert
+				color="gray"
+				icon={IconAlertTriangle}
+				title="It appears there are currently no players online."
+				subtitle="Please check back again soon."
+			/>
+		);
 	}
 
 	return (

@@ -1,7 +1,7 @@
 import { FetchedRoom } from "@/lib/types/server";
 import { NextResponse } from "next/server";
-import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
 import { Room } from "@/lib/types";
+import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
 
 export const GET = async (): Promise<Response> => {
 	try {
@@ -11,6 +11,8 @@ export const GET = async (): Promise<Response> => {
 		if (!body) {
 			return NextResponse.error();
 		}
+
+		return NextResponse.json([]);
 
 		const rooms = body.map<Room>(room => ({
 			...room,

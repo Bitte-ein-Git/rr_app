@@ -10,8 +10,8 @@ import Status from "@/components/common/status/Status";
 const PlayersPage = () => {
 	return (
 		<PlayersFormProvider>
-			<Stack gap="sm">
-				<Title size={32}>Active Players</Title>
+			<Stack gap="md">
+				<Title size={32}>Players Online</Title>
 				<Group justify="space-between">
 					<Status />
 					<SortPlayersForm />

@@ -9,8 +9,8 @@ import Status from "@/components/common/status";
 const RoomsPage = () => {
 	return (
 		<RoomsFormProvider>
-			<Stack gap="sm">
-				<Title size={32}>Rooms</Title>
+			<Stack gap="md">
+				<Title size={32}>Active Rooms</Title>
 				<Group justify="space-between">
 					<Status />
 					<SortRoomsForm />

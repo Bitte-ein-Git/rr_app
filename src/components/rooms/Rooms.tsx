@@ -1,10 +1,11 @@
 "use client";
 
+import { IconAlertCircle, IconAlertTriangle } from "@tabler/icons-react";
 import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-responsive-masonry";
 
+import Alert from "../common/alert";
 import Loading from "../common/loading";
 import { RoomItem } from ".";
-import { Text } from "@mantine/core";
 import useRooms from "@/lib/hooks/swr/useRooms";
 import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
@@ -20,11 +21,25 @@ const Rooms = ({ ...props }: Props) => {
 	}
 
 	if (error) {
-		return <Text>There was an issue fetching rooms.</Text>;
+		return (
+			<Alert
+				color="red"
+				icon={IconAlertCircle}
+				title="It appears Retro Rewind is currently unreachable."
+				subtitle="It may be undergoing maintenance."
+			/>
+		);
 	}
 
 	if (rooms.length === 0) {
-		return <Text>No players online.</Text>;
+		return (
+			<Alert
+				color="gray"
+				icon={IconAlertTriangle}
+				title="It appears there are currently no active rooms."
+				subtitle="Please check back again soon."
+			/>
+		);
 	}
 
 	return (

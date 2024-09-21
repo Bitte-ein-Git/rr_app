@@ -55,6 +55,7 @@ const SortPlayersForm = ({ ...props }: Props) => {
 			{...props}
 		>
 			<Select
+				style={{ display: !form.getValues().query ? "block" : "none" }}
 				variant="unstyled"
 				size="xs"
 				maw={108}

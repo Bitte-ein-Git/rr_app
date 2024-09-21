@@ -22,13 +22,13 @@ const FooterNavigation = ({ ...props }: Props) => {
 				icon={IconUsersGroup}
 				href="/rooms"
 			>
-				Rooms
+				Active Rooms
 			</FooterNavigationItem>
 			<FooterNavigationItem
 				icon={IconUser}
 				href="/players"
 			>
-				Active Players
+				Players Online
 			</FooterNavigationItem>
 		</Group>
 	);

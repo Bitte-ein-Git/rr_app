@@ -9,8 +9,8 @@ interface Props extends GroupProps {}
 const Status = ({ ...props }: Props) => {
 	const { data, isLoading } = useRooms();
 
-	const rooms = data?.length;
-	const players = data?.reduce((total, { players }) => total + players.length, 0);
+	const rooms = data?.length ?? 0;
+	const players = data?.reduce((total, { players }) => total + players.length, 0) ?? 0;
 
 	return (
 		<Group

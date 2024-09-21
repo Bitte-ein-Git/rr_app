@@ -1,6 +1,10 @@
 "use client";
 
-import { LOCALSTORAGE_SETTINGS_REFRESHINTERVAL, URL_INTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
+import {
+	DEFAULT_SETTINGS_REFRESHINTERVAL,
+	LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,
+	URL_INTERNAL_RETROREWIND_ROOMS,
+} from "@/lib/constants";
 import useSWR, { KeyedMutator } from "swr";
 
 import { Room } from "@/lib/types";
@@ -15,7 +19,10 @@ const useRooms = (): {
 	isValidating: boolean;
 	isLoading: boolean;
 } => {
-	const interval = readLocalStorageValue<number>({ key: LOCALSTORAGE_SETTINGS_REFRESHINTERVAL });
+	const interval = readLocalStorageValue<number>({
+		key: LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,
+		defaultValue: DEFAULT_SETTINGS_REFRESHINTERVAL,
+	});
 
 	const refreshInterval = useCallback(() => interval * 1000, [interval]);
 
