@@ -8,7 +8,7 @@ interface Player {
 	fc: string;
 	ev: string;
 	eb: string;
-	mii: { data: string; name: string }[];
+	mii: string;
 }
 
 export default Player;

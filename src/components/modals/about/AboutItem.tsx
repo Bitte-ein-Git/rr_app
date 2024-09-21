@@ -29,7 +29,7 @@ const AboutItem = ({ icon: AboutItemIcon, label, value, ...props }: Props) => {
 				>
 					{label}
 				</Text>
-				<Text c="dimmed">{!value ? "Fetching.." : value}</Text>
+				<Text c="dimmed">{!value ? "Not found" : value}</Text>
 			</Box>
 		</Group>
 	);

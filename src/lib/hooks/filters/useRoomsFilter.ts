@@ -1,19 +1,23 @@
+"use client";
+
 import { Room } from "../../types";
 import { average } from "../../util";
 import { useMemo } from "react";
-import { useRoomsFormContext } from "../../contexts/RoomsFormContext";
+import { useRoomsFormContext } from "@/lib/contexts/RoomsFormContext";
 
-const useRoomsFilter = (rooms: Room[]) => {
+const useRoomsFilter = (data: Room[] | undefined): Room[] => {
 	const form = useRoomsFormContext();
 
 	return useMemo(() => {
-		let results: Room[] = rooms;
+		if (!data) return [];
+
+		let rooms: Room[] = data;
 
 		// Filter
-		// TODO: filter items here
+		// TODO: filter rooms here
 
 		// Sort
-		results = [...results].sort((a, b) => {
+		rooms = [...rooms].sort((a, b) => {
 			switch (form.getValues().sortBy) {
 				case "name":
 					return a.id.localeCompare(b.id);
@@ -36,8 +40,8 @@ const useRoomsFilter = (rooms: Room[]) => {
 			}
 		});
 
-		return form.getValues().reverseSortDirection ? results.reverse() : results;
-	}, [rooms, form]);
+		return form.getValues().reverseSortDirection ? rooms.reverse() : rooms;
+	}, [data, form]);
 };
 
 export default useRoomsFilter;

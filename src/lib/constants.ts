@@ -28,18 +28,9 @@ export const URL_EXTERNAL_RETROREWIND_WIKI = "https://wiki.tockdom.com/wiki/Retr
 export const URL_EXTERNAL_WHEELWIZARD_REPOSITORY = "https://github.com/patchzyy/WheelWizard";
 export const URL_EXTERNAL_WHEELWIZARD_VERSION = "https://api.github.com/repos/patchzyy/WheelWizard/releases/latest";
 
-/* React Query Keys */
-export const QUERY_APP_VERSION: string = "app-version";
-export const QUERY_MII: string = "mii";
-export const QUERY_RETROREWIND_ROOMS: string = "retrorewind-rooms";
-export const QUERY_RETROREWIND_VERSION: string = "retrorewind-version";
-export const QUERY_WHEELWIZARD_VERSION: string = "wheelwizard-version";
-
 /* Local Storage Keys */
+export const LOCALSTORAGE_MIIS: string = "miis";
 export const LOCALSTORAGE_SETTINGS_REFRESHINTERVAL: string = "settings-refresh-interval";
 export const LOCALSTORAGE_SETTINGS_VRONLY: string = "settings-vr-only";
-export const LOCALSTORAGE_ABOUT_APPVERSION: string = "about-app-version";
-export const LOCALSTORAGE_ABOUT_RETROREWINDVERSION: string = "about-retrorewind-version";
-export const LOCALSTORAGE_ABOUT_WHEELWIZARDVERSION: string = "about-wheelwizard-version";
 
 /* Form Select Data */

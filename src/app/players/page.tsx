@@ -1,41 +1,23 @@
-"use client";
-
 import { Group, Stack, Title } from "@mantine/core";
-import { PlayersFormProvider, usePlayersForm } from "@/lib/contexts/PlayersFormContext";
-import { SearchForm, SortForm } from "@/components/players/form";
 
-import Loading from "@/components/common/loading";
-import { NoPlayersAlert } from "@/components/common/alerts";
-import Players from "@/components/players/Players";
+import Players from "@/components/players";
+import PlayersFormProvider from "@/lib/providers/PlayersFormProvider";
 import React from "react";
-import Status from "@/components/common/status";
-import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
+import { SearchPlayersForm } from "@/components/players/forms";
+import SortPlayersForm from "@/components/players/forms/SortPlayersForm";
+import Status from "@/components/common/status/Status";
 
 const PlayersPage = () => {
-	const form = usePlayersForm({
-		initialValues: {
-			query: "",
-			sortBy: "name",
-			reverseSortDirection: false,
-		},
-	});
-
-	const { rooms, status } = useRetroRewindRooms();
-
-	if (status === "pending") {
-		return <Loading>Fetching rooms..</Loading>;
-	}
-
 	return (
-		<PlayersFormProvider form={form}>
-			<Stack gap="sm">
-				<Title size={32}>Players</Title>
+		<PlayersFormProvider>
+			<Stack gap="md">
+				<Title size={32}>Players Online</Title>
 				<Group justify="space-between">
-					<Status rooms={rooms} />
-					<SortForm />
+					<Status />
+					<SortPlayersForm />
 				</Group>
-				<SearchForm />
-				{!rooms ? <NoPlayersAlert /> : <Players rooms={rooms} />}
+				<SearchPlayersForm />
+				<Players />
 			</Stack>
 		</PlayersFormProvider>
 	);

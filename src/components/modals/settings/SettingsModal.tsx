@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Group, Select, Stack, Switch, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import {
 	DEFAULT_SETTINGS_COLORSCHEME,
@@ -41,7 +43,7 @@ const intervals = [
 
 const SettingsModal = () => {
 	const { setColorScheme } = useMantineColorScheme();
-	const computedColorScheme = useComputedColorScheme(DEFAULT_SETTINGS_COLORSCHEME, { getInitialValueInEffect: true });
+	const computedColorScheme = useComputedColorScheme(DEFAULT_SETTINGS_COLORSCHEME);
 
 	const [refreshInterval, setRefreshInterval] = useLocalStorage<number>({
 		key: LOCALSTORAGE_SETTINGS_REFRESHINTERVAL,

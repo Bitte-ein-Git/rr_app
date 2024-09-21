@@ -1,19 +1,45 @@
+"use client";
+
+import { IconAlertCircle, IconAlertTriangle } from "@tabler/icons-react";
 import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-responsive-masonry";
 
-import { NoPlayersAlert } from "../common/alerts";
-import { Room } from "@/lib/types";
-import RoomItem from "./RoomItem";
+import Alert from "../common/alert";
+import Loading from "../common/loading";
+import { RoomItem } from ".";
+import useRooms from "@/lib/hooks/swr/useRooms";
 import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
-interface Props extends Omit<ResponsiveMasonryProps, "children"> {
-	rooms: Room[];
-}
+interface Props extends Omit<ResponsiveMasonryProps, "children"> {}
 
-const Rooms = ({ rooms, ...props }: Props) => {
-	const data = useRoomsFilter(rooms);
+const Rooms = ({ ...props }: Props) => {
+	const { data, isLoading, error } = useRooms();
 
-	if (!data || data.length === 0) {
-		return <NoPlayersAlert />;
+	const rooms = useRoomsFilter(data);
+
+	if (isLoading) {
+		return <Loading>Fetching rooms..</Loading>;
+	}
+
+	if (error) {
+		return (
+			<Alert
+				color="red"
+				icon={IconAlertCircle}
+				title="It appears Retro Rewind is currently unreachable."
+				subtitle="It may be undergoing maintenance."
+			/>
+		);
+	}
+
+	if (rooms.length === 0) {
+		return (
+			<Alert
+				color="gray"
+				icon={IconAlertTriangle}
+				title="It appears there are currently no active rooms."
+				subtitle="Please check back again soon."
+			/>
+		);
 	}
 
 	return (
@@ -22,7 +48,7 @@ const Rooms = ({ rooms, ...props }: Props) => {
 			{...props}
 		>
 			<Masonry gutter="1.5rem">
-				{data.map(room => (
+				{rooms.map(room => (
 					<RoomItem
 						key={room.id}
 						room={room}

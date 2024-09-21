@@ -1,40 +1,21 @@
-"use client";
-
 import { Group, Stack, Title } from "@mantine/core";
-import { RoomsFormProvider, useRoomsForm } from "@/lib/contexts/RoomsFormContext";
 
-import Loading from "@/components/common/loading";
-import { NoPlayersAlert } from "@/components/common/alerts";
 import React from "react";
-import Rooms from "@/components/rooms/Rooms";
-import SortForm from "@/components/rooms/form";
+import Rooms from "@/components/rooms";
+import RoomsFormProvider from "@/lib/providers/RoomsFormProvider";
+import { SortRoomsForm } from "@/components/rooms/forms";
 import Status from "@/components/common/status";
-import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
 
 const RoomsPage = () => {
-	const form = useRoomsForm({
-		initialValues: {
-			filters: [],
-			sortBy: "players",
-			reverseSortDirection: true,
-		},
-	});
-
-	const { rooms, status } = useRetroRewindRooms();
-
-	if (status === "pending") {
-		return <Loading>Fetching rooms..</Loading>;
-	}
-
 	return (
-		<RoomsFormProvider form={form}>
-			<Stack gap="sm">
-				<Title size={32}>Rooms</Title>
+		<RoomsFormProvider>
+			<Stack gap="md">
+				<Title size={32}>Active Rooms</Title>
 				<Group justify="space-between">
-					<Status rooms={rooms} />
-					<SortForm />
+					<Status />
+					<SortRoomsForm />
 				</Group>
-				{!rooms ? <NoPlayersAlert /> : <Rooms rooms={rooms} />}
+				<Rooms />
 			</Stack>
 		</RoomsFormProvider>
 	);

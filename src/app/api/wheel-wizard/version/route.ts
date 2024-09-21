@@ -1,23 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-
+import { FetchedGitHubRelease } from "@/lib/types/server";
+import { NextResponse } from "next/server";
 import { URL_EXTERNAL_WHEELWIZARD_VERSION } from "@/lib/constants";
-import { WheelWizardVersionQuery } from "@/lib/types";
-import { revalidatePath } from "next/cache";
+import { Version } from "@/lib/types";
 
-export const revalidate = 60 * 60; // Cache for 1 hour
-
-export const GET = async (request: NextRequest): Promise<Response> => {
+export const GET = async (): Promise<Response> => {
 	try {
-		const response: Response = await fetch(URL_EXTERNAL_WHEELWIZARD_VERSION);
-		const data = await response.json();
+		const response: Response = await fetch(URL_EXTERNAL_WHEELWIZARD_VERSION, { next: { revalidate: 3600 } });
+		const data: FetchedGitHubRelease = await response.json();
 
 		if (!data) {
 			return NextResponse.error();
 		}
 
-		revalidatePath(request.url);
-
-		return NextResponse.json<WheelWizardVersionQuery>({ version: data.name });
+		return NextResponse.json<Version>({ version: data.name });
 	} catch (error) {
 		return NextResponse.error();
 	}

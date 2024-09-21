@@ -1,29 +1,33 @@
+"use client";
+
 import { Player, Room } from "../../types";
 
 import Fuse from "fuse.js";
 import { useMemo } from "react";
-import { usePlayersFormContext } from "../../contexts/PlayersFormContext";
+import { usePlayersFormContext } from "@/lib/contexts/PlayersFormContext";
 
-const usePlayersFilter = (rooms: Room[]) => {
+const usePlayersFilter = (data: Room[] | undefined) => {
 	const form = usePlayersFormContext();
 
 	return useMemo(() => {
-		let results = rooms.reduce<Player[]>((a, b) => [...a, ...b.players], []);
+		if (!data) return [];
+
+		let players: Player[] = data.reduce<Player[]>((a, b) => [...a, ...b.players], []);
 
 		// Search
 		if (form.getValues().query) {
-			results = results.filter(player => player.name && player.name !== "no name");
+			players = players.filter(player => player.name && player.name !== "no name");
 
-			return new Fuse(results, { keys: ["name"], threshold: 0.2 })
+			return new Fuse(players, { keys: ["name"], threshold: 0.2 })
 				.search(form.getValues().query)
-				.map(({ item }) => results.find(player => player.pid === item.pid)!);
+				.map(({ item }) => players.find(player => player.pid === item.pid)!);
 		}
 
 		// Filter
-		// TODO: filter items here
+		// TODO: filter rooms here
 
 		// Sort
-		results = [...results].sort((a, b) => {
+		players = [...players].sort((a, b) => {
 			switch (form.getValues().sortBy) {
 				case "name":
 					return a.name.localeCompare(b.name);
@@ -40,8 +44,8 @@ const usePlayersFilter = (rooms: Room[]) => {
 			}
 		});
 
-		return form.getValues().reverseSortDirection ? results.reverse() : results;
-	}, [rooms, form]);
+		return form.getValues().reverseSortDirection ? players.reverse() : players;
+	}, [data, form]);
 };
 
 export default usePlayersFilter;
