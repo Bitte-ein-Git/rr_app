@@ -1,6 +1,7 @@
 import { Group, Stack, Title } from "@mantine/core";
+import React, { Suspense } from "react";
 
-import React from "react";
+import Loading from "@/components/common/loading";
 import Rooms from "@/components/rooms";
 import SortForm from "@/components/common/sort-form";
 import Status from "@/components/common/status";
@@ -11,39 +12,43 @@ const RoomsPage = () => {
 			<Title size={32}>Rooms</Title>
 			<Group justify="space-between">
 				<Status />
-				<SortForm
-					data={[
-						{
-							label: "Room name",
-							value: "name",
-							defaultReverseSortDirection: false,
-						},
-						{
-							label: "Lifetime",
-							value: "lifetime",
-							defaultReverseSortDirection: true,
-						},
-						{
-							label: "Player count",
-							value: "players",
-							defaultReverseSortDirection: true,
-						},
-						{
-							label: "Average VR",
-							value: "vr",
-							defaultReverseSortDirection: true,
-						},
-						{
-							label: "Average BR",
-							value: "br",
-							defaultReverseSortDirection: true,
-						},
-					]}
-					textValues={["name"]}
-					defaultValue="players"
-				/>
+				<Suspense>
+					<SortForm
+						data={[
+							{
+								label: "Room name",
+								value: "name",
+								defaultReverseSortDirection: false,
+							},
+							{
+								label: "Lifetime",
+								value: "lifetime",
+								defaultReverseSortDirection: true,
+							},
+							{
+								label: "Player count",
+								value: "players",
+								defaultReverseSortDirection: true,
+							},
+							{
+								label: "Average VR",
+								value: "vr",
+								defaultReverseSortDirection: true,
+							},
+							{
+								label: "Average BR",
+								value: "br",
+								defaultReverseSortDirection: true,
+							},
+						]}
+						textValues={["name"]}
+						defaultValue="players"
+					/>
+				</Suspense>
 			</Group>
-			<Rooms />
+			<Suspense fallback={<Loading>Fetching rooms..</Loading>}>
+				<Rooms />
+			</Suspense>
 		</Stack>
 	);
 };

@@ -14,8 +14,6 @@ const usePlayersFilter = (data: Room[] | undefined) => {
 
 		let players: Player[] = data.reduce<Player[]>((a, b) => [...a, ...b.players], []);
 
-		console.log(players);
-
 		// Search
 		if (searchParams.get("query")) {
 			players = players.filter(player => player.name && player.name !== "no name");
