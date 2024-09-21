@@ -1,6 +1,8 @@
-import { FetchedMiiStudio, Mii } from "@/lib/types/server";
 import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
+
+import { FetchedMiiStudio } from "@/lib/types/server";
+import { Mii } from "@/lib/types";
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
