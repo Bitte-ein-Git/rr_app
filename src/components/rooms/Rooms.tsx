@@ -5,22 +5,22 @@ import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-respon
 import Loading from "../common/loading";
 import { RoomItem } from ".";
 import { Text } from "@mantine/core";
-import usePlayersFilter from "@/lib/hooks/filters/useRoomsFilter";
 import useRooms from "@/lib/hooks/swr/useRooms";
+import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
 interface Props extends Omit<ResponsiveMasonryProps, "children"> {}
 
 const Rooms = ({ ...props }: Props) => {
 	const { data, isLoading, error } = useRooms();
 
-	const rooms = usePlayersFilter(data);
+	const rooms = useRoomsFilter(data);
 
 	if (isLoading) {
 		return <Loading>Fetching rooms..</Loading>;
 	}
 
 	if (error) {
-		return <Text>{JSON.stringify(error)}</Text>;
+		return <Text>There was an issue fetching rooms.</Text>;
 	}
 
 	if (rooms.length === 0) {

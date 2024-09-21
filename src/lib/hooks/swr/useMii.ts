@@ -9,7 +9,10 @@ import { useLocalStorage } from "@mantine/hooks";
 import useSWRImmutable from "swr/immutable";
 
 const useMii = (fc: string, data: string): string | undefined => {
-	const [miis, setMiis] = useLocalStorage<{ [key: string]: string }>({ key: LOCALSTORAGE_MIIS, defaultValue: {} });
+	const [miis, setMiis] = useLocalStorage<{ [key: string]: string }>({
+		key: LOCALSTORAGE_MIIS,
+		defaultValue: {},
+	});
 
 	const key = useCallback(() => (!miis[fc] ? `${URL_INTERNAL_MII}?data=${data}` : null), [fc, data, miis]);
 

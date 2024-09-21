@@ -4,10 +4,10 @@ import { Player, Room } from "../../types";
 
 import Fuse from "fuse.js";
 import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { usePlayersFormContext } from "@/lib/contexts/PlayersFormContext";
 
 const usePlayersFilter = (data: Room[] | undefined) => {
-	const searchParams = useSearchParams();
+	const form = usePlayersFormContext();
 
 	return useMemo(() => {
 		if (!data) return [];
@@ -15,11 +15,11 @@ const usePlayersFilter = (data: Room[] | undefined) => {
 		let players: Player[] = data.reduce<Player[]>((a, b) => [...a, ...b.players], []);
 
 		// Search
-		if (searchParams.get("query")) {
+		if (form.getValues().query) {
 			players = players.filter(player => player.name && player.name !== "no name");
 
 			return new Fuse(players, { keys: ["name"], threshold: 0.2 })
-				.search(searchParams.get("query") as string)
+				.search(form.getValues().query)
 				.map(({ item }) => players.find(player => player.pid === item.pid)!);
 		}
 
@@ -28,7 +28,7 @@ const usePlayersFilter = (data: Room[] | undefined) => {
 
 		// Sort
 		players = [...players].sort((a, b) => {
-			switch (searchParams.get("sortBy")) {
+			switch (form.getValues().sortBy) {
 				case "name":
 					return a.name.localeCompare(b.name);
 				case "vr":
@@ -44,8 +44,8 @@ const usePlayersFilter = (data: Room[] | undefined) => {
 			}
 		});
 
-		return searchParams.get("reverse") === "true" ? players.reverse() : players;
-	}, [data, searchParams]);
+		return form.getValues().reverseSortDirection ? players.reverse() : players;
+	}, [data, form]);
 };
 
 export default usePlayersFilter;

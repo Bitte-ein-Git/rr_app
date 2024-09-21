@@ -3,10 +3,10 @@
 import { Room } from "../../types";
 import { average } from "../../util";
 import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRoomsFormContext } from "@/lib/contexts/RoomsFormContext";
 
 const useRoomsFilter = (data: Room[] | undefined): Room[] => {
-	const searchParams = useSearchParams();
+	const form = useRoomsFormContext();
 
 	return useMemo(() => {
 		if (!data) return [];
@@ -18,7 +18,7 @@ const useRoomsFilter = (data: Room[] | undefined): Room[] => {
 
 		// Sort
 		rooms = [...rooms].sort((a, b) => {
-			switch (searchParams.get("sortBy")) {
+			switch (form.getValues().sortBy) {
 				case "name":
 					return a.id.localeCompare(b.id);
 				case "lifetime":
@@ -40,8 +40,8 @@ const useRoomsFilter = (data: Room[] | undefined): Room[] => {
 			}
 		});
 
-		return searchParams.get("reverse") === "true" ? rooms.reverse() : rooms;
-	}, [data, searchParams]);
+		return form.getValues().reverseSortDirection ? rooms.reverse() : rooms;
+	}, [data, form]);
 };
 
 export default useRoomsFilter;
