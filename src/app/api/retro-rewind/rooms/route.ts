@@ -1,23 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import { RetroRewindRoomsQuery } from "@/lib/types";
+import { FetchedRoom } from "@/lib/types/server";
+import { NextResponse } from "next/server";
 import { URL_EXTERNAL_RETROREWIND_ROOMS } from "@/lib/constants";
-import { revalidatePath } from "next/cache";
+import { Room } from "@/lib/types";
 
-export const revalidate = 15; // Cache for 15ec
-
-export const GET = async (request: NextRequest): Promise<Response> => {
+export const GET = async (): Promise<Response> => {
 	try {
-		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS);
-		const data = await response.json();
+		const response: Response = await fetch(URL_EXTERNAL_RETROREWIND_ROOMS, { next: { revalidate: 15 } });
+		const body: FetchedRoom[] = await response.json();
 
-		if (!data) {
+		if (!body) {
 			return NextResponse.error();
 		}
 
-		revalidatePath(request.url);
+		const rooms = body.map<Room>(room => ({
+			...room,
+			players: Object.values(room.players).map(player => ({ ...player, mii: player.mii[0].data })),
+		}));
 
-		return NextResponse.json<RetroRewindRoomsQuery>(data);
+		return NextResponse.json(rooms);
 	} catch (error) {
 		return NextResponse.error();
 	}

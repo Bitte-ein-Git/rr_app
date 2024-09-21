@@ -1,9 +1,6 @@
+import { FetchedMiiStudio, Mii } from "@/lib/types/server";
 import { NextRequest, NextResponse } from "next/server";
 import { URL_EXTERNAL_MII_IMAGE, URL_EXTERNAL_MII_STUDIO } from "@/lib/constants";
-
-import { MiiQuery } from "@/lib/types";
-
-const cache: { [key: string]: string } = {};
 
 export const GET = async (request: NextRequest): Promise<Response> => {
 	try {
@@ -11,10 +8,6 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		if (!data) {
 			return Response.error();
-		}
-
-		if (cache[data]) {
-			return NextResponse.json({ imageData: cache[data] });
 		}
 
 		const formData: FormData = new FormData();
@@ -25,14 +18,14 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 			method: "POST",
 			body: formData,
 		});
-		const studioJson = await studioResponse.json();
+		const studioBody: FetchedMiiStudio = await studioResponse.json();
 
-		if (!studioResponse.ok || !studioJson) {
+		if (!studioResponse.ok || !studioBody) {
 			return NextResponse.error();
 		}
 
 		const searchParams: URLSearchParams = new URLSearchParams();
-		searchParams.append("data", studioJson.mii);
+		searchParams.append("data", studioBody.mii);
 		searchParams.append("bgColor", "FFFFFF00");
 		searchParams.append("cameraXRotate", "0");
 		searchParams.append("cameraYRotate", "0");
@@ -48,7 +41,9 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 		searchParams.append("type", "face");
 		searchParams.append("width", "270");
 
-		const imageResponse: Response = await fetch(`${URL_EXTERNAL_MII_IMAGE}?${searchParams.toString()}`);
+		const imageResponse: Response = await fetch(`${URL_EXTERNAL_MII_IMAGE}?${searchParams.toString()}`, {
+			cache: "force-cache",
+		});
 		const imageBuffer = await imageResponse.arrayBuffer();
 
 		if (!imageResponse.ok || !imageBuffer) {
@@ -57,9 +52,7 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
 		const imageData = Buffer.from(imageBuffer).toString("base64");
 
-		cache[data] = imageData;
-
-		return NextResponse.json<MiiQuery>({
+		return NextResponse.json<Mii>({
 			imageData,
 		});
 	} catch (error) {

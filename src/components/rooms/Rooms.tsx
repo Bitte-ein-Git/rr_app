@@ -1,19 +1,30 @@
+"use client";
+
 import Masonry, { ResponsiveMasonry, ResponsiveMasonryProps } from "react-responsive-masonry";
 
-import { NoPlayersAlert } from "../common/alerts";
-import { Room } from "@/lib/types";
-import RoomItem from "./RoomItem";
-import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
+import Loading from "../common/loading";
+import { RoomItem } from ".";
+import { Text } from "@mantine/core";
+import usePlayersFilter from "@/lib/hooks/filters/useRoomsFilter";
+import useRooms from "@/lib/hooks/swr/useRooms";
 
-interface Props extends Omit<ResponsiveMasonryProps, "children"> {
-	rooms: Room[];
-}
+interface Props extends Omit<ResponsiveMasonryProps, "children"> {}
 
-const Rooms = ({ rooms, ...props }: Props) => {
-	const data = useRoomsFilter(rooms);
+const Rooms = ({ ...props }: Props) => {
+	const { data, isLoading, error } = useRooms();
 
-	if (!data || data.length === 0) {
-		return <NoPlayersAlert />;
+	const rooms = usePlayersFilter(data);
+
+	if (isLoading) {
+		return <Loading>Fetching rooms..</Loading>;
+	}
+
+	if (error) {
+		return <Text>{JSON.stringify(error)}</Text>;
+	}
+
+	if (rooms.length === 0) {
+		return <Text>No players online.</Text>;
 	}
 
 	return (
@@ -22,7 +33,7 @@ const Rooms = ({ rooms, ...props }: Props) => {
 			{...props}
 		>
 			<Masonry gutter="1.5rem">
-				{data.map(room => (
+				{rooms.map(room => (
 					<RoomItem
 						key={room.id}
 						room={room}

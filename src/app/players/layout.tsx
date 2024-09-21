@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-	title: "Players · Retro Rewind · Players & Rooms",
+	title: "Active Players · Retro Rewind · Players & Rooms",
 };
 
 const PlayersLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {

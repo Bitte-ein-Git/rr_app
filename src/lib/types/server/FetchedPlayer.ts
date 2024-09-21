@@ -1,4 +1,4 @@
-interface Player {
+interface FetchedPlayer {
 	count: string;
 	pid: string;
 	name: string;
@@ -8,7 +8,7 @@ interface Player {
 	fc: string;
 	ev: string;
 	eb: string;
-	mii: string;
+	mii: { [key: string]: { name: string; data: string } };
 }
 
-export default Player;
+export default FetchedPlayer;

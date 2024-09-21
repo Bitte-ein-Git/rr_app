@@ -1,46 +1,13 @@
-"use client";
-
 import { APPSHELL_CONTAINER_SIZE, APPSHELL_HEADER_HEIGHT } from "@/lib/constants";
-import { ActionIcon, Box, Container, Group, Image, Menu, Text, Tooltip } from "@mantine/core";
-import { IconDotsVertical, IconInfoCircle, IconReload, IconSettings } from "@tabler/icons-react";
+import { Box, Container, Group, Image, Text } from "@mantine/core";
+import { HeaderMenu, HeaderRoomsRefresh } from ".";
 
-import AboutModal from "@/components/modals/about";
-import { MenuItem } from ".";
-import ModalTitle from "@/components/modals/ModalTitle";
-import SettingsModal from "@/components/modals/settings";
 import dayjs from "dayjs";
-import { modals } from "@mantine/modals";
 import relativetime from "dayjs/plugin/relativeTime";
-import useDuration from "@/lib/hooks/useDuration";
-import { useEffect } from "react";
-import useRetroRewindRooms from "@/lib/hooks/queries/useRetroRewindRooms";
 
 dayjs.extend(relativetime);
 
 const Header = () => {
-	const { fetchStatus, refetch } = useRetroRewindRooms();
-	const { duration, setDate } = useDuration();
-
-	const handleSettingsClick = () => {
-		modals.open({
-			title: <ModalTitle>Settings</ModalTitle>,
-			children: <SettingsModal />,
-		});
-	};
-
-	const handleAboutClick = () => {
-		modals.open({
-			title: <ModalTitle>About</ModalTitle>,
-			children: <AboutModal />,
-		});
-	};
-
-	useEffect(() => {
-		if (fetchStatus === "idle") {
-			setDate(new Date());
-		}
-	}, [fetchStatus, setDate]);
-
 	return (
 		<Container
 			size={APPSHELL_CONTAINER_SIZE}
@@ -76,58 +43,8 @@ const Header = () => {
 					</Box>
 				</Group>
 				<Group gap={4}>
-					<Tooltip
-						label={
-							<>
-								<Text inherit>Fetch latest data</Text>
-								{duration && (
-									<Text
-										fs="italic"
-										size="xs"
-									>
-										Last fetched {duration}
-									</Text>
-								)}
-							</>
-						}
-						position="bottom-end"
-					>
-						<ActionIcon
-							variant="subtle"
-							color="gray"
-							size="lg"
-							loading={fetchStatus === "fetching"}
-							loaderProps={{ type: "dots" }}
-							onClick={() => refetch()}
-						>
-							<IconReload size={24} />
-						</ActionIcon>
-					</Tooltip>
-					<Menu position="bottom-end">
-						<Menu.Target>
-							<ActionIcon
-								variant="subtle"
-								color="gray"
-								size="lg"
-							>
-								<IconDotsVertical size={24} />
-							</ActionIcon>
-						</Menu.Target>
-						<Menu.Dropdown>
-							<MenuItem
-								title="Settings"
-								description="Adjust data fetching and theming"
-								icon={IconSettings}
-								onClick={handleSettingsClick}
-							/>
-							<MenuItem
-								title="About"
-								description="Development and app information"
-								icon={IconInfoCircle}
-								onClick={handleAboutClick}
-							/>
-						</Menu.Dropdown>
-					</Menu>
+					<HeaderRoomsRefresh />
+					<HeaderMenu />
 				</Group>
 			</Group>
 		</Container>

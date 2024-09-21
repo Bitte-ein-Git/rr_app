@@ -1,16 +1,31 @@
-import { Paper, PaperProps, Stack } from "@mantine/core";
+"use client";
 
-import PlayerItem from "../common/player-item/PlayerItem";
+import { Paper, PaperProps, Stack, Text } from "@mantine/core";
+
+import Loading from "../common/loading";
+import { PlayerItem } from ".";
 import React from "react";
-import { Room } from "@/lib/types";
 import usePlayersFilter from "@/lib/hooks/filters/usePlayersFilter";
+import useRooms from "@/lib/hooks/swr/useRooms";
 
-interface Props extends PaperProps {
-	rooms: Room[];
-}
+interface Props extends Omit<PaperProps, "children"> {}
 
-const Players = ({ rooms, ...props }: Props) => {
-	const data = usePlayersFilter(rooms);
+const Players = ({ ...props }: Props) => {
+	const { data, isLoading, error } = useRooms();
+
+	const players = usePlayersFilter(data);
+
+	if (isLoading) {
+		return <Loading>Fetching players..</Loading>;
+	}
+
+	if (error) {
+		return <Text>{JSON.stringify(error)}</Text>;
+	}
+
+	if (players.length === 0) {
+		return <Text>No players online.</Text>;
+	}
 
 	return (
 		<Paper
@@ -20,7 +35,7 @@ const Players = ({ rooms, ...props }: Props) => {
 			{...props}
 		>
 			<Stack gap={0}>
-				{data.map((player, index) => (
+				{players.map((player, index) => (
 					<PlayerItem
 						key={player.fc}
 						player={player}

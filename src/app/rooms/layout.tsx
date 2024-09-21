@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 	title: "Rooms · Retro Rewind · Players & Rooms",
 };
 
-const RoomsLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const RoomsLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return <>{children}</>;
 };
 
