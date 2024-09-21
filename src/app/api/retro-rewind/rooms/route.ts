@@ -12,8 +12,6 @@ export const GET = async (): Promise<Response> => {
 			return NextResponse.error();
 		}
 
-		return NextResponse.json([]);
-
 		const rooms = body.map<Room>(room => ({
 			...room,
 			players: Object.values(room.players).map(player => ({ ...player, mii: player.mii[0].data })),
