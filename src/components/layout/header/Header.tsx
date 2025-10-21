@@ -1,4 +1,4 @@
-import { APPSHELL_CONTAINER_SIZE, APPSHELL_HEADER_HEIGHT } from "@/lib/constants";
+import { APPSHELL_CONTAINER_SIZE, APPSHELL_HEADER_HEIGHT, BRAND_NAME, BRAND_SUBTITLE } from "@/lib/constants";
 import { Box, Container, Group, Image, Text } from "@mantine/core";
 import { HeaderMenu, HeaderRoomsRefresh } from ".";
 
@@ -7,6 +7,7 @@ import relativetime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativetime);
 
+// header component displaying brand and actions
 const Header = () => {
 	return (
 		<Container
@@ -19,18 +20,20 @@ const Header = () => {
 				align="center"
 			>
 				<Group gap="xs">
+					{/* logo */}
 					<Image
 						w={34}
 						radius="xl"
-						src="/favicon.svg"
-						alt="Logo"
+						src="/favicon.ico" // using .ico as .svg was empty
+						alt={`${BRAND_NAME} Logo`}
 					/>
+					{/* brand text */}
 					<Box>
 						<Text
 							fw={700}
 							lh={1.32}
 						>
-							Retro Rewind
+							{BRAND_NAME}
 						</Text>
 						<Text
 							fw={600}
@@ -38,10 +41,11 @@ const Header = () => {
 							size="xs"
 							c="dimmed"
 						>
-							Players &amp; Rooms
+							{BRAND_SUBTITLE}
 						</Text>
 					</Box>
 				</Group>
+				{/* action icons */}
 				<Group gap={4}>
 					<HeaderRoomsRefresh />
 					<HeaderMenu />

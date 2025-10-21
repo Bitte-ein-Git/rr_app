@@ -1,63 +1,26 @@
-![Logo](https://retrorewind-status.vercel.app/favicon.ico)
+# 🏎️ RR App
 
-# Retro Rewind · Players & Rooms
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Bitte-ein-Git/rr_app)
+![GitHub contributors](https://img.shields.io/github/contributors/Bitte-ein-Git/rr_app)
 
-![GitHub Release](https://img.shields.io/github/v/release/odysseusdev/retrorewind-status?include_prereleases&color=%2304bb08)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/odysseusdev/retrorewind-status)
-![GitHub contributors](https://img.shields.io/github/contributors/odysseusdev/retrorewind-status)
-
-A web application for viewing rooms and tracking players currently playing ZPL's Mario Kart Wii mod [Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind).
+A web application for viewing rooms and tracking players currently playing ZPL's Mario Kart Wii mod [Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind). Maintained by [Bitte ein Git!](https://github.com/Bitte-ein-Git).
 
 ## Screenshots
 
-![Desktop screenshot](https://retrorewind-status.vercel.app/screenshot-desktop.png)
-![Mobile screenshot](https://retrorewind-status.vercel.app/screenshot-mobile.png)
+![Desktop screenshot](./public/screenshot-desktop.png)
+![Mobile screenshot](./public/screenshot-mobile.png)
 
 ## Features
 
--   Fetch currently active rooms, including dynamic auto-refreshing
+-   Fetch currently active rooms via [RWFC API](https://api.heyfordy.de/rwfc), including dynamic auto-refreshing
 -   Search by player name
 -   Sort by room name, player count or average VR/BR
 -   Responsive design and dark mode
+-   iOS "Add to Home Screen" compatible
 
 ## Run Locally
 
 Clone the project
 
 ```bash
-git clone https://github.com/odysseusdev/retrorewind-status
-```
-
-Go to the project directory
-
-```bash
-cd retrorewind-status
-```
-
-Install dependencies
-
-```bash
-yarn install
-```
-
-Start the server
-
-```bash
-yarn dev
-```
-
-## Contributors
-
-![Contributors](https://contrib.rocks/image?repo=odysseusdev/retrorewind-status)
-
-## Contributing
-
-Contributions are currently NOT being accepted. Although this repository is public, this is currently a personal development project.
-
-## Related software
-
-[Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind)
-
-[Wheel Wizard](https://github.com/patchzyy/WheelWizard)
-
-[Dolphin Emulator](https://dolphin-emu.org/)
+git clone https://github.com/Bitte-ein-Git/rr_app.git

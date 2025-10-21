@@ -2,13 +2,16 @@
 
 import { AboutItem, AboutSectionTitle } from ".";
 import { Button, Grid, Group } from "@mantine/core";
-import { IconCode, IconGitBranch, IconHelmet, IconPackage, IconSteeringWheel } from "@tabler/icons-react";
+// Removed unused IconGitBranch from import
+import { IconCode, IconHelmet, IconPackage, IconSteeringWheel } from "@tabler/icons-react";
 
+import { BRAND_COPYRIGHT_HOLDER } from "@/lib/constants";
 import { modals } from "@mantine/modals";
 import useVersion from "@/lib/hooks/swr/useVersion";
 
+// modal component displaying application and related software versions
 const AboutModal = () => {
-	const appVersion = useVersion("app");
+	// removed unused appVersion constant
 	const retroRewindVersion = useVersion("retro-rewind");
 	const wheelWizardVersion = useVersion("wheel-wizard");
 
@@ -17,20 +20,14 @@ const AboutModal = () => {
 			<Grid.Col span={{ base: 12 }}>
 				<AboutSectionTitle>Application</AboutSectionTitle>
 			</Grid.Col>
-			<Grid.Col span={{ base: 6 }}>
+			<Grid.Col span={{ base: 12 }}> {/* Changed span to 12 as the other column was removed */}
 				<AboutItem
 					icon={IconCode}
 					label="Developed by"
-					value="odysseus."
+					value={BRAND_COPYRIGHT_HOLDER}
 				/>
 			</Grid.Col>
-			<Grid.Col span={{ base: 6 }}>
-				<AboutItem
-					icon={IconGitBranch}
-					label="Latest release"
-					value={appVersion.isLoading ? "Fetching.." : appVersion.data?.version}
-				/>
-			</Grid.Col>
+			{/* Removed the Grid.Col that displayed appVersion */}
 			<Grid.Col span={{ base: 12 }}>
 				<AboutItem
 					icon={IconPackage}
@@ -45,14 +42,16 @@ const AboutModal = () => {
 				<AboutItem
 					icon={IconHelmet}
 					label="Retro Rewind"
-					value={retroRewindVersion.isLoading ? "Fetching.." : `v${retroRewindVersion.data?.version}`}
+					// display version, handle loading state and potential missing data
+					value={retroRewindVersion.isLoading ? "Fetching.." : (retroRewindVersion.data?.version && retroRewindVersion.data.version !== "N/A" ? `v${retroRewindVersion.data.version}`: "N/A")}
 				/>
 			</Grid.Col>
 			<Grid.Col span={{ base: 6 }}>
 				<AboutItem
 					icon={IconSteeringWheel}
 					label="Wheel Wizard"
-					value={wheelWizardVersion.isLoading ? "Fetching.." : `v${wheelWizardVersion.data?.version}`}
+					// display version, handle loading state and potential missing data
+					value={wheelWizardVersion.isLoading ? "Fetching.." : (wheelWizardVersion.data?.version && wheelWizardVersion.data.version !== "N/A" ? `${wheelWizardVersion.data.version}`: "N/A")}
 				/>
 			</Grid.Col>
 			<Grid.Col span={{ base: 12 }}>
@@ -60,6 +59,7 @@ const AboutModal = () => {
 					justify="flex-end"
 					align="center"
 				>
+					{/* close modal button */}
 					<Button onClick={() => modals.closeAll()}>Dismiss</Button>
 				</Group>
 			</Grid.Col>

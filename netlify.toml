@@ -1,0 +1,11 @@
+# build settings section
+[build]
+  command = "yarn build" # build command
+  publish = "out"        # publish directory
+
+# redirect rules section
+[[redirects]]
+  from = "/"             # source path
+  to = "/rooms"          # target path
+  status = 301           # http status code (permanent redirect)
+  force = true           # ensure this rule always applies to the root

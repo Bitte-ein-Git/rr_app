@@ -1,0 +1,79 @@
+name: "🌀 RR Version Check"
+
+on:
+  schedule:
+    # runs daily at 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch: # allows manual triggering
+
+permissions:
+  contents: write # needed to push changes back to the repo
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      # check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Specify the branch to checkout if it's not the default branch for commits
+        # with:
+        #   ref: 'source' # Replace 'source' with your actual target branch if needed
+
+      # define the url and target file
+      - name: Define variables
+        id: vars
+        run: |
+          echo "url=http://update.rwfc.net:8000/RetroRewind/RetroRewindVersion.txt" >> $GITHUB_ENV
+          echo "target_file=versions.txt" >> $GITHUB_ENV
+          echo "temp_file=versions_new.txt" >> $GITHUB_ENV
+
+      # download the latest version file
+      - name: Download latest version file
+        run: curl -s -o ${{ env.temp_file }} ${{ env.url }}
+
+      # check if the file content has changed
+      - name: Check for changes
+        id: check_diff
+        run: |
+          if ! cmp -s "${{ env.target_file }}" "${{ env.temp_file }}"; then
+            echo "File content has changed."
+            echo "changed=true" >> $GITHUB_OUTPUT
+            mv ${{ env.temp_file }} ${{ env.target_file }}
+          else
+            echo "File content has not changed."
+            echo "changed=false" >> $GITHUB_OUTPUT
+            rm ${{ env.temp_file }}
+          fi
+        # handle case where target file doesn't exist yet
+        continue-on-error: true
+
+      # if target file didn't exist, ensure it's moved and mark as changed
+      - name: Handle initial creation case
+        if: steps.check_diff.outcome == 'failure'
+        id: initial_creation
+        run: |
+           echo "Target file ${{ env.target_file }} did not exist. Creating it."
+           mv ${{ env.temp_file }} ${{ env.target_file }}
+           echo "changed=true" >> $GITHUB_OUTPUT
+
+      # configure git user
+      - name: Configure Git
+        if: steps.check_diff.outputs.changed == 'true' || steps.initial_creation.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # commit and push changes if any
+      - name: Commit and Push changes
+        if: steps.check_diff.outputs.changed == 'true' || steps.initial_creation.outputs.changed == 'true'
+        run: |
+          git add ${{ env.target_file }}
+          # Check if there are changes staged
+          if ! git diff --staged --quiet; then
+            git commit -m "🏎️ RR versions .txt updated"
+            git push
+            echo "Changes committed and pushed."
+          else
+            echo "No changes to commit after adding (already up-to-date or file unchanged)."
+          fi
