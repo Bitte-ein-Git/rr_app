@@ -32,7 +32,7 @@ import { theme } from "@/lib/theme";
 
 // metadata for SEO and PWA/iOS
 export const metadata: Metadata = {
-	title: `${APP_NAME} · ${BRAND_SUBTITLE}`, // Use app name and subtitle
+	title: `${APP_NAME}`, // Use app name and subtitle
 	description: `${BRAND_NAME} · ${BRAND_SUBTITLE}`,
 	icons: {
 		icon: "/favicon.ico",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 // viewport settings for responsiveness and PWA/iOS look
 export const viewport: Viewport = {
-	themeColor: "#00aeff", // main theme color for status bar etc.
+	themeColor: "#ff9900", // main theme color for status bar etc.
 	initialScale: 1,
 	minimumScale: 1,
 	maximumScale: 1,
@@ -63,8 +63,8 @@ const RootLayout = ({
 				{/* pwa and ios specific meta tags */}
 				<link rel="icon" href="/favicon.ico" sizes="any" />
 				<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-				<link rel="manifest" href="/manifest.json" />
-
+				{/* <link rel="manifest" href="/manifest.json" /> */}
+				<meta name="mobile-web-app-capable" content="yes"></meta>
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 				<meta name="apple-mobile-web-app-title" content={APP_NAME} />
@@ -74,7 +74,7 @@ const RootLayout = ({
 			<body>
 				<MantineProvider
 					theme={theme}
-					defaultColorScheme="light"
+					defaultColorScheme="dark"
 				>
 					<RouterTransition />
 					<Notifications

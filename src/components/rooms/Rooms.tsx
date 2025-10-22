@@ -1,14 +1,13 @@
 "use client";
 
 import { IconAlertCircle, IconAlertTriangle } from "@tabler/icons-react";
-// Import Masonry and ResponsiveMasonry
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+// Removed Masonry and ResponsiveMasonry imports
+import { Stack } from "@mantine/core"; // Import Stack
 
 import Alert from "../common/alert";
 import Loading from "../common/loading";
 import React from "react";
 import { RoomItem } from ".";
-// removed unused imports
 import useRooms from "@/lib/hooks/swr/useRooms";
 import useRoomsFilter from "@/lib/hooks/filters/useRoomsFilter";
 
@@ -48,29 +47,23 @@ const Rooms = () => { // removed props parameter
 		);
 	}
 
-    // cast ResponsiveMasonry to any to bypass type checking issue
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ResponsiveMasonryComponent = ResponsiveMasonry as any;
-    // cast Masonry to any to bypass type checking issue
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MasonryComponent = Masonry as any;
+    // Removed ResponsiveMasonryComponent and MasonryComponent casts
 
-	// render the masonry layout for rooms
+	// render the stack layout for rooms
 	return (
-        <ResponsiveMasonryComponent
-			// define breakpoints for column count
-			columnsCountBreakPoints={{ 0: 1, 768: 2, 1200: 3 }}
-		>
-			<MasonryComponent gutter="1.5rem"> {/* Use the casted component */}
-				{/* map through rooms and render RoomItem for each */}
-				{rooms.map(room => (
-					<RoomItem
-						key={room.id}
-						room={room}
-					/>
-				))}
-			</MasonryComponent>
-		</ResponsiveMasonryComponent>
+        <Stack align="center" gap="1.5rem"> {/* Use Stack instead of Masonry */}
+            {/* map through rooms and render RoomItem for each */}
+            {rooms.map(room => (
+                <RoomItem
+                    key={room.id}
+                    room={room}
+                    // Apply max width similar to player list items if needed
+                    // You might need to adjust the width based on your design
+                    // Example: style={{ maxWidth: '400px', width: '100%' }}
+                    style={{ width: '100%', maxWidth: '500px'}} // Set width for RoomItem
+                />
+            ))}
+        </Stack>
 	);
 };
 

@@ -21,7 +21,7 @@ const RoomItemDetails = ({ room, ...props }: Props) => {
 	return (
 		<Box
 			px="md"
-			py="sm"
+			py="xs"
 			bg={computedColorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[6]}
 			{...props}
 		>

@@ -15,7 +15,7 @@ import FooterNavigation from "./navigation";
 // footer component with navigation and links
 const Footer = () => {
 	const currentYear: number = new Date().getFullYear();
-	const startYear = 2024; // copyright start year
+	const startYear = 2025; // copyright start year
 
 	return (
 		<Container

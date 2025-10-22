@@ -11,7 +11,7 @@ const PlayersPage = () => {
 	return (
 		<PlayersFormProvider>
 			<Stack gap="md">
-				<Title size={32}>Players Online</Title>
+				<Title size={32}>Active Players:</Title>
 				<Group justify="space-between">
 					<Status />
 					<SortPlayersForm />

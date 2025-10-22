@@ -120,9 +120,9 @@ const SettingsModal = () => {
 					color="gray"
 					onClick={handleReset}
 				>
-					Reset to default
+					Reset
 				</Button>
-				<Button onClick={() => modals.closeAll()}>Dismiss</Button>
+				<Button onClick={() => modals.closeAll()}>Save</Button>
 			</Group>
 		</Stack>
 	);

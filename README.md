@@ -1,7 +1,7 @@
 # 🏎️ RR App
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f01c061c-7a47-467a-b991-6927efd75f77/deploy-status)](https://app.netlify.com/projects/heyfordys-rwfc-app/deploys)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Bitte-ein-Git/rr_app)
-![GitHub contributors](https://img.shields.io/github/contributors/Bitte-ein-Git/rr_app)
 
 A web application for viewing rooms and tracking players currently playing ZPL's Mario Kart Wii mod [Retro Rewind](https://wiki.tockdom.com/wiki/Retro_Rewind). Maintained by [Bitte ein Git!](https://github.com/Bitte-ein-Git).
 

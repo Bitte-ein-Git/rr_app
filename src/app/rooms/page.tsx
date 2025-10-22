@@ -10,8 +10,8 @@ const RoomsPage = () => {
 	return (
 		<RoomsFormProvider>
 			<Stack gap="md">
-				<Title size={32}>Active Rooms</Title>
-				<Group justify="space-between">
+				<Title size={0}>Active Rooms</Title>
+				<Group align="space-between">
 					<Status />
 					<SortRoomsForm />
 				</Group>

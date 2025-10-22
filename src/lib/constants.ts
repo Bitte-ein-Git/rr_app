@@ -27,7 +27,7 @@ export const URL_EXTERNAL_APP_VERSION = "https://api.github.com/repos/Bitte-ein-
 export const URL_EXTERNAL_MII_IMAGE = "https://studio.mii.nintendo.com/miis/image.png"; // Official Mii image source
 export const URL_EXTERNAL_MII_STUDIO: string = "https://qrcode.rc24.xyz/cgi-bin/studio.cgi"; // Mii QR code generator
 export const URL_EXTERNAL_RETROREWIND_ROOMS: string = "https://api.heyfordy.de/rwfc"; // Updated external rooms api source
-export const URL_EXTERNAL_RETROREWIND_VERSION = "http://update.rwfc.net:8000/RetroRewind/RetroRewindVersion.txt"; // Updated external rr version source
+export const URL_EXTERNAL_RETROREWIND_VERSION = "https://github.com/Bitte-ein-Git/rr_app/blob/source/versions.txt"; // Updated rr version source
 export const URL_EXTERNAL_RETROREWIND_WIKI = "https://wiki.tockdom.com/wiki/Retro_Rewind"; // RR Wiki link
 export const URL_EXTERNAL_WHEELWIZARD_REPOSITORY = "https://github.com/patchzyy/WheelWizard"; // WW Repo link
 export const URL_EXTERNAL_WHEELWIZARD_VERSION = "https://api.github.com/repos/patchzyy/WheelWizard/releases/latest"; // GH API for WW version
@@ -38,7 +38,7 @@ export const LOCALSTORAGE_SETTINGS_REFRESHINTERVAL: string = "settings-refresh-i
 export const LOCALSTORAGE_SETTINGS_VRONLY: string = "settings-vr-only"; // key for VR only setting
 
 /* Branding */
-export const APP_NAME: string = "🏎️ RR App"; // iOS web app name
-export const BRAND_NAME: string = "Retro Rewind Rooms"; // main brand name
-export const BRAND_SUBTITLE: string = "RWFC"; // subtitle
+export const APP_NAME: string = "🏎️ RR•App"; // iOS web app name
+export const BRAND_NAME: string = "🏎️ Retro Rewind"; // main brand name
+export const BRAND_SUBTITLE: string = ""; // subtitle
 export const BRAND_COPYRIGHT_HOLDER: string = "🍻 Bitte ein Git!"; // copyright holder
