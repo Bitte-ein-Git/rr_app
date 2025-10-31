@@ -17,7 +17,9 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 
 ## ⚙️ APIs Used
 
-[http://rwfc.net/api/groups](http://rwfc.net/api/groups)
+* [Room Data | http://rwfc.net/api/groups](http://rwfc.net/api/groups)
+* [Profile stats | https://rwfc.net/vr](https://rwfc.net/vr)
+* [Mii Data | https://umapyoi.net/api/v1/mii](https://umapyoi.net/api/v1/mii)
 
 ## 🤝 Credits
 
@@ -25,3 +27,11 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 * **Retro Rewind:** [Retro-Rewind-Team/rr-pulsar](https://github.com/Retro-Rewind-Team/rr-pulsar)
 * **WheelWizard:** [patchzyy](https://github.com/patchzyy/WheelWizard)
 * **Fonts:** [CTMKF](https://wiki.tockdom.com/wiki/CTMKF) & [Rubik](https://www.fontsquirrel.com/fonts/rubik)
+
+## 📜 License & Usage
+
+This project is licensed under the [MIT](./LICENSE) License.
+
+Copyright © 2025 [rr.heyfordy.de](https://rr.heyfordy.de)
+
+If you use or adapt this code for your own projects, please provide attribution by linking back to the original repository or website.
