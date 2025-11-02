@@ -83,8 +83,16 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 #favorites-list .player-row { margin-bottom: 5px; cursor: default; }
 #favorites-list .player-info { cursor: pointer; }
 #favorites-list p { text-align: center; color: #aaa; padding: 1rem; }
-.remove-favorite-btn { background: #ff5555; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 14px; line-height: 25px; text-align: center; cursor: pointer; margin-left: auto; flex-shrink: 0; }
+.edit-nickname-btn, .remove-favorite-btn { background: #666; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; line-height: 28px; text-align: center; cursor: pointer; margin-left: 4px; flex-shrink: 0; padding: 0; }
+.edit-nickname-btn { margin-left: auto; background: #777; }
+.remove-favorite-btn { background: #ff5555; }
+.edit-nickname-btn:hover { background: #999; }
 .remove-favorite-btn:hover { background: #ff7777; }
+
+/* --- Nickname Modal --- */
+#nickname-modal-content input { width: 100%; }
+.nickname-modal-buttons { display: flex; justify-content: space-around; margin-top: 1.5rem; }
+.nickname-modal-buttons button { margin: 0; }
 
 /* --- User Profile Modal --- */
 .user-search-container { display: flex; align-items: stretch; gap: 5px; width: 100%; }
@@ -105,7 +113,8 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 .player-info-modal-header { display: flex; align-items: center; gap: 15px; margin-bottom: 1rem; text-align: left; }
 .player-mii-large { width: 60px; height: 60px; border-radius: 5px; background: #555; object-fit: cover; flex-shrink: 0;}
 .player-info-modal-header > div { display: flex; flex-direction: column; }
-.player-info-modal-lastseen { font-size: 0.9em; color: #ccc; margin-bottom: 0.8rem; text-align: center; }
+.player-info-modal-lastseen { font-size: 0.9em; color: #ccc; margin-bottom: 0.8rem; text-align: center; min-height: 1.2em; }
+.player-info-modal-cache-status { font-size: 0.8em; font-style: italic; color: #f0c040; margin-top: 1rem; text-align: center; }
 .player-info-modal-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; margin-bottom: 0.8rem; text-align: center; }
 .stat-item { padding: 8px 5px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .stat-label { font-size: 0.8em; color: #aaa; margin-bottom: 2px; }
@@ -145,7 +154,7 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 .player-menu-btn { background: none; border: none; color: #aaa; font-size: 1.4rem; font-weight: bold; cursor: pointer; padding: 0 0.5rem; margin-left: auto; line-height: 1; order: 3; z-index: 5; }
 .player-menu-btn:hover { color: #fff; }
 .player-menu { display: none; position: absolute; right: 5px; top: calc(100% - 10px); background: #1e1f25; border-radius: 0.4rem; box-shadow: 0 4px 10px #000000a0; z-index: 15; min-width: 180px; overflow: hidden; }
-.player-menu button { display: block; width: 100%; padding: 0.6rem 1rem; background: none; border: none; color: #fff; text-align: left; cursor: pointer; font-size: 0.9rem; }
+.player-menu button { display: block; width: 100%; padding: 0.6rem 1rem; background: none; border: none; color: #fff; text-align: left; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
 .player-menu button:hover { background: #2e2f36; }
 .player-menu .remove-highlight { color: #ff5555; }
 
