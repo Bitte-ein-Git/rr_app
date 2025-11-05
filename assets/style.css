@@ -54,8 +54,37 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 
 /* --- Indicators --- */
 #history-indicator, #filter-indicator { display: none; padding: 10px; text-align: center; font-style: italic; background: #333; margin: 0 auto 1rem auto; border-radius: 8px; max-width: 90%; color: #fff; }
-#history-indicator button, #filter-indicator button { margin-left: 10px; padding: 2px 8px; }
-#history-indicator { background-color: #ff000040; } #filter-indicator { background-color: #00aaff40; }
+#history-indicator { 
+    display: none; /* JS toggles to flex */
+    flex-wrap: wrap; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    background-color: #ff000040; 
+}
+#filter-indicator { background-color: #00aaff40; }
+#history-indicator span {
+    flex-basis: 100%;
+    text-align: center;
+    font-style: normal; /* Override the italic */
+}
+#history-indicator .history-indicator-controls {
+    display: flex;
+    gap: 5px;
+}
+#history-indicator button { /* This already exists, just check it */
+    margin-left: 0; /* Override old margin */
+    padding: 2px 8px; 
+    background: #555; 
+    border: none; 
+    color: white; 
+    border-radius: 4px;
+}
+#history-indicator button:hover { background: #777; }
+#history-indicator .history-indicator-controls button {
+    padding: 5px 10px; /* Make controls buttons bigger */
+}
+
 
 /* --- Modals Common Styles --- */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 20; opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0.3s ease; }
@@ -123,9 +152,176 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 .stat-value.vr-positive { color: #4CAF50; }
 .stat-value.vr-negative { color: #F44336; }
 .player-info-modal-active-rank { font-size: 0.9em; margin-top: 1rem; text-align: center; color: #ccc;}
+.player-info-modal-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 1rem; }
+.player-info-modal-buttons .modal-close-btn { margin: 0; flex: 1; }
+.player-info-modal-buttons .report-btn { background-color: #e74c3c; }
+.player-info-modal-buttons .report-btn:hover { background-color: #ff5555; }
+
 
 /* --- Player Info Modal --- */
 .modal-content.small-modal { max-width: 380px; padding-top: 40px; }
+
+/* --- Report Player Modal --- */
+#report-modal .modal-content {
+    padding: 0;
+    max-width: 500px;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 2px solid rgba(231, 76, 60, 0.3);
+    background: rgba(231, 76, 60, 0.1);
+}
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e74c3c;
+    margin: 0;
+}
+#rr-report-player-display {
+    padding: 20px 25px 0 25px;
+    border-bottom: 1px solid #444;
+}
+#report-form {
+    padding: 25px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: left;
+}
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(231, 76, 60, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e74c3c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
+}
+.form-group select option {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 10px;
+}
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: rgba(231, 76, 60, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(231, 76, 60, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.form-group input[type="file"]:hover {
+    border-color: rgba(231, 76, 60, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+}
+.file-info {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-style: italic;
+    text-align: left;
+}
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+.btn-cancel,
+.btn-submit {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0;
+    color: #fff;
+}
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+.btn-submit {
+    background: rgba(231, 76, 60, 0.3);
+    border: 2px solid rgba(231, 76, 60, 0.5);
+    color: #e74c3c;
+}
+.btn-submit:hover {
+    background: rgba(231, 76, 60, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+.report-status {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+    margin: 15px 25px 0 25px; /* Added margin */
+}
+.report-status.success {
+    display: block;
+    background: rgba(46, 204, 113, 0.2);
+    border: 2px solid rgba(46, 204, 113, 0.5);
+    color: #2ecc71;
+}
+.report-status.error {
+    display: block;
+    background: rgba(231, 76, 60, 0.2);
+    border: 2px solid rgba(231, 76, 60, 0.5);
+    color: #e74c3c;
+}
 
 /* --- Room Cards --- */
 .room-card { padding: 1rem; border-radius: 0.6rem; box-shadow: 0 4px 10px #00000080; text-align: left; transition: transform 0.2s ease-in-out; }
@@ -157,6 +353,11 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 .player-menu button { display: block; width: 100%; padding: 0.6rem 1rem; background: none; border: none; color: #fff; text-align: left; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
 .player-menu button:hover { background: #2e2f36; }
 .player-menu .remove-highlight { color: #ff5555; }
+.player-menu .player-menu-row { display: flex; gap: 5px; padding: 0.4rem 0.5rem; }
+.player-menu .player-menu-row button { flex: 1; justify-content: center; padding: 0.5rem; }
+.player-menu .report-btn-menu { color: #e74c3c; }
+.player-menu .report-btn-menu:hover { background: #ff555520; }
+
 
 /* --- Highlighting and Status --- */
 .player-row.highlighted { background: #4a443a; border-left: 3px solid #ffcc00; }
@@ -193,6 +394,8 @@ body.desktop-view .player-fc { font-size: 0.9em; }
 body.desktop-view .player-vrbr { font-size: 1.0em; width: 80px; }
 body.desktop-view .modal-content { max-width: 500px; }
 body.desktop-view .modal-content.small-modal { max-width: 400px; }
+body.desktop-view .player-menu .player-menu-row { flex-direction: column; } /* Stack buttons in desktop menu */
+
 
 /* --- Mobile Tweaks --- */
 @media (max-width: 400px) {
@@ -206,4 +409,5 @@ body.desktop-view .modal-content.small-modal { max-width: 400px; }
   .setting-row label { width: 120px; }
   .player-info-modal-stats-grid { grid-template-columns: 1fr; } /* Stack all stats on smallest */
   .vr-stats-heading { margin-top: 0.8rem; }
+  .player-info-modal-buttons { flex-direction: column; }
 }
