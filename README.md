@@ -1,6 +1,9 @@
-## 🏎️ Retro Rewind Rooms Web App
-
-![RR](./assets/apple-icon-180.png)
+<div align="center">
+  <br>
+  <img href="https://rwfc.net/"src="./assets/Logo.png" alt="Retro Rewind">
+  <h2>🏎️ Retro Rewind Rooms
+  <br>Web App</h2>
+</div>
 
 A simple web app that displays the current online rooms for **Retro Rewind**, a Custom Track-Distribution for Mario Kart Wii.
 
@@ -17,9 +20,9 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 
 ## ⚙️ APIs Used
 
-* [Room Data | http://rwfc.net/api/groups](http://rwfc.net/api/groups)
-* [Profile stats | https://rwfc.net/vr](https://rwfc.net/vr)
-* [Mii Data | https://umapyoi.net/api/v1/mii](https://umapyoi.net/api/v1/mii)
+* **Room Data** | [http://rwfc.net/api/groups](http://rwfc.net/api/groups)
+* **Profile stats** | [https://rwfc.net/vr](https://rwfc.net/vr)
+* **Mii Data** | [https://umapyoi.net/api/v1/mii](https://umapyoi.net/api/v1/mii)
 
 ## 🤝 Credits
 
@@ -27,6 +30,7 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 * **Retro Rewind:** [Retro-Rewind-Team/rr-pulsar](https://github.com/Retro-Rewind-Team/rr-pulsar)
 * **WheelWizard:** [patchzyy](https://github.com/patchzyy/WheelWizard)
 * **Fonts:** [CTMKF](https://wiki.tockdom.com/wiki/CTMKF) & [Rubik](https://www.fontsquirrel.com/fonts/rubik)
+* **Report Discord Webhook by [@Weebo6464](https://github.com/Weebo6464):** [Weebo64's Portfolio](https://github.com/Weebo6464/homepage/tree/main/rooms)
 
 ## 📜 License & Usage
 

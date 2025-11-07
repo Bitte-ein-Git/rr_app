@@ -53,36 +53,50 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 #not-found-container { display: none; color: #ffaaaa; }
 
 /* --- Indicators --- */
-#history-indicator, #filter-indicator { display: none; padding: 10px; text-align: center; font-style: italic; background: #333; margin: 0 auto 1rem auto; border-radius: 8px; max-width: 90%; color: #fff; }
-#history-indicator { 
+#history-indicator, #filter-indicator, #history-controls-main {
+    display: none;
+    padding: 10px;
+    text-align: center;
+    font-style: italic;
+    background: #333;
+    margin: 0 auto 1rem auto;
+    border-radius: 8px;
+    max-width: 90%;
+    color: #fff;
+}
+#history-indicator, #history-controls-main {
     display: none; /* JS toggles to flex */
-    flex-wrap: wrap; 
-    justify-content: center; 
-    align-items: center; 
-    gap: 10px; 
-    background-color: #ff000040; 
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: #ff000040;
 }
 #filter-indicator { background-color: #00aaff40; }
-#history-indicator span {
-    flex-basis: 100%;
+#history-indicator span, #history-controls-main span {
     text-align: center;
     font-style: normal; /* Override the italic */
 }
-#history-indicator .history-indicator-controls {
+#history-indicator .history-indicator-controls, #history-controls-main .history-indicator-controls {
     display: flex;
     gap: 5px;
 }
-#history-indicator button { /* This already exists, just check it */
+#history-indicator button, #history-controls-main button {
     margin-left: 0; /* Override old margin */
-    padding: 2px 8px; 
-    background: #555; 
-    border: none; 
-    color: white; 
+    padding: 2px 8px;
+    background: #555;
+    border: none;
+    color: white;
     border-radius: 4px;
+    cursor: pointer;
 }
-#history-indicator button:hover { background: #777; }
-#history-indicator .history-indicator-controls button {
+#history-indicator button:hover, #history-controls-main button:hover { background: #777; }
+#history-indicator .history-indicator-controls button, #history-controls-main .history-indicator-controls button {
     padding: 5px 10px; /* Make controls buttons bigger */
+}
+/* Ensure main history controls are compact and match width */
+#history-controls-main {
+    max-width: 600px; /* Match main content width */
 }
 
 
@@ -395,6 +409,7 @@ body.desktop-view .player-vrbr { font-size: 1.0em; width: 80px; }
 body.desktop-view .modal-content { max-width: 500px; }
 body.desktop-view .modal-content.small-modal { max-width: 400px; }
 body.desktop-view .player-menu .player-menu-row { flex-direction: column; } /* Stack buttons in desktop menu */
+body.desktop-view #history-controls-main { max-width: none; } /* Allow full width in desktop */
 
 
 /* --- Mobile Tweaks --- */
@@ -409,5 +424,15 @@ body.desktop-view .player-menu .player-menu-row { flex-direction: column; } /* S
   .setting-row label { width: 120px; }
   .player-info-modal-stats-grid { grid-template-columns: 1fr; } /* Stack all stats on smallest */
   .vr-stats-heading { margin-top: 0.8rem; }
-  .player-info-modal-buttons { flex-direction: column; }
+  /* Change: Modal buttons side-by-side */
+  .player-info-modal-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .player-info-modal-buttons .modal-close-btn {
+    flex: 1 1 0; /* Allow buttons to share space */
+    min-width: 100px; /* Prevent them from being too small */
+    font-size: 0.9em;
+    padding: 0.6rem 0.4rem;
+  }
 }

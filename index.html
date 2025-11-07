@@ -4,6 +4,11 @@
     <title>🏎️ RWFC Rooms</title>
     <meta name="description" content="Retro Rewind is a custom track distribution by ZPL featuring every retro track from Super Mario Kart to Mario Kart 7, plus tracks from Mario Kart 8, Tour, and Arcade GP. Built on the Pulsar engine and connected to Retro WFC servers."/>
     <meta name="author" content="heyFordy.de" />
+
+    <meta name="theme-color" content="#FE9900"/>
+    <meta name="msapplication-TileColor" content="#FE9900">
+    <meta name="msapplication-TileImage" content="./assets/manifest-icon-192.maskable.png">
+
     <link rel="icon" href="./assets/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="apple-touch-startup-image" href="./assets/startup.jpg">
@@ -67,7 +72,16 @@
         </div>
     </header>
 
-    <div id="history-indicator" style="display: none;"> <span style="font-style: normal;">ℹ️</span> Currently viewing history. <button onclick="disable_history()">Back to Live</button> </div>
+    <div id="history-indicator" style="display: none;"> <span style="font-style: normal;">ℹ️</span> Currently viewing history.</div>
+    <div id="history-controls-main" style="display: none;">
+        <div class="history-indicator-controls">
+            <button onclick="add_history(-60)">-1h</button>
+            <button onclick="add_history(-1)">-1m</button>
+            <button onclick="add_history(1)">+1m</button>
+            <button onclick="add_history(60)">+1h</button>
+        </div>
+        <button onclick="disable_history()">Back to Live</button>
+    </div>
     <div id="filter-indicator" style="display: none;"> <span style="font-style: normal;">ℹ️</span> Room filter applied. <button onclick="disable_filter()">Show all</button> </div>
 
     <main>

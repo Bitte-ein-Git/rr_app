@@ -126,7 +126,7 @@ document.addEventListener('click', (e) => {
     if (menu_was_closed) {
         // A menu was closed, resume timer
         if (RELOAD_TIMER) clearInterval(RELOAD_TIMER);
-        if (el("timeout-checkbox").checked) {
+        if (el("timeout-checkbox").checked && !HISTORY_MODE) {
             const f = fetch_rooms;
             RELOAD_TIMER = setInterval(f, RELOAD_TIME);
         }
@@ -144,7 +144,7 @@ function toggle_player_menu(m) {
 
     if (is_showing) {
         // Menu is now closed, restart timer
-        if (el("timeout-checkbox").checked) {
+        if (el("timeout-checkbox").checked && !HISTORY_MODE) {
             const f = fetch_rooms;
             RELOAD_TIMER = setInterval(f, RELOAD_TIME);
         }
@@ -260,42 +260,25 @@ function is_favorite(fc) { return FAVORITES.some(f => f.fc === fc); }
 async function add_favorite(fc, e) {
     // Add player to favorites
     if (e) e.stopPropagation();
-    const btn = e.target;
-    const player_row = btn.closest('.player-row');
+    if (is_favorite(fc)) return; // Do not add duplicates
 
-    if (!is_favorite(fc)) {
-        try {
-            const r = await fetch(`${API_BASE_URL}?info=${fc}`);
-            if (!r.ok) throw new Error('Player not found');
-            const d = await r.json();
-            FAVORITES.push({ fc: d.FC, name: d.name, nickname: null });
-            save_favorites();
-
-            // Update UI instantly
-            if (player_row) player_row.classList.add("highlighted");
-            btn.innerHTML = "🚫 Remove Favorite";
-            btn.classList.add("remove-highlight");
-            btn.onclick = (ev) => remove_favorite(fc, false, ev);
-
-        } catch (err) {
-            console.error("Favorite add fail:", err);
-        }
+    try {
+        const r = await fetch(`${API_BASE_URL}?info=${fc}`);
+        if (!r.ok) throw new Error('Player not found');
+        const d = await r.json();
+        FAVORITES.push({ fc: d.FC, name: d.name, nickname: null });
+        save_favorites();
+    } catch (err) {
+        console.error("Favorite add fail:", err);
     }
-    document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none');
     
-    // Restart timer
-    if (RELOAD_TIMER) clearInterval(RELOAD_TIMER);
-    if (el("timeout-checkbox").checked) {
-        const f = fetch_rooms;
-        RELOAD_TIMER = setInterval(f, RELOAD_TIME);
-    }
+    document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none');
+    reload_rooms(); // Refresh UI
 }
  
 function remove_favorite(fc, fm = false, e) {
     // Remove player from favorites
     if (e) e.stopPropagation();
-    const btn = e.target;
-    const player_row = btn.closest('.player-row');
 
     const l = FAVORITES.length;
     FAVORITES = FAVORITES.filter(f => f.fc !== fc);
@@ -305,24 +288,8 @@ function remove_favorite(fc, fm = false, e) {
         if (fm) {
             render_favorites_list();
         } else {
-            // Update UI instantly
-            if (player_row && !player_row.classList.contains('is-user')) {
-                player_row.classList.remove("highlighted");
-            }
-            btn.innerHTML = "⭐ Add Favorite";
-            btn.classList.remove("remove-highlight");
-            btn.onclick = (ev) => add_favorite(fc, ev);
-        }
-    }
-    
-    if (!fm) {
-        document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none');
-        
-        // Restart timer
-        if (RELOAD_TIMER) clearInterval(RELOAD_TIMER);
-        if (el("timeout-checkbox").checked) {
-            const f = fetch_rooms;
-            RELOAD_TIMER = setInterval(f, RELOAD_TIME);
+             document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none');
+             reload_rooms(); // Refresh UI
         }
     }
 }
@@ -585,8 +552,8 @@ function on_checkbox(){
     const s=el("timeout-checkbox").checked; 
     localStorage.setItem("auto-reload", s); 
     if(RELOAD_TIMER) clearInterval(RELOAD_TIMER); 
-    if(s){ 
-        const f = fetch_rooms; // Always fetch rooms if timer is on
+    if(s && !HISTORY_MODE){ 
+        const f = fetch_rooms;
         RELOAD_TIMER=setInterval(f, RELOAD_TIME); 
     } 
 }
@@ -801,7 +768,8 @@ async function on_load(){
 // --- Main Data Fetching (fetch_rooms) ---
 async function fetch_rooms() {
     // Fetch room data from API
-    console.log("Loading room data..."); clear_expired_cache(); let cb=el("timeout-checkbox"), hi=el("history-indicator"), tp=""; 
+    console.log("Loading room data..."); clear_expired_cache(); 
+    let cb=el("timeout-checkbox"), hi=el("history-indicator"), hc_main=el("history-controls-main"), tp=""; 
     if(HISTORY_MODE){ 
         let dt=el("history-input").value;
         let ht=Math.max(0, new Date(dt).getTime()); // This gets timestamp for local time
@@ -815,11 +783,13 @@ async function fetch_rooms() {
         tp=`?time=${us}`; 
         cb.disabled=true; 
         hi.style.display="block"; 
+        hc_main.style.display="flex";
         el("rooms-container").innerHTML=""; 
         el("loading").style.display="block"; 
     } else { 
         cb.disabled=false; 
         hi.style.display="none"; 
+        hc_main.style.display="none";
     } 
     try { 
         const r=await fetch(RWFC_API_URL+tp); 
