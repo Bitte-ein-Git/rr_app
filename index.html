@@ -72,8 +72,9 @@
         </div>
     </header>
 
-    <div id="history-indicator" style="display: none;"> <span style="font-style: normal;">ℹ️</span> Currently viewing history.</div>
+    <div id="history-indicator" style="display: none;"> <span style="font-style: normal;">ℹ️</span> Currently viewing history. <button onclick="disable_history()">Back to Live</button> </div>
     <div id="history-controls-main" style="display: none;">
+        <span style="font-style: normal;">ℹ️</span> Currently viewing history.
         <div class="history-indicator-controls">
             <button onclick="add_history(-60)">-1h</button>
             <button onclick="add_history(-1)">-1m</button>
@@ -105,6 +106,7 @@
             <div class="setting-row"> <label for="private-checkbox">Show Private Rooms</label> <input type="checkbox" id="private-checkbox" onchange="on_private_checkbox()" /> </div>
             <div class="setting-row"> <label for="openhost-checkbox">Underline "OpenHost"</label> <input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /> </div>
             <div class="setting-row"> <label for="vr-only-checkbox">Only VR-points</label> <input type="checkbox" id="vr-only-checkbox" onchange="on_vr_only_change()" /> </div>
+            <div class="setting-row"> <label for="avg-vr-checkbox">Show Avg. VR</label> <input type="checkbox" id="avg-vr-checkbox" onchange="on_avg_vr_change()" /> </div>
             <div class="setting-row"> <button id="favorites-btn" onclick="toggle_favorites_modal()">⭐ Favorites</button> </div>
             <div class="setting-row history-controls"> <label for="history-input">History:</label> <input type="datetime-local" id="history-input" oninput="on_history_change()" /> </div>
             <div class="setting-row history-buttons"> <button onclick="add_history(-60)">-1h</button> <button onclick="add_history(-1)">-1m</button> <button onclick="add_history(1)">+1m</button> <button onclick="add_history(60)">+1h</button> </div>

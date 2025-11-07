@@ -15,6 +15,7 @@ const RELOAD_TIME = 1000 * 5; // 5 seconds
 // --- Global State ---
 let RELOAD_TIMER = null; let cur_rooms = []; let FIRST_LOAD = true;
 let VRBR_FLIPPER_TIMER = null; let VRBR_STATE = 'vr';
+let ROOM_DETAIL_FLIPPER_TIMER = null; let ROOM_DETAIL_STATE = 'players';
 let HEADER_STATS_TIMER = null;
 let HISTORY_TIMER = null; let HISTORY_MODE = false; let HISTORY_DATE = null;
 let FAVORITES = []; let USER_PROFILE = null; let CURRENT_VIEW_MODE = 'mobile';
@@ -55,7 +56,7 @@ const show_report_modal = (fc, miiName) => {
             <div class="player-fc">${fc.replace(/[^0-9]/g, '').replace(/(\d{4})(?=\d)/g, '$1-')}</div>
         </div>
     `;
-    if (miiKey) fetch_mii_images([miiKey]);
+    if (miiKey) fetch_mii_images([miiKey]); // Fetch only if not in cache
     
     // Hidden inputs
     el('rr-report-fc-hidden').value = fc;
@@ -542,6 +543,44 @@ function update_header_stats(rc, pc, isFiltered) { const s=el("header-stats-chec
 // --- VR/BR Flipper ---
 function start_vrbr_flipper() { if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); if(el("vr-only-checkbox").checked){ document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); return; } const u=()=>{ const es=document.querySelectorAll('.player-vrbr[data-vr][data-br]'); if(el("vr-only-checkbox").checked){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); es.forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); return; } VRBR_STATE=VRBR_STATE==='vr'?'br':'vr'; for(const e of es) e.style.opacity=0; setTimeout(()=>{ for(const e of es) { e.textContent=(VRBR_STATE==='vr')?`${e.dataset.vr} VR`:`${e.dataset.br} BR`; e.style.opacity=1; }}, 300); }; u(); VRBR_FLIPPER_TIMER=setInterval(u, 3000); }
 
+// --- Room Detail Flipper ---
+function start_room_detail_flipper() {
+    if (ROOM_DETAIL_FLIPPER_TIMER) clearInterval(ROOM_DETAIL_FLIPPER_TIMER);
+    const show_avg_vr = el("avg-vr-checkbox").checked;
+    
+    // Reset all to players view first
+    document.querySelectorAll('.room-detail-flipper').forEach(e => {
+        if(e.dataset.players) e.innerHTML = e.dataset.players;
+        e.style.opacity = 1;
+    });
+
+    if (!show_avg_vr) return; // Do not start flipper if disabled
+
+    const u = () => {
+        if (!el("avg-vr-checkbox").checked) { // Check again in case it was disabled
+             if (ROOM_DETAIL_FLIPPER_TIMER) clearInterval(ROOM_DETAIL_FLIPPER_TIMER);
+             document.querySelectorAll('.room-detail-flipper').forEach(e => {
+                 if(e.dataset.players) e.innerHTML = e.dataset.players;
+                 e.style.opacity = 1;
+             });
+             return;
+        }
+        
+        ROOM_DETAIL_STATE = ROOM_DETAIL_STATE === 'players' ? 'vr' : 'players';
+        const es = document.querySelectorAll('.room-detail-flipper[data-players][data-vr]');
+
+        for (const e of es) e.style.opacity = 0;
+        setTimeout(() => {
+            for (const e of es) {
+                e.innerHTML = (ROOM_DETAIL_STATE === 'players') ? e.dataset.players : e.dataset.vr;
+                e.style.opacity = 1;
+            }
+        }, 300);
+    };
+    u(); // Initial call
+    ROOM_DETAIL_FLIPPER_TIMER = setInterval(u, 3000); // Flip every 3 seconds
+}
+
 // --- Settings Handlers ---
 function on_vr_only_change() { const c=el("vr-only-checkbox").checked; localStorage.setItem("vr-only", c); if(c){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); } else { start_vrbr_flipper(); } }
 function on_theme_change() { const t=el("theme-select").value; localStorage.setItem("theme", t); apply_theme(t); }
@@ -559,6 +598,7 @@ function on_checkbox(){
 }
 function on_private_checkbox() { const c=el("private-checkbox").checked; localStorage.setItem("show-private", c); reload_rooms(); }
 function on_openhost_checkbox() { const c=el("openhost-checkbox").checked; localStorage.setItem("openhost", c); update_openhost_underline(); }
+function on_avg_vr_change() { const c=el("avg-vr-checkbox").checked; localStorage.setItem("show-avg-vr", c); start_room_detail_flipper(); }
 function update_openhost_underline() { const s=el("openhost-checkbox").checked; document.querySelectorAll(".player-fc[openhost]").forEach(t=>{t.classList.toggle("openhost", s);}); }
 
 // --- View Mode ---
@@ -657,6 +697,7 @@ async function on_load(){
     let o=localStorage.getItem("openhost"); o=(o===null)?true:(o==="true"); el("openhost-checkbox").checked=o;
     el("vr-only-checkbox").checked=localStorage.getItem("vr-only")==="true";
     let h=localStorage.getItem("show-header-stats"); h=(h===null)?true:(h==="true"); el("header-stats-checkbox").checked=h;
+    let a=localStorage.getItem("show-avg-vr"); a=(a===null)?true:(a==="true"); el("avg-vr-checkbox").checked=a;
     const s=localStorage.getItem("sort-order")||"player_count"; el("sort-order-select").value=s;
     const t=localStorage.getItem("theme")||"dark"; el("theme-select").value=t; apply_theme(t);
     
@@ -859,18 +900,41 @@ async function reload_rooms(){
      let r_cnt=0, tp_cnt=0; let mii_keys=[];
      for(const room of rooms){
          r_cnt++; rnf=false;
-         let icon=room.type=="anybody"?"🌎":"🔒"; let jn="✅ Joinable", jc="joinable"; const pc=Object.keys(room.players).length; if(room.split){ jn="⛓️ Split Room"; jc="split-room"; } else if(room.suspend){ if(pc>=12){ jn="❌ Not Joinable"; jc="not-joinable"; } else { jn="🗺️ Course selection"; jc="course-selection"; } }
+         const sk=Object.keys(room.players).sort((a,b)=>{ const pA=room.players[a], pB=room.players[b]; const iA=USER_PROFILE&&pA.fc===USER_PROFILE.fc, iB=USER_PROFILE&&pB.fc===USER_PROFILE.fc; if(iA&&!iB) return -1; if(!iA&&iB) return 1; const fA=is_favorite(pA.fc), fB=is_favorite(pB.fc); if(fA&&!fB) return -1; if(!fA&&fB) return 1; const vA=parseInt(pA.ev,10)||0, vB=parseInt(pB.ev,10)||0; return vB-vA; });
+         
+         // Calculate room status
+         let icon = room.type == "anybody" ? "🌎" : "🔒";
+         let jn = "✅ Joinable", jc = "joinable";
+         const pc = sk.length; // Use sorted keys length
+         if (room.split) {
+             jn = "⛓️ Split Room"; jc = "split-room";
+         } else if (room.type !== "anybody" && room.suspend) { // Private + Suspend
+             jn = "❌ Not Joinable"; jc = "not-joinable";
+         } else if (room.type === "anybody" && room.suspend) { // Public + Suspend
+             jn = "🗺️ Course selection"; jc = "course-selection";
+         } else if (pc >= 12) { // Full (covers public-not-suspend and private-not-suspend)
+             jn = "❌ Not Joinable"; jc = "not-joinable";
+         }
+
          var rk=room.rk||"", rk_k=rk.replace(/^(vs|bt)_/,""); if(rk_k==="vs"||rk_k==="bt") rk_k=""; var rk_h="", rk_t=""; const ti=ROOM_TYPES[rk_k]||ROOM_TYPES["-1"]; if(ti){ rk_h=`<span title="${rk||'Unknown'}" style="color: ${ti.c};">${ti.l}</span>`; rk_t=ti.l; } else if(rk){ rk_h=rk.toUpperCase(); rk_t=rk.toUpperCase(); }
          let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; let h_t=rk_t?`${rk_h} Room`:""; head.innerHTML=`<span class="room-name">${icon} ${h_t?'| '+h_t:''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">ⓘ</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
-         const sk=Object.keys(room.players).sort((a,b)=>{ const pA=room.players[a], pB=room.players[b]; const iA=USER_PROFILE&&pA.fc===USER_PROFILE.fc, iB=USER_PROFILE&&pB.fc===USER_PROFILE.fc; if(iA&&!iB) return -1; if(!iA&&iB) return 1; const fA=is_favorite(pA.fc), fB=is_favorite(pB.fc); if(fA&&!fB) return -1; if(!fA&&fB) return 1; const vA=parseInt(pA.ev,10)||0, vB=parseInt(pB.ev,10)||0; return vB-vA; });
-         let rm_cnt=0;
+         
+         let rm_cnt=0; let total_vr = 0; let vr_count = 0;
          for(const p_idx of sk){
-             const p=room.players[p_idx]; let nm=(p.mii&&p.mii.length>0)?p.mii.length:1;
+             const p=room.players[p_idx];
+             if(p.ev) { let vr = parseInt(p.ev,10); if (!isNaN(vr)) { total_vr += vr; vr_count++; } }
+             let nm=(p.mii&&p.mii.length>0)?p.mii.length:1;
              for(let cmi=0; cmi<nm; cmi++){
                  rm_cnt++; let pr=document.createElement("div"); pr.className="player-row"; const isGuest = cmi > 0;
-                 if (!isGuest) pr.onclick=()=>show_player_info_modal(p.fc); else pr.style.cursor = 'default';
+                 const iu=USER_PROFILE&&p.fc===USER_PROFILE.fc&&!isGuest;
+                 
+                 if (!isGuest) {
+                     if (iu) { pr.onclick = () => toggle_user_profile_modal(); } 
+                     else { pr.onclick = () => show_player_info_modal(p.fc); }
+                 } else { pr.style.cursor = 'default'; }
+
                  let mi=document.createElement("img"); mi.className="player-mii"; mi.alt="Mii"; mi.src="empty.png"; let mk=null; if(p.mii&&p.mii[cmi]&&p.mii[cmi].data){ mk=p.mii[cmi].data; mi.setAttribute("mii-data", mk); mii_keys.push(mk); } pr.appendChild(mi);
-                 let pi=document.createElement("div"); pi.className="player-info"; let pn=document.createElement("div"); pn.className="player-name"; const iu=USER_PROFILE&&p.fc===USER_PROFILE.fc&&!isGuest; const bn=(p.mii&&p.mii[cmi])?p.mii[cmi].name:p.name;
+                 let pi=document.createElement("div"); pi.className="player-info"; let pn=document.createElement("div"); pn.className="player-name"; const bn=(p.mii&&p.mii[cmi])?p.mii[cmi].name:p.name;
                  pn.innerHTML=iu?`You <small>${handle_mii_name(bn)}</small>`:handle_mii_name(get_display_name(p.fc, bn));
                  pi.appendChild(pn); let pf=document.createElement("div"); pf.className="player-fc"; pf.textContent=isGuest?"Guest":p.fc; if(p.openhost==="true"&&!isGuest){ pf.setAttribute("openhost",""); pf.title="OpenHost enabled"; } pi.appendChild(pf); pr.appendChild(pi);
                  if (!isGuest) {
@@ -911,10 +975,18 @@ async function reload_rooms(){
                  pl.appendChild(pr);
              }
          }
-         tp_cnt+=rm_cnt; det.innerHTML=`<span class="room-player-count excited">${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'} | <span class="${jc}">${jn}</span>`; foot.innerHTML=`ID: <a href="${r_l}" class="room-link">${room.id}</a> • Uptime: <span created="${room.created}">0:00:00</span>`;
+         tp_cnt+=rm_cnt;
+         const avg_vr = (vr_count > 0) ? Math.floor(total_vr / vr_count) : 0;
+         det.innerHTML = `
+             <span class="room-detail-flipper" 
+                   data-players="<span class='room-player-count excited'>${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'} | <span class='${jc}'>${jn}</span>" 
+                   data-vr="🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.">
+                 <span class="room-player-count excited">${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'} | <span class="${jc}">${jn}</span>
+             </span>`;
+         foot.innerHTML=`ID: <a href="${r_l}" class="room-link">${room.id}</a> • Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr){ el("not-found-container").style.display="block"; return; } el("not-found-container").style.display="none";
-     update_openhost_underline(); update_uptimes(!!uptimes_timer); start_vrbr_flipper(); update_header_stats(r_cnt, tp_cnt, isFiltered);
+     update_openhost_underline(); update_uptimes(!!uptimes_timer); start_vrbr_flipper(); start_room_detail_flipper(); update_header_stats(r_cnt, tp_cnt, isFiltered);
      fetch_mii_images(mii_keys);
 }
 
