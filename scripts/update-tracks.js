@@ -16,10 +16,10 @@ async function main() {
         // 1. Get Version
         console.log("📡 Fetching version...");
         const verRes = await axios.get(API_VERSION_URL);
-        const version = verRes.data.version; // e.g., "6.4.2"
+        const version = verRes.data.version;
         console.log(`✅ Current version: ${version}`);
 
-        // 2. Determine Download URL (Hotfix vs. Patch vs. Full)
+        // 2. Determine Download URL
         const downloadUrl = await determineDownloadUrl(version);
         console.log(`⬇️ Downloading Config.pul from: ${downloadUrl}`);
 
@@ -40,7 +40,7 @@ async function main() {
         // 6. Save
         const count = Object.keys(trackDb).length;
         if (count === 0) {
-            console.warn("⚠️ Warning: 0 tracks found. Something might be wrong with the parsing.");
+            console.warn("⚠️ Warning: 0 tracks found. Please check if the Excel header row has changed.");
         }
         
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(trackDb, null, 2));
@@ -75,36 +75,21 @@ async function determineDownloadUrl(version) {
 async function downloadAndExtractConfig(url) {
     const response = await axios.get(url, { responseType: 'arraybuffer' });
     const zip = new AdmZip(response.data);
-    
     const zipEntries = zip.getEntries();
-    // Looking for Config.pul anywhere in the zip
     const configEntry = zipEntries.find(entry => entry.entryName.endsWith('Config.pul'));
-
-    if (configEntry) {
-        return configEntry.getData();
-    }
-    return null;
+    return configEntry ? configEntry.getData() : null;
 }
 
 function generateTrackDb(configContent, workbook) {
     const db = {};
     const configMap = {};
 
-    // --- A. Parse Config.pul (Mapping: InternalName -> DecID) ---
-    // Regex explanation:
-    // ([0-9A-F]{1,3})  -> Captures Hex ID (e.g., 1A, 10F)
-    // =                -> Literal equals
-    // ([^|\r\n]+)      -> Captures Name until pipe or newline
-    // \|               -> Literal pipe
+    // --- A. Parse Config.pul ---
     const regex = /([0-9A-F]{1,3})=([^|\r\n]+)\|/g;
-    
     let match;
     while ((match = regex.exec(configContent)) !== null) {
-        const hexId = match[1];
-        const internalName = match[2];
-        const decId = parseInt(hexId, 16);
-        
-        configMap[internalName] = decId;
+        const decId = parseInt(match[1], 16);
+        configMap[match[2]] = decId;
     }
     console.log(`ℹ️  Config.pul parsed: ${Object.keys(configMap).length} ID mappings found.`);
 
@@ -118,28 +103,25 @@ function generateTrackDb(configContent, workbook) {
             return;
         }
         
-        const rows = XLSX.utils.sheet_to_json(sheet);
+        // FIX: range: 1 überspringt die erste Zeile ("Track list updated as of...")
+        // damit die Header korrekt erkannt werden.
+        const rows = XLSX.utils.sheet_to_json(sheet, { range: 1 });
         
         rows.forEach(row => {
-            // The 'File' column contains either the ID (int) or the Filename (string)
             const fileVal = row['File'];
             let finalId = null;
 
-            // 1. Try parsing as Integer directly (Retro/Custom tracks often use IDs like 0, 1, 100)
+            // 1. Try parsing as Integer directly
             const parsedInt = parseInt(fileVal);
-            
-            // Check if it's a valid number and the original value was actually numeric-ish
             if (!isNaN(parsedInt) && String(parsedInt) == String(fileVal)) {
                 finalId = parsedInt;
             } 
-            // 2. If not a number, look it up in Config.pul map (e.g. "uMKS", "old_battle4_sfc")
+            // 2. Look up in Config.pul map
             else if (configMap[fileVal] !== undefined) {
                 finalId = configMap[fileVal];
             }
 
-            // 3. If we have an ID, add to DB
             if (finalId !== null) {
-                // Determine type based on Sheet Name
                 let type = 'Unknown';
                 if (sheetName.includes('Retro')) type = 'Retro';
                 else if (sheetName.includes('Custom')) type = 'Custom';
@@ -150,7 +132,7 @@ function generateTrackDb(configContent, workbook) {
                     author: row['Author(s)'] || '',
                     version: row['Version'] || '',
                     type: type,
-                    internalName: isNaN(fileVal) ? fileVal : undefined 
+                    slot: row['Track Slot'] || ''
                 };
             }
         });
