@@ -1,7 +1,7 @@
 <div align="center">
   <br>
   <img href="https://rwfc.net/"src="./assets/Logo.png" alt="Retro Rewind">
-  <h2>🏎️ Retro Rewind Rooms
+  <h2>🏎️ Retro Rewind
   <br>Web App</h2>
 </div>
 
