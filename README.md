@@ -13,16 +13,20 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 
 * Live view of all public and private online rooms.
 * Detailed view per room: players, VR/BR points, host, uptime.
-* Player search (by Name/FC) and a local Favorites system.
+* **Player Reporting System:** Integrated Discord Webhook reporting for moderation.
+* **Mii Rendering:** Automatic conversion of raw Mii data to Nintendo Studio images (via RC24).
+* Visit player Discord profiles.
+* Local Favorites system + Player search (by Name/FC),
 * Mobile and desktop-optimized layout with various themes.
 * "Add to Home Screen" functionality for iOS and Android.
-* History mode to view past room statuses.
+* History mode (7d max.)
 
-## ⚙️ APIs Used
+## ⚙️ APIs Used (Worker Upstreams)
 
 * **Room Data** | [http://rwfc.net/api/groups](http://rwfc.net/api/groups)
 * **Profile stats** | [https://rwfc.net/vr](https://rwfc.net/vr)
-* **Mii Data** | [https://umapyoi.net/api/v1/mii](https://umapyoi.net/api/v1/mii)
+* **RC24 Mii Rendering** | [WiiLink/Riiconnect24 Mii Studio](https://miicontestp.wii.rc24.xyz/cgi-bin/studio.cgi)
+* **Report Discord Webhook** | [Weebo64's Homepage (./rooms)](https://github.com/Weebo6464/homepage/tree/main/rooms)
 
 ## 🤝 Credits
 
@@ -30,7 +34,7 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 * **Retro Rewind:** [Retro-Rewind-Team/rr-pulsar](https://github.com/Retro-Rewind-Team/rr-pulsar)
 * **WheelWizard:** [patchzyy](https://github.com/patchzyy/WheelWizard)
 * **Fonts:** [CTMKF](https://wiki.tockdom.com/wiki/CTMKF) & [Rubik](https://www.fontsquirrel.com/fonts/rubik)
-* **Report Discord Webhook by [@Weebo6464](https://github.com/Weebo6464):** [Weebo64's Portfolio](https://github.com/Weebo6464/homepage/tree/main/rooms)
+* **Report Discord Webhook:** [Weebo64](https://github.com/Weebo6464)
 
 ## 📜 License & Usage
 
