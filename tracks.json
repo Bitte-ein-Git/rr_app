@@ -477,7 +477,7 @@
   },
   "68": {
     "name": "GCN Wario Colosseum",
-    "author": "ZPL, MKDasher",
+    "author": "MKDasher",
     "version": "v1.3-alt2",
     "type": "Retro",
     "slot": "GCN Waluigi Stadium"
@@ -758,7 +758,7 @@
   "108": {
     "name": "3DS Wuhu Loop",
     "author": "ZPL",
-    "version": "v1.0",
+    "version": "Beta",
     "type": "Retro",
     "slot": "Daisy Circuit"
   },
