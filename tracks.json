@@ -7,11 +7,11 @@
     "slot": "SNES Mario Circuit 3"
   },
   "1": {
-    "name": "SNES Donut Plains 1",
-    "author": "Luca",
-    "version": "v1.0",
+    "name": "Beta Donut Plains 1",
+    "author": "ZPL",
+    "version": "v1.1",
     "type": "Retro",
-    "slot": "GCN Mario Circuit"
+    "slot": "SNES Mario Circuit 3"
   },
   "2": {
     "name": "SNES Ghost Valley 1",
@@ -210,9 +210,9 @@
     "slot": "N64 Sherbet Land"
   },
   "30": {
-    "name": "N64 Royal Raceway",
-    "author": "Paratroopa3",
-    "version": "v1.1-alt",
+    "name": "Wii U Royal Raceway",
+    "author": "ZPL",
+    "version": "v1.3",
     "type": "Retro",
     "slot": "N64 Mario Raceway"
   },
@@ -1057,1046 +1057,1011 @@
     "slot": "SNES Mario Circuit 3"
   },
   "151": {
-    "name": "RMX Rainbow Road 1",
-    "author": "Luca, Kozakura",
-    "version": "v1.2-rr",
-    "type": "Retro",
-    "slot": "Rainbow Road"
-  },
-  "152": {
     "name": "RMX Rainbow Road 2",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Retro",
     "slot": "Rainbow Road"
   },
-  "153": {
-    "name": "RMX Vanilla Lake 1",
-    "author": "Cal",
-    "version": "v1.01-wtp",
-    "type": "Retro",
-    "slot": "N64 Sherbet Land"
-  },
-  "154": {
+  "152": {
     "name": "RMX Vanilla Lake 2",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Retro",
     "slot": "N64 Sherbet Land"
   },
-  "155": {
+  "153": {
     "name": "RMX Ghost Valley 1",
     "author": "Kozakura",
     "version": "v1.1",
     "type": "Retro",
     "slot": "SNES Ghost Valley 2"
   },
-  "156": {
+  "154": {
     "name": "RMX Bowser Castle 1",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Retro",
     "slot": "GBA Bowser Castle 3"
   },
-  "157": {
+  "155": {
     "name": "RMX Donut Plains 1",
     "author": "Luca",
     "version": "v1.2",
     "type": "Retro",
     "slot": "GCN Mario Circuit"
   },
-  "158": {
+  "156": {
     "name": "GP Mario Beach",
     "author": "SuperMario64DS, DJ Lowgey",
     "version": "v2.0 Alpha 1 Hotfix 2",
     "type": "Retro",
     "slot": "GCN Mario Circuit"
   },
-  "159": {
+  "157": {
     "name": "GP Mario Highway",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Retro",
     "slot": "GCN Mario Circuit"
   },
-  "160": {
-    "name": "GP DK Jungle",
-    "author": "Pointy Pighead Games",
-    "version": "RC2b",
-    "type": "Retro",
-    "slot": "N64 DK's Jungle Parkway"
-  },
-  "161": {
+  "158": {
     "name": "GP Bananan Ruins",
     "author": "Dylanmario",
     "version": "v1.0.mkd",
     "type": "Retro",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "162": {
+  "159": {
     "name": "GP Snow Panic",
     "author": "Dylanmario",
     "version": "v1.0",
     "type": "Retro",
     "slot": "DK Summit"
   },
-  "163": {
+  "160": {
     "name": "GP Bowser's Castle",
     "author": "TheGamingBram",
     "version": "v1.0",
     "type": "Retro",
     "slot": "Bowser's Castle"
   },
-  "164": {
+  "161": {
     "name": "GP Castle Wall",
     "author": "TheGamingBram",
     "version": "v1.0",
     "type": "Retro",
     "slot": "Bowser's Castle"
   },
-  "165": {
+  "162": {
     "name": "GP Rainbow Coaster",
     "author": "Diego Vapy",
     "version": "v1.2",
     "type": "Retro",
     "slot": "Rainbow Road"
   },
-  "166": {
-    "name": "GP2 Stadium Arena",
-    "author": "Diego Vapy",
-    "version": "v2.0",
-    "type": "Retro",
-    "slot": "GCN Waluigi Stadium"
-  },
-  "167": {
+  "163": {
     "name": "SW2 Mario Bros. Circuit",
     "author": "TheGamingBram",
     "version": "v1.0",
     "type": "Retro",
     "slot": "GCN Mario Circuit"
   },
-  "168": {
+  "164": {
     "name": "SW2 Whistlestop Summit",
     "author": "Outlaw Runner",
     "version": "v1.0",
     "type": "Retro",
     "slot": "Wario's Gold Mine"
   },
-  "169": {
+  "165": {
     "name": "SW2 Cheep Cheep Falls",
     "author": "TheGamingBram, Cats4Life",
     "version": "v1.1",
     "type": "Retro",
     "slot": "Maple Treeway"
   },
-  "170": {
+  "166": {
     "name": "Beta Dokan Course",
     "author": "Wingcapman, Luke Chandler",
     "version": "v1.04",
     "type": "Retro",
     "slot": "Koopa Cape"
   },
-  "171": {
+  "167": {
     "name": "Beta Nokonoko Beach",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Retro",
     "slot": "GCN Peach Beach"
   },
-  "172": {
+  "168": {
     "name": "Phendrana Frostbite",
     "author": "Fuffina, ISwearChris",
     "version": "v2.2",
     "type": "Custom",
     "slot": "Toad's Factory"
   },
-  "173": {
+  "169": {
     "name": "Honeymoon Lune",
     "author": "SquireTurnbolt",
     "version": "v2.1.scp",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "174": {
+  "170": {
     "name": "Poké Floats",
     "author": "G-Force",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "175": {
+  "171": {
     "name": "DK Jungle Tour",
     "author": "zatchi",
     "version": "v1.3",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "176": {
+  "172": {
     "name": "Terra Ursae",
     "author": "Bear",
     "version": "v1.2.2b",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "177": {
+  "173": {
     "name": "Confectionery Cliffs",
     "author": "Bear, ZPL",
     "version": "v1.0",
     "type": "Custom",
     "slot": "GCN Mario Circuit"
   },
-  "178": {
+  "174": {
     "name": "WP Tanks!",
     "author": "Brawlboxgaming",
     "version": "v3.0.1",
     "type": "Custom",
     "slot": "Moonview Highway"
   },
-  "179": {
+  "175": {
     "name": "Cloud Mist Castle",
     "author": "BroOfFun",
     "version": "v1.0.mkd",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "180": {
+  "176": {
     "name": "Rooster Island",
     "author": "BroOfFun",
     "version": "v1.0-beta3",
     "type": "Custom",
     "slot": "GCN Mario Circuit"
   },
-  "181": {
+  "177": {
     "name": "Wario's Cosmic Construction",
     "author": "AltairYoshi, JadenMKW",
     "version": "v1.4",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "182": {
+  "178": {
     "name": "Jiyuu Village",
     "author": "Jiyuu",
     "version": "v1.2",
     "type": "Custom",
     "slot": "DS Delfino Square"
   },
-  "183": {
+  "179": {
     "name": "Cargo Bay",
     "author": "Shorky, Cal, KC",
     "version": "v1.1",
     "type": "Custom",
     "slot": "Koopa Cape"
   },
-  "184": {
+  "180": {
     "name": "Jigsaw Circuit",
     "author": "Cal",
     "version": "v1.21",
     "type": "Custom",
     "slot": "Luigi Circuit"
   },
-  "185": {
+  "181": {
     "name": "Cruel Angel's Thesis",
     "author": "Cal",
     "version": "v2.0.ctgp",
     "type": "Custom",
     "slot": "GCN DK Mountain"
   },
-  "186": {
+  "182": {
     "name": "Whispy Woodlands",
     "author": "Bear, ISwearChris, Kit",
     "version": "Beta",
     "type": "Custom",
     "slot": "Mario Circuit"
   },
-  "187": {
+  "183": {
     "name": "Stargaze Summit",
     "author": "Ferv",
     "version": "v1.2b",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "188": {
+  "184": {
     "name": "Good Egg Drive",
     "author": "Wraith Hopper",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "189": {
+  "185": {
     "name": "Starry Cityscape",
     "author": "bugsy",
     "version": "v1.1-Hotfix",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "190": {
+  "186": {
     "name": "Stickerbush Sunset",
     "author": "Fuffina",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Mushroom Gorge"
   },
-  "191": {
+  "187": {
     "name": "Alone and Incomplete",
     "author": "ISwearChris",
     "version": "v1.7",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "192": {
+  "188": {
     "name": "Gallant Grotto",
     "author": "ISwearChris",
     "version": "v1.31-CTGP",
     "type": "Custom",
     "slot": "Moo Moo Meadows"
   },
-  "193": {
+  "189": {
     "name": "Fort Francis",
     "author": "JadenMKW",
     "version": "v3.1",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "194": {
+  "190": {
     "name": "Bowser Jr.'s Fort",
     "author": "MrFluffy",
     "version": "v1.2",
     "type": "Custom",
     "slot": "GBA Bowser Castle 3"
   },
-  "195": {
+  "191": {
     "name": "Backside of the TV",
     "author": "GioMacGrillin",
     "version": "v2.0",
     "type": "Custom",
     "slot": "GCN Mario Circuit"
   },
-  "196": {
+  "192": {
     "name": "Garden of Dreams",
     "author": "Jiyuu",
     "version": "v1.2",
     "type": "Custom",
     "slot": "DS Peach Gardens"
   },
-  "197": {
+  "193": {
     "name": "Overgrown Temple",
     "author": "JoeyMK",
     "version": "v1.21",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "198": {
+  "194": {
     "name": "Lava Lake",
     "author": "JorisMKW",
     "version": "v2.3.mkd",
     "type": "Custom",
     "slot": "Grumble Volcano"
   },
-  "199": {
+  "195": {
     "name": "Timber Rapids",
     "author": "ZPL, Kozakura",
     "version": "Beta",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "200": {
+  "196": {
     "name": "Musical Cliff",
     "author": "Luca",
     "version": "v1.3",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "201": {
+  "197": {
     "name": "Toad's Temple",
     "author": "LucioWins, tarsa129",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Wario's Gold Mine"
   },
-  "202": {
+  "198": {
     "name": "Luncheon Tour",
     "author": "Luke Chandler",
     "version": "v1.16.mkd",
     "type": "Custom",
     "slot": "Luigi Circuit"
   },
-  "203": {
+  "199": {
     "name": "Shy Guy Lumber Co.",
     "author": "Metabus",
     "version": "v1.2.5.opt",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "204": {
+  "200": {
     "name": "Super Marine World",
     "author": "MrFluffy",
     "version": "v1.1",
     "type": "Custom",
     "slot": "N64 Sherbet Land"
   },
-  "205": {
+  "201": {
     "name": "Icebound Stronghold",
     "author": "KaneTheSnowman",
     "version": "v2.1",
     "type": "Custom",
     "slot": "N64 Sherbet Land"
   },
-  "206": {
+  "202": {
     "name": "Kamek's Library",
     "author": "MysterE99",
     "version": "v2.1.4",
     "type": "Custom",
     "slot": "N64 Bowser's Castle"
   },
-  "207": {
+  "203": {
     "name": "Wario Circuit",
     "author": "MysterE99",
     "version": "v3.11.mkd",
     "type": "Custom",
     "slot": "Mario Circuit"
   },
-  "208": {
+  "204": {
     "name": "Sunrise Slopes",
     "author": "bugsy",
     "version": "v1.0",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "209": {
+  "205": {
     "name": "Banished Courtyard",
     "author": "Metabus",
     "version": "v1.0.opt",
     "type": "Custom",
     "slot": "DS Peach Gardens"
   },
-  "210": {
+  "206": {
     "name": "Shadow Woods",
     "author": "Sniki",
     "version": "v1.3",
     "type": "Custom",
     "slot": "Daisy Circuit"
   },
-  "211": {
+  "207": {
     "name": "Hells Dimension",
     "author": "Jasperr",
     "version": "v1.0-alt",
     "type": "Custom",
     "slot": "Bowser's Castle"
   },
-  "212": {
+  "208": {
     "name": "Botania",
     "author": "SpyKid",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Moo Moo Meadows"
   },
-  "213": {
+  "209": {
     "name": "Cascade Kingdom",
     "author": "SpyKid, ZPL",
     "version": "v2.01",
     "type": "Custom",
     "slot": "GCN DK Mountain"
   },
-  "214": {
+  "210": {
     "name": "Sandcastle Park",
     "author": "SpyKid, ZPL",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Dry Dry Ruins"
   },
-  "215": {
+  "211": {
     "name": "Emerald Coast",
     "author": "Squadaloo",
     "version": "v1.0.1.mkd",
     "type": "Custom",
     "slot": "DS Yoshi Falls"
   },
-  "216": {
+  "212": {
     "name": "Super Bell Circuit",
     "author": "Squadaloo",
     "version": "v2.0",
     "type": "Custom",
     "slot": "N64 Mario Raceway"
   },
-  "217": {
+  "213": {
     "name": "Midnight Museum",
     "author": "SquireTurnbolt",
     "version": "v1.2",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "218": {
+  "214": {
     "name": "Crystal Canopy",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "219": {
+  "215": {
     "name": "Shy Guy Skies",
     "author": "SquireTurnbolt, Atmosphere",
     "version": "v1.1.1",
     "type": "Custom",
     "slot": "GBA Bowser Castle 3"
   },
-  "220": {
+  "216": {
     "name": "Forgotten Facility",
     "author": "Citrus",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Toad's Factory"
   },
-  "221": {
+  "217": {
     "name": "Kitayama Keep",
     "author": "TacoJosh",
     "version": "v1.2",
     "type": "Custom",
     "slot": "DS Peach Gardens"
   },
-  "222": {
+  "218": {
     "name": "Dolphin Harbor",
     "author": "SpyKid",
     "version": "v1.0.mkd",
     "type": "Custom",
     "slot": "DS Delfino Square"
   },
-  "223": {
+  "219": {
     "name": "Aqua Dungeon",
     "author": "ZPL",
     "version": "v2.2",
     "type": "Custom",
     "slot": "N64 Bowser's Castle"
   },
-  "224": {
+  "220": {
     "name": "Divine Paradise",
     "author": "ZPL",
     "version": "v2.2.mkd",
     "type": "Custom",
     "slot": "Koopa Cape"
   },
-  "225": {
+  "221": {
     "name": "Moonlit Grounds",
     "author": "bugsy",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Moonview Highway"
   },
-  "226": {
+  "222": {
     "name": "Frigid Freezeway",
     "author": "ZPL",
     "version": "v2.0",
     "type": "Custom",
     "slot": "N64 Sherbet Land"
   },
-  "227": {
+  "223": {
     "name": "Honeyhive Falls",
     "author": "Fuffina, RustyCowboi333",
     "version": "v1.2",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "228": {
+  "224": {
     "name": "Heavenly Sanctuary",
     "author": "ZPL",
     "version": "v1.1",
     "type": "Custom",
     "slot": "GCN Mario Circuit"
   },
-  "229": {
+  "225": {
     "name": "Luigi's Island",
     "author": "ZPL",
     "version": "v4.51",
     "type": "Custom",
     "slot": "N64 Mario Raceway"
   },
-  "230": {
+  "226": {
     "name": "Mystic Tangle",
     "author": "ZPL",
     "version": "v1.1",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "231": {
+  "227": {
     "name": "Maplewood Caverns",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "232": {
+  "228": {
     "name": "Fiery Factory, Fading Frost",
     "author": "Cotni",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Grumble Volcano"
   },
-  "233": {
+  "229": {
     "name": "Sunset Forest",
     "author": "ZPL",
     "version": "v1.0.opt",
     "type": "Custom",
     "slot": "Mushroom Gorge"
   },
-  "234": {
+  "230": {
     "name": "Pandora Palace",
     "author": "Shorky",
     "version": "Beta-alt",
     "type": "Custom",
     "slot": "Luigi Circuit"
   },
-  "235": {
+  "231": {
     "name": "Comet Starway",
     "author": "WiiLuigi, ZPL",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "236": {
+  "232": {
     "name": "The Seamlands",
     "author": "Metabus, Fuffina, ._.",
     "version": "v1.25",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "237": {
+  "233": {
     "name": "Northern Heights",
     "author": "Lovelifeandtpose024",
     "version": "v2.3.1",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "238": {
+  "234": {
     "name": "Thunder City",
     "author": "BigOto2, Fuffina",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Moonview Highway"
   },
-  "239": {
+  "235": {
     "name": "Goomba Circuit",
     "author": "UmbreonTurtle",
     "version": "v1.2",
     "type": "Custom",
     "slot": "Luigi Circuit"
   },
-  "240": {
+  "236": {
     "name": "Propeller Paradise",
     "author": "Mickeyman713",
     "version": "v1.2",
     "type": "Custom",
     "slot": "Maple Treeway"
   },
-  "241": {
+  "237": {
     "name": "µTorrent's Divinity",
     "author": "Empex",
     "version": "v1.0",
     "type": "Custom",
     "slot": "N64 Bowser's Castle"
   },
-  "242": {
+  "238": {
     "name": "Ghostly Gulch",
     "author": "TacoJosh",
     "version": "v1.0",
     "type": "Custom",
     "slot": "SNES Ghost Valley 2"
   },
-  "243": {
+  "239": {
     "name": "Cubing Conundrum",
     "author": "adam",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "244": {
+  "240": {
     "name": "Daisy Gardens",
     "author": "xBlue98",
     "version": "v2.2e",
     "type": "Custom",
     "slot": "DS Peach Gardens"
   },
-  "245": {
+  "241": {
     "name": "Lunar Lights",
     "author": "Sniki",
     "version": "v1.1",
     "type": "Custom",
     "slot": "Rainbow Road"
   },
-  "246": {
+  "242": {
     "name": "Fruity Folly",
     "author": "Fuffina, liamonade07",
     "version": "v1.1",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "247": {
+  "243": {
     "name": "Thunder Canyon",
     "author": "bugsy",
     "version": "v2.0",
     "type": "Custom",
     "slot": "Wario's Gold Mine"
   },
-  "248": {
+  "244": {
     "name": "Fungal Jungle",
     "author": "TacoJosh",
     "version": "v1.21",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "249": {
+  "245": {
     "name": "Cherry Blossom Garden",
     "author": "Renegade Ciara, ChaosShadow23",
     "version": "v2.3",
     "type": "Custom",
     "slot": "DS Peach Gardens"
   },
-  "250": {
+  "246": {
     "name": "Frostburn Fortress",
     "author": "Waltz, Vanillavaquita",
     "version": "v1.0",
     "type": "Custom",
     "slot": "DK Summit"
   },
-  "251": {
+  "247": {
     "name": "Seaside Palace",
     "author": "Waltz, Rover",
     "version": "v1.0",
     "type": "Custom",
     "slot": "GCN Peach Beach"
   },
-  "252": {
+  "248": {
     "name": "Vile Isle",
     "author": "Citrus",
     "version": "v1.4.1",
     "type": "Custom",
     "slot": "SNES Ghost Valley 2"
   },
-  "253": {
+  "249": {
     "name": "Blooper Ruins",
     "author": "UmbreonTurtle",
     "version": "v1.0",
     "type": "Custom",
     "slot": "Koopa Cape"
   },
-  "254": {
+  "250": {
     "name": "Blizzerno Fortress",
     "author": "FunkyRacer",
     "version": "v1.0",
     "type": "Custom",
     "slot": "N64 Sherbet Land"
   },
-  "255": {
+  "251": {
     "name": "Desert Fort",
     "author": "JorisMKW",
     "version": "v3.0a",
     "type": "Custom",
     "slot": "Dry Dry Ruins"
   },
-  "256": {
+  "252": {
     "name": "Spectral Station",
     "author": "MrFluffy",
     "version": "v1.1",
     "type": "Custom",
     "slot": "SNES Ghost Valley 2"
   },
-  "257": {
+  "253": {
     "name": "Bouldergeist's Ghostly Manor",
     "author": "Bits",
     "version": "v1.0",
     "type": "Custom",
     "slot": "SNES Ghost Valley 2"
   },
-  "258": {
+  "254": {
     "name": "Forest Creek",
     "author": "Bits",
     "version": "v3.0",
     "type": "Custom",
     "slot": "N64 DK's Jungle Parkway"
   },
-  "259": {
+  "255": {
     "name": "Mushlight's Reprise",
     "author": "Fuffina",
-    "version": "v1.0",
+    "version": "Beta",
     "type": "Custom",
     "slot": "Mushroom Gorge"
   },
-  "260": {
+  "256": {
     "name": "SNES Battle Course 4",
     "author": "Nintendo",
     "version": "-",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "261": {
+  "257": {
     "name": "SNES Mario Circuit 1",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "262": {
+  "258": {
     "name": "SNES Vanilla Lake 2",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "263": {
+  "259": {
     "name": "N64 Big Donut",
     "author": "UltraWario",
     "version": "v1.2",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "264": {
+  "260": {
     "name": "N64 Block Fort",
     "author": "AltairYoshi",
     "version": "v1.2",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "265": {
+  "261": {
     "name": "N64 Skyscraper",
     "author": "Nintendo",
     "version": "-",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "266": {
+  "262": {
     "name": "N64 Banshee Boardwalk",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "267": {
+  "263": {
     "name": "GBA Battle Course 1",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "268": {
+  "264": {
     "name": "GBA Battle Course 2",
     "author": "ZPL",
     "version": "v1.1",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "269": {
+  "265": {
     "name": "GBA Battle Course 3",
     "author": "Nintendo",
     "version": "-",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "270": {
+  "266": {
     "name": "GBA Battle Course 4",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "271": {
+  "267": {
     "name": "GCN Cookie Land",
     "author": "Nintendo",
     "version": "-",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "273": {
+  "269": {
     "name": "GCN Nintendo Gamecube",
     "author": "Tock",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "274": {
+  "270": {
     "name": "GCN Pipe Plaza",
     "author": "ZPL",
     "version": "v1.1",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "275": {
+  "271": {
     "name": "GCN Baby Park",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "276": {
+  "272": {
     "name": "GCN Bowser's Castle",
     "author": "ZPL",
     "version": "v1.1",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "277": {
+  "273": {
     "name": "DS Nintendo DS",
     "author": "AltairYoshi",
     "version": "v1.5",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "278": {
+  "274": {
     "name": "DS Twilight House",
     "author": "Nintendo",
     "version": "-",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "279": {
+  "275": {
     "name": "DS Palm Shore",
     "author": "Retrostyle12",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "280": {
+  "276": {
     "name": "DS Tart Top",
     "author": "Questorian",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "281": {
+  "277": {
     "name": "DS Water Stage",
     "author": "UltraWario",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "282": {
+  "278": {
     "name": "DS Lava Arena",
     "author": "UltraWario",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "283": {
+  "279": {
     "name": "DS Tick-Tock Clock",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "284": {
+  "280": {
     "name": "Wii Block Plaza",
     "author": "Nintendo",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "285": {
+  "281": {
     "name": "Wii Delfino Pier",
     "author": "Nintendo",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "286": {
+  "282": {
     "name": "Wii Funky Stadium",
     "author": "Nintendo",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "287": {
+  "283": {
     "name": "Wii Chain Chomp Wheel",
     "author": "Nintendo",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "288": {
+  "284": {
     "name": "Wii Thwomp Desert",
     "author": "Nintendo",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "289": {
+  "285": {
     "name": "Wii Galaxy Colosseum",
     "author": "Nintendo, Zeraora, Ro",
     "version": "v1.0-br",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "290": {
+  "286": {
     "name": "Wii Moo Moo Meadows",
     "author": "ZPL, TheBeefBai",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "291": {
+  "287": {
     "name": "Wii Coconut Mall",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "292": {
+  "288": {
     "name": "Wii Rainbow Road",
     "author": "ZPL, TheBeefBai",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "293": {
+  "289": {
     "name": "3DS Honeybee Hive",
     "author": "Atlas",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "294": {
+  "290": {
     "name": "3DS Sherbet Rink",
     "author": "Diego Vapy",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "295": {
+  "291": {
     "name": "3DS Daisy Hills",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "296": {
+  "292": {
     "name": "Wii U Animal Crossing",
     "author": "ZPL, TheBeefBai",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "297": {
+  "293": {
     "name": "SW Battle Stadium",
     "author": "SamanthaMK",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "298": {
+  "294": {
     "name": "Tour Paris Promenade B",
     "author": "SamanthaMK",
     "version": "v1.1.1",
     "type": "Battle",
     "slot": "Luigi Circuit"
   },
-  "299": {
+  "295": {
     "name": "Beta Nokonoko Beach",
     "author": "ZPL",
     "version": "v1.0",
     "type": "Battle",
     "slot": "Luigi Circuit"
-  },
-  "301": {
-    "name": "Beta Donut Plains 1",
-    "author": "ZPL",
-    "version": "v1.1",
-    "type": "Retro",
-    "slot": "SNES Mario Circuit 3"
   }
 }
