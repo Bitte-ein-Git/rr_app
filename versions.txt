@@ -62,3 +62,4 @@
 6.5.3 http://update.rwfc.net:8000/RetroRewind/zip/6.5.3.zip /6.5.3.zip Assets
 6.5.4 http://update.rwfc.net:8000/RetroRewind/zip/6.5.4.zip /6.5.4.zip Assets
 6.5.5 http://update.rwfc.net:8000/RetroRewind/zip/6.5.5.zip /6.5.5.zip Assets
+6.5.6 http://update.rwfc.net:8000/RetroRewind/zip/6.5.6.zip /6.5.6.zip Assets
