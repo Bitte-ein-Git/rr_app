@@ -33,7 +33,7 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 * **Project Repository:** [Bitte-ein-Git/rr_app](https://github.com/Bitte-ein-Git/rr_app)
 * **Retro Rewind:** [Retro-Rewind-Team/rr-pulsar](https://github.com/Retro-Rewind-Team/rr-pulsar)
 * **WheelWizard:** [patchzyy](https://github.com/patchzyy/WheelWizard)
-* **Fonts:** [CTMKF](https://wiki.tockdom.com/wiki/CTMKF) & [Rubik](https://www.fontsquirrel.com/fonts/rubik)
+* **Fonts:** [CTMKF](https://wiki.tockdom.com/wiki/CTMKF) (modified) & [Rubik](https://www.fontsquirrel.com/fonts/rubik)
 * **Report Discord Webhook:** [Weebo64](https://github.com/Weebo6464)
 
 ## 📜 License & Usage
