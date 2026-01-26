@@ -14,8 +14,6 @@
     <link href="./assets/rr.css" rel="Stylesheet" type="text/css" />
     <link href="./assets/ctmkf.css" rel="Stylesheet" type="text/css" />
     <link href="./assets/Rubik.css" rel="Stylesheet" type="text/css" />
-    
-    <!-- iOS Splash Screens omitted for brevity, they remain unchanged -->
 </head>
 <body>
 
@@ -69,7 +67,6 @@
             <div class="setting-row"> <label>Private Rooms</label> <label class="switch"><input type="checkbox" id="private-checkbox" onchange="on_private_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Undl. OpenHost</label> <label class="switch"><input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Only VR</label> <label class="switch"><input type="checkbox" id="vr-only-checkbox" onchange="on_vr_only_change()" /><span class="slider round"></span></label> </div>
-            <div class="setting-row"> <label>Avg. VR</label> <label class="switch"><input type="checkbox" id="avg-vr-checkbox" onchange="on_avg_vr_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>History Time:</label> <input type="datetime-local" id="history-input" oninput="on_history_change()" /> </div>
         </div>
     </div>
@@ -153,51 +150,9 @@
         </div>
     </div>
 
-    <!-- Report Modal -->
-    <div id="report-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header"> <h2>Report Player</h2> <button class="modal-close-btn top-right" onclick="close_report_modal()">X</button> </div>
-            <div id="rr-report-player-display" class="player-info-modal-header"></div>
-            <form id="report-form">
-                <input type="hidden" id="rr-report-fc-hidden" name="fc">
-                <input type="hidden" id="rr-report-miiName-hidden" name="miiName">
-                <div class="form-group">
-                    <label>Report Category *</label>
-                    <select id="rr-report-category" name="category" required>
-                        <option value="">Select...</option>
-                        <option value="offensive-mii-name">Offensive Mii Name</option>
-                        <option value="cheating">Cheating</option>
-                        <option value="emulator-speedup">Emulator Speed Up</option>
-                        <option value="trolling">Trolling</option>
-                        <option value="targeting">Targeting</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group" id="rr-other-description-group" style="display: none;">
-                    <label>Please describe *</label>
-                    <textarea id="rr-report-otherDescription" name="otherDescription" rows="3"></textarea>
-                </div>
-                <div class="form-group" id="rr-additional-details-group" style="display: none;">
-                    <label>Details (Optional)</label>
-                    <textarea id="rr-report-reason" name="reason" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Evidence (Image/Video)</label>
-                    <input type="file" id="rr-report-file" name="file" accept="image/*,video/*">
-                    <small class="file-info">Max 8MB</small>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel modal-close-btn" id="rr-report-cancel">Cancel</button>
-                    <button type="submit" class="btn-submit modal-close-btn">Submit</button>
-                </div>
-            </form>
-            <div id="rr-report-status" class="report-status"></div>
-        </div>
-    </div>
-
     <div class="footer-links">
         <p> <a href="https://github.com/Bitte-ein-Git/rr_app" target="_blank" class="footer-button"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .5 -.6 1.2 -.6 2.2v3.5"></path></svg> Page Source </a> </p>
-        <p> <a href="https://github.com/Bitte-ein-Git/rr_app/blob/main/LICENSE" target="_blank" class="footer-button">© 2025 rr.heyfordy.de</a> </p>
+        <p> <a href="https://github.com/Bitte-ein-Git/rr_app/blob/main/LICENSE" target="_blank" class="footer-button">© 2026 rr.heyfordy.de</a> </p>
     </div>
 
     <script src="./rr.js" defer></script>
