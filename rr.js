@@ -1,6 +1,6 @@
 const el = (id) => document.getElementById(id);
 
-// API Endpoints
+// API configuration
 const API_BASE_URL = "https://api.heyfordy.de/rr_app/player";
 const DISCORD_API_URL = "https://api.heyfordy.de/rr_app/discord";
 const RWFC_API_URL = "https://api.heyfordy.de/rwfc";
@@ -11,6 +11,7 @@ const MII_EXPIRE_TIME = 1000 * 60 * 60 * 24;
 const PROFILE_EXPIRE_TIME = 1000 * 60 * 60 * 24; 
 const RELOAD_TIME = 1000 * 5; 
 
+// Application state
 let RELOAD_TIMER = null; let cur_rooms = []; let FIRST_LOAD = true;
 let VRBR_FLIPPER_TIMER = null; let VRBR_STATE = 'vr';
 let ROOM_DETAIL_FLIPPER_TIMER = null; let ROOM_DETAIL_STATE = 'players';
@@ -18,10 +19,12 @@ let HEADER_STATS_TIMER = null;
 let HISTORY_TIMER = null; let HISTORY_MODE = false; let HISTORY_DATE = null;
 let FAVORITES = []; let USER_PROFILE = null; let CURRENT_VIEW_MODE = 'mobile';
 let CURRENT_NICKNAME_FC = null;
+let ROOM_STATUS_CACHE = {};
 
+// Definitions for room categories
 const ROOM_TYPES = { "10":{l:"🕹️ Retro Tracks",c:"#FF8C00"},"11":{l:"⏰ Online TT",c:"#FF6347"},"12":{l:"🚀 200cc",c:"#DC143C"},"13":{l:"☂️ Item Rain",c:"#1E90FF"},"14":{l:"Regular Battle",c:"#B22222"},"15":{l:"Elimination Battle",c:"#8B0000"},"20":{l:"🚧 Custom Tracks",c:"#E800A3"},"21":{l:"Vanilla Tracks",c:"#7B68EE"},"22":{l:"CT 200cc",c:"#DA70D6"},"666":{l:"Luminous 150cc",c:"#FFD700"},"667":{l:"Luminous Online TT",c:"#BDB76B"},"668":{l:"CTGP-C",c:"#32CD32"},"751":{l:"Versus",c:"#A9A9A9"},"-1":{l:"Regular",c:"#A9A9A9"},"":{l:"Private",c:"#A9A9A9"},"69":{l:"IKW Default",c:"#ADD8E6"},"70":{l:"IKW Ultras VS",c:"#008080"},"71":{l:"IKW Countdown",c:"#00FFFF"},"72":{l:"IKW Bob-omb Blast",c:"#696969"},"73":{l:"IKW Infinite Accel",c:"#4B0082"},"74":{l:"IKW Banana Slip",c:"#FFFFE0"},"75":{l:"IKW Random Items",c:"#FF00FF"},"76":{l:"IKW Unfair Items",c:"#800000"},"77":{l:"IKW Blue Shell Madness",c:"#0000CD"},"78":{l:"IKW Mushroom Dash",c:"#2E8B57"},"79":{l:"IKW Bumper Karts",c:"#A52A2A"},"80":{l:"IKW Item Rampage",c:"#FA8072"},"81":{l:"IKW Item Rain",c:"#4169E1"},"82":{l:"IKW Shell Break",c:"#2E8B57"},"83":{l:"IKW Riibalanced",c:"#C0C0C0"},"875":{l:"OptPack 150cc",c:"#7CFC00"},"876":{l:"OptPack Online TT",c:"#556B2F"},"877":{l:"OptPack",c:"#000080"},"878":{l:"OptPack",c:"#000080"},"879":{l:"OptPack",c:"#000080"},"880":{l:"OptPack",c:"#000080"},"1312":{l:"WTP 150cc",c:"#008B8B"},"1313":{l:"WTP 200cc",c:"#483D8B"},"1314":{l:"WTP Online TT",c:"#8FBC8F"},"1315":{l:"WTP Item Rain",c:"#00CED1"},"1316":{l:"WTP STYD",c:"#9400D3"} };
 
-// Modal logic
+// Modal control functions
 const updateScrollLock = () => document.body.classList.toggle('no-scroll', document.querySelectorAll('.modal:not(.hidden)').length > 0);
 const toggle_modal = (m) => { el(m).classList.toggle('hidden'); updateScrollLock(); };
 const toggle_settings_modal = () => toggle_modal('settings-modal');
@@ -32,7 +35,7 @@ const toggle_info_modal = () => toggle_modal('info-modal');
 const close_nickname_modal = () => { CURRENT_NICKNAME_FC = null; toggle_modal('nickname-modal'); }
 const toggle_fav_search = () => { const w = el('fav-search-wrapper'); w.classList.toggle('visible'); if(w.classList.contains('visible')) el('fav-search-input').focus(); };
 
-// Cache handlers
+// Cache retrieval and storage
 function get_cached_item(key, expireTime) {
     const item = localStorage.getItem(key); if (!item) return null;
     try { const [data, timestamp] = JSON.parse(item); if (expireTime !== 0 && (Date.now() - timestamp > expireTime)) { localStorage.removeItem(key); return null; } return { data, timestamp }; } catch (e) { localStorage.removeItem(key); return null; }
@@ -48,12 +51,14 @@ function clear_all_cache() {
     keys.forEach(k => localStorage.removeItem(k)); location.reload();
 }
 
+// Event listeners for closing menus
 document.addEventListener('click', (e) => {
     document.querySelectorAll('.modal').forEach(m => { if (e.target === m) { m.classList.add('hidden'); updateScrollLock(); } });
     let menu_was_closed = false; document.querySelectorAll('.player-menu').forEach(m => { if (m.style.display === 'block' && !m.contains(e.target) && !e.target.classList.contains('player-menu-btn')) { m.style.display = 'none'; menu_was_closed = true; } });
     if (menu_was_closed) { if (RELOAD_TIMER) clearInterval(RELOAD_TIMER); if (el("timeout-checkbox").checked && !HISTORY_MODE) { RELOAD_TIMER = setInterval(fetch_rooms, RELOAD_TIME); } }
 });
 
+// Player context menu handling
 function toggle_player_menu(m) {
     document.querySelectorAll('.player-menu').forEach(i => { if (i !== m) i.style.display = 'none'; });
     const is_showing = m.style.display === 'block'; m.style.display = is_showing ? 'none' : 'block';
@@ -61,11 +66,13 @@ function toggle_player_menu(m) {
     if (is_showing && el("timeout-checkbox").checked && !HISTORY_MODE) { RELOAD_TIMER = setInterval(fetch_rooms, RELOAD_TIME); }
 }
 
+// Relative time formatting
 function format_last_seen(dateString) {
     if (!dateString) return 'N/A'; const lastSeenDate = new Date(dateString); const now = new Date(); const diffSeconds = Math.floor((now - lastSeenDate) / 1000);
     if (diffSeconds < 120) return '<strong style="color: #4CAF50;">Now online</strong>'; if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} min. ago`; if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)}h ago`; return lastSeenDate.toLocaleString();
 }
 
+// Discord button fetching
 function load_discord_for_profile(fc, container) {
     const discordCacheKey = `discord_${fc}`; const cachedDiscord = get_cached_item(discordCacheKey, PROFILE_EXPIRE_TIME * 7);
     const render = (profileUrl) => {
@@ -75,6 +82,7 @@ function load_discord_for_profile(fc, container) {
     if (cachedDiscord) render(cachedDiscord.data); else { fetch(`${DISCORD_API_URL}?fc=${fc}`).then(res => res.json()).then(discordData => { set_cached_item(discordCacheKey, discordData.profile); render(discordData.profile); }).catch(err => console.error("Discord fetch err", err)); }
 }
 
+// Main player info modal
 async function show_player_info_modal(fc) {
     const mc = el('player-info-content'); el('player-info-modal').classList.remove('hidden'); updateScrollLock();
     let activePlayer = null; if (cur_rooms) { for (const r of cur_rooms) { if (r.players) { const players = Object.values(r.players); const found = players.find(p => p.fc === fc); if (found) { activePlayer = found; break; } } } }
@@ -85,18 +93,20 @@ async function show_player_info_modal(fc) {
     load_discord_for_profile(fc, mc); 
     try { 
         const r = await fetch(`${API_BASE_URL}?info=${fc}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const d = await r.json();
-        if (d.miiData) { fetch_mii_images([d.miiData], fc); }
+        if (d.miiData) { fetch_mii_images([d.miiData], fc); } else { fetch_miis_by_fc([fc]); }
         mc.innerHTML = _get_player_profile_html(d, miiSrc, fc, false, false); 
         load_discord_for_profile(fc, mc); 
     } catch (e) { console.error("Error fetching player info:", e); }
 }
 
+// User naming and copying
 function copy_fc(fc) { if (navigator.clipboard) navigator.clipboard.writeText(fc).catch(e => prompt("Manual copy:", fc)); else prompt("Manual copy:", fc); document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none'); }
 function get_display_name(fc, defaultName) { const fav = FAVORITES.find(f => f.fc === fc); return (fav && fav.nickname) ? fav.nickname : defaultName; }
 function show_nickname_modal(fc, encodedName, e) { if (e) e.stopPropagation(); CURRENT_NICKNAME_FC = fc; const fav = FAVORITES.find(f => f.fc === fc); const defaultName = decodeURIComponent(encodedName); el('nickname-input').value = fav?.nickname || ''; el('nickname-input').placeholder = `Enter nickname for ${defaultName}`; el('nickname-modal').classList.remove('hidden'); updateScrollLock(); document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none'); }
 function apply_nickname() { if (!CURRENT_NICKNAME_FC) return; const fav = FAVORITES.find(f => f.fc === CURRENT_NICKNAME_FC); if (fav) { const newNick = el('nickname-input').value.trim(); fav.nickname = newNick ? newNick : null; save_favorites(); render_favorites_list(); reload_rooms(); } close_nickname_modal(); }
 function reset_nickname() { if (!CURRENT_NICKNAME_FC) return; const fav = FAVORITES.find(f => f.fc === CURRENT_NICKNAME_FC); if (fav) { fav.nickname = null; save_favorites(); render_favorites_list(); reload_rooms(); } close_nickname_modal(); }
 
+// Persistent favorite list
 function load_favorites() { const f = localStorage.getItem("favorites"); FAVORITES = f ? JSON.parse(f) : []; }
 function save_favorites() { localStorage.setItem("favorites", JSON.stringify(FAVORITES)); }
 function is_favorite(fc) { return FAVORITES.some(f => f.fc === fc); }
@@ -117,15 +127,17 @@ async function add_favorite(fc, name = null, e) {
 }
 
 function remove_favorite(fc, fm = false, e) { if (e) e.stopPropagation(); const l = FAVORITES.length; FAVORITES = FAVORITES.filter(f => f.fc !== fc); if (FAVORITES.length < l) { save_favorites(); if (fm) render_favorites_list(); else { document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none'); reload_rooms(); } } }
-async function search_player_for_fav() { const q = el('fav-search-input').value.trim(), rc = el('fav-search-results'); if (!q) return; rc.innerHTML = 'Searching...'; try { const r = await fetch(`${API_BASE_URL}?find=${encodeURIComponent(q)}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const p = await r.json(); if (!p || p.length === 0) { rc.innerHTML = '<p>No players found.</p>'; return; } let h = ''; p.forEach(pl => { if (is_favorite(pl.FC)) return; let ms = format_mii_src(get_cached_mii_image(pl.FC)); h += `<div class="player-row search-result-row" onclick="show_player_info_modal('${pl.FC}')"><img class="player-mii" src="${ms}" alt="Mii" mii-data-fc="${pl.FC}"><div class="player-info"> <div class="player-name">${handle_mii_name(pl.name)}</div> <div class="player-fc">${pl.FC}</div> </div><button class="select-profile-btn" style="background: #4CAF50;" onclick="add_favorite('${pl.FC}', decodeURIComponent('${encodeURIComponent(pl.name)}'), event)">+ Add</button></div>`; }); rc.innerHTML = h || '<p>All players already favorites.</p>'; } catch (e) { rc.innerHTML = `<p style="color:red;">Search failed.</p>`; } }
+async function search_player_for_fav() { const q = el('fav-search-input').value.trim(), rc = el('fav-search-results'); if (!q) return; rc.innerHTML = 'Searching...'; try { const r = await fetch(`${API_BASE_URL}?find=${encodeURIComponent(q)}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const p = await r.json(); if (!p || p.length === 0) { rc.innerHTML = '<p>No players found.</p>'; return; } let h = ''; p.forEach(pl => { if (is_favorite(pl.FC)) return; let ms = format_mii_src(get_cached_mii_image(pl.FC)); h += `<div class="player-row search-result-row" onclick="show_player_info_modal('${pl.FC}')"><img class="player-mii" src="${ms}" alt="Mii" mii-data-fc="${pl.FC}"><div class="player-info"> <div class="player-name">${handle_mii_name(pl.name)}</div> <div class="player-fc">${pl.FC}</div> </div><button class="select-profile-btn" style="background: #4CAF50;" onclick="add_favorite('${pl.FC}', decodeURIComponent('${encodeURIComponent(pl.name)}'), event)">+ Add</button></div>`; }); rc.innerHTML = h || '<p>All players already favorites.</p>'; const fcs = p.map(pl => pl.FC); if (fcs.length > 0) fetch_miis_by_fc(fcs); } catch (e) { rc.innerHTML = `<p style="color:red;">Search failed.</p>`; } }
 async function render_favorites_list() { const lc = el('favorites-list'); if (FAVORITES.length === 0) { lc.innerHTML = '<p>No favorites added yet.</p>'; return; } let h = ''; for (const f of FAVORITES) { let ms = format_mii_src(get_cached_mii_image(f.fc)); const displayName = get_display_name(f.fc, f.name); h += `<div class="player-row favorite-row"><img class="player-mii" src="${ms}" alt="Mii" mii-data-fc="${f.fc}"><div class="player-info" onclick="show_player_info_modal('${f.fc}')"><div class="player-name">${handle_mii_name(displayName)}</div><div class="player-fc">${f.fc}</div></div><button class="edit-nickname-btn" onclick="show_nickname_modal('${f.fc}', '${encodeURIComponent(f.name)}', event)">✏️</button><button class="remove-favorite-btn" onclick="remove_favorite('${f.fc}', true, event)">X</button></div>`; } lc.innerHTML = h; }
 
+// Personal user profile management
 function load_user_profile() { const p = get_cached_item("userProfile", PROFILE_EXPIRE_TIME * 30); USER_PROFILE = p ? p.data : null; }
 function save_user_profile() { if (USER_PROFILE) set_cached_item("userProfile", USER_PROFILE); else localStorage.removeItem("userProfile"); }
-async function search_user() { const q = el('user-search-input').value.trim(), rc = el('user-search-results'); if (!q) return; rc.innerHTML = ''; try { const r = await fetch(`${API_BASE_URL}?find=${encodeURIComponent(q)}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const p = await r.json(); if (!p || p.length === 0) { rc.innerHTML = '<p>No players found.</p>'; return; } let h = ''; p.forEach((pl) => { let ms = format_mii_src(get_cached_mii_image(pl.FC)); h += `<div class="player-row search-result-row" onclick="set_user_profile('${pl.FC}', '${encodeURIComponent(pl.name)}')"><img class="player-mii" src="${ms}" alt="Mii" mii-data-fc="${pl.FC}"><div class="player-info"> <div class="player-name">${handle_mii_name(pl.name)}</div> <div class="player-fc">${pl.FC}</div> </div><button class="select-profile-btn">Select</button></div>`; }); rc.innerHTML = h; } catch (e) { rc.innerHTML = `<p style="color:red;">Search failed.</p>`; } }
+async function search_user() { const q = el('user-search-input').value.trim(), rc = el('user-search-results'); if (!q) return; rc.innerHTML = ''; try { const r = await fetch(`${API_BASE_URL}?find=${encodeURIComponent(q)}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const p = await r.json(); if (!p || p.length === 0) { rc.innerHTML = '<p>No players found.</p>'; return; } let h = ''; p.forEach((pl) => { let ms = format_mii_src(get_cached_mii_image(pl.FC)); h += `<div class="player-row search-result-row" onclick="set_user_profile('${pl.FC}', '${encodeURIComponent(pl.name)}')"><img class="player-mii" src="${ms}" alt="Mii" mii-data-fc="${pl.FC}"><div class="player-info"> <div class="player-name">${handle_mii_name(pl.name)}</div> <div class="player-fc">${pl.FC}</div> </div><button class="select-profile-btn">Select</button></div>`; }); rc.innerHTML = h; const fcs = p.map(pl => pl.FC); if (fcs.length > 0) fetch_miis_by_fc(fcs); } catch (e) { rc.innerHTML = `<p style="color:red;">Search failed.</p>`; } }
 function set_user_profile(fc, en) { const n = decodeURIComponent(en); USER_PROFILE = { fc, n }; save_user_profile(); update_user_profile_modal_state(); reload_rooms(); }
 function logout_user() { USER_PROFILE = null; save_user_profile(); location.reload(); }
 
+// Helper for profile HTML
 function _get_player_profile_html(d, miiSrc, fc, isUserProfile = false, isPlaceholder = false) {
     const vr24 = d.vrStats?.last24Hours ?? 0; const vr7 = d.vrStats?.lastWeek ?? 0; const vr30 = d.vrStats?.lastMonth ?? 0;
     const formatVRStat = (v) => isPlaceholder ? '-' : (v === 0 ? '0' : (v > 0 ? `+${v}` : `${v}`));
@@ -145,7 +157,7 @@ async function render_user_profile() {
     } else dc.innerHTML = 'Loading...';
     try {
         const r = await fetch(`${API_BASE_URL}?info=${fc}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const d = await r.json(); set_cached_item(`profile_${fc}`, d);
-        if (d.miiData) fetch_mii_images([d.miiData], fc);
+        if (d.miiData) fetch_mii_images([d.miiData], fc); else fetch_miis_by_fc([fc]);
         dc.innerHTML = _get_player_profile_html(d, miiSrc, fc, true);
         const cst = el('user-profile-cache-status'); if(cst) cst.textContent = `Updated: ${new Date().toLocaleString()}`;
         load_discord_for_profile(fc, dc);
@@ -157,7 +169,7 @@ async function render_user_profile() {
      if (USER_PROFILE) { lv.classList.add('hidden'); sc.style.display = 'none'; sr.style.display = 'none'; pv.classList.remove('hidden'); lb.style.display = 'block'; render_user_profile(); } else { pv.classList.add('hidden'); lv.classList.remove('hidden'); sc.style.display = 'flex'; sr.style.display = 'block'; lb.style.display = 'none'; el('user-search-input').value = ''; sr.innerHTML = ''; }
  }
 
-// --- History & Filter ---
+// Room history and filters
 function on_history_change() { if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
 function on_history_main_change() { const val = el("history-input-main").value; if(el("history-input")) el("history-input").value = val; if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
 function add_history(m) { let i=el("history-input"),t=new Date(i.value).getTime() + m*60*1000 - new Date().getTimezoneOffset()*60000; const newVal = new Date(t).toISOString().slice(0,16); i.value = newVal; if(el("history-input-main")) el("history-input-main").value = newVal; on_history_change(); }
@@ -165,13 +177,13 @@ function change_history() { HISTORY_MODE = true; on_checkbox(); fetch_rooms(); }
 function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); let localDate = new Date(Date.now() - new Date().getTimezoneOffset()*60000); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr; on_checkbox(); fetch_rooms(); }
 function disable_filter() { let p=new URL(location.href).searchParams; p.delete("room"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); reload_rooms(); }
 
-// --- Names ---
+// Special character filtering
 function _escape(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/(?:\r\n|\r|\n)/g,''); }
 function handle_mii_name(n){ if (!n) return "Guest"; if (n.length > 10) n=n.substring(0, 10); return filter_mii_name(_escape(n)); }
 function char_code_is_wide(c){ return (c >= 0xF103 && c <= 0xF12F) || c == 0x2026; }
 function filter_mii_name(n){ let nw="", sp=false; for(let i=0; i<n.length; i++){ const c=n.charCodeAt(i); if(char_code_is_wide(c)){ if(!sp){ nw+="<span class=\"wide-char\">"; sp=true; } } else { if(sp){ nw+="</span>"; sp=false; } } nw+=n[i]; } if(sp) nw+="</span>"; return nw; }
 
-// --- Room Logic ---
+// Room connectivity processing
 function fix_split_rooms(rooms){
   let nr = []; 
   for (let r of rooms){ 
@@ -186,6 +198,7 @@ function fix_split_rooms(rooms){
   } return nr;
 }
 
+// Room sorting order
 function prioritize_rooms(rooms) {
     let user_fc = USER_PROFILE ? USER_PROFILE.fc : null; let fav_fcs = FAVORITES.map(f => f.fc).filter(f => f !== user_fc);
     let user_rooms = [], fav_rooms = [], public_rooms = [], private_rooms = [];
@@ -199,6 +212,7 @@ function prioritize_rooms(rooms) {
     return user_rooms.concat(fav_rooms).concat(public_rooms).concat(private_rooms);
 }
 
+// Animation and time updates
 let prev_uptime_update_date = null; let uptimes_timer = null;
 function update_uptimes(sr=false){ const ss=document.querySelectorAll("span[created]"); if(!HISTORY_MODE||sr||FIRST_LOAD){ FIRST_LOAD=false; for(const s of ss){ const c=new Date(s.getAttribute("created")); let n=HISTORY_MODE?HISTORY_DATE:new Date(); const d=n-c; let sc=Math.floor(d/1000),m=Math.floor(sc/60),h=Math.floor(m/60),dy=Math.floor(h/24); h%=24; m%=60; sc%=60; let ps=sc.toString().padStart(2,"0"),pm=m.toString().padStart(2,"0"),ph=h.toString().padStart(2,"0"); let str=`${h}:${pm}:${ps}`; if(dy>0) str=`${dy}:${ph}:${pm}:${ps}`; s.textContent=str; }} if(sr) return; let ms=1000; if(prev_uptime_update_date) ms-=(Date.now()-prev_uptime_update_date); prev_uptime_update_date=Date.now(); if(uptimes_timer) clearTimeout(uptimes_timer); uptimes_timer=setTimeout(update_uptimes, Math.max(0,ms)); }
 
@@ -208,11 +222,22 @@ function start_vrbr_flipper() { if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPE
 
 function start_room_detail_flipper() {
     if (ROOM_DETAIL_FLIPPER_TIMER) clearInterval(ROOM_DETAIL_FLIPPER_TIMER);
-    document.querySelectorAll('.room-detail-flipper-right').forEach(e => { if(e.dataset.players) e.innerHTML = e.dataset.players; e.style.opacity = 1; });
-    const u = () => { ROOM_DETAIL_STATE = ROOM_DETAIL_STATE === 'players' ? 'vr' : 'players'; const es = document.querySelectorAll('.room-detail-flipper-right[data-vr]'); for (const e of es) e.style.opacity = 0; setTimeout(() => { for (const e of es) { e.innerHTML = (ROOM_DETAIL_STATE === 'players') ? e.dataset.players : e.dataset.vr; e.style.opacity = 1; } }, 300); }; u(); ROOM_DETAIL_FLIPPER_TIMER = setInterval(u, 3000);
+    document.querySelectorAll('.room-detail-flipper-right').forEach(e => { e.style.opacity = 1; });
+    const u = () => { 
+        ROOM_DETAIL_STATE = ROOM_DETAIL_STATE === 'players' ? 'vr' : 'players'; 
+        const es = document.querySelectorAll('.room-detail-flipper-right[data-vr]'); 
+        for (const e of es) e.style.opacity = 0; 
+        setTimeout(() => { 
+            for (const e of es) { 
+                e.innerHTML = (ROOM_DETAIL_STATE === 'players') ? e.dataset.players : e.dataset.vr; 
+                e.style.opacity = 1; 
+            } 
+        }, 300); 
+    }; 
+    u(); ROOM_DETAIL_FLIPPER_TIMER = setInterval(u, 3000);
 }
 
-// Settings changes
+// User settings changes
 function on_vr_only_change() { const c=el("vr-only-checkbox").checked; localStorage.setItem("vr-only", c); if(c){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); } else start_vrbr_flipper(); }
 function on_theme_change() { const t=el("theme-select").value; localStorage.setItem("theme", t); apply_theme(t); }
 function apply_theme(t) { document.body.className=''; if(t==="blue") document.body.classList.add("theme-blue"); else if(t==="orange") document.body.classList.add("theme-orange"); else document.body.classList.add("theme-dark"); document.body.classList.add(CURRENT_VIEW_MODE==='desktop'?'desktop-view':'mobile-view'); }
@@ -226,12 +251,12 @@ function set_view_mode(m) { CURRENT_VIEW_MODE=(m==='desktop')?'desktop':'mobile'
 function apply_view_mode_styling() { const d=(CURRENT_VIEW_MODE==='desktop'); document.body.classList.toggle('desktop-view', d); document.body.classList.toggle('mobile-view', !d); el('view-mode-desktop-btn').classList.toggle('active', d); el('view-mode-mobile-btn').classList.toggle('active', !d); }
 function detect_initial_view_mode() { const s=localStorage.getItem("view-mode"); if(s) CURRENT_VIEW_MODE=s; else CURRENT_VIEW_MODE=window.innerWidth>768?'desktop':'mobile'; apply_view_mode_styling(); }
 
-// Advanced Mii Caching logic
+// Advanced Mii image caching
 function remove_expired_mii_images(){
     let r=[]; let favFcs = FAVORITES.map(f=>f.fc); if(USER_PROFILE) favFcs.push(USER_PROFILE.fc);
     for(let i=0; i<localStorage.length; i++){
         const k=localStorage.key(i); if(k.startsWith("mii_img_")){
-            const fc = k.replace("mii_img_", ""); if(favFcs.includes(fc)) continue; // Permanent cache for favorites/user
+            const fc = k.replace("mii_img_", ""); if(favFcs.includes(fc)) continue; 
             try { const d=JSON.parse(localStorage.getItem(k)); if(!Array.isArray(d)||d.length<2||(Date.now()-d[1]>MII_EXPIRE_TIME)) r.push(k); } catch(e){ r.push(k); }
         }
     }
@@ -242,6 +267,7 @@ function set_cached_mii_image(fc, img){ if (!fc || !img) return; const c = `mii_
 function format_mii_src(img) { if (!img) return './assets/loading.gif'; if (img.startsWith('http') || img.startsWith('data:image')) return img; return `data:image/png;base64,${img}`; }
 function apply_mii_image(fc, img){ const els=document.querySelectorAll(`img[mii-data-fc="${CSS.escape(fc)}"]`); if(!els||els.length===0) return; let src = format_mii_src(img); for(const el of els) if (el.src !== src) el.src=src; }
 
+// Image loading and batch fetching
 async function fetch_mii_images(miiDataArray, fcToMap = null){ 
     let u=[...new Set(miiDataArray)].filter(Boolean);
     for(let i=0; i<u.length; i+=MAX_MIIS_PER_REQUEST){
@@ -258,7 +284,8 @@ async function fetch_mii_images(miiDataArray, fcToMap = null){
     }
 }
 async function fetch_miis_by_fc(fcs){
-    let f=[]; for(const k of fcs) if(!get_cached_mii_image(k)) f.push(k);
+    let f=[...new Set(fcs)].filter(fc => fc !== "guest" && !get_cached_mii_image(fc));
+    if (f.length === 0) return;
     for(let i=0; i<f.length; i+=MAX_MIIS_PER_REQUEST){
         const b=f.slice(i, i+MAX_MIIS_PER_REQUEST);
         try{
@@ -268,8 +295,10 @@ async function fetch_miis_by_fc(fcs){
     }
 }
 
+// System version retrieval
 async function fetch_versions() { try { const r=await fetch("https://api.heyfordy.de/rr_app/version-rr"); if(r.ok) el("info-rr-version").textContent=` v${(await r.json()).version}`; } catch(e){} try { const w=await fetch("https://api.heyfordy.de/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} }
 
+// Page load initialization
 async function on_load(){
     el('settings-btn').onclick=toggle_settings_modal;
     el('user-profile-btn').onclick=toggle_user_profile_modal;
@@ -295,6 +324,7 @@ async function on_load(){
     fetch_rooms(); on_checkbox();
 }
 
+// Data fetch handler
 async function fetch_rooms() {
     clear_expired_cache(); let cb=el("timeout-checkbox"), hi=el("history-indicator"), hc_main=el("history-controls-main"), tp=""; 
     if(HISTORY_MODE){ 
@@ -309,15 +339,25 @@ async function fetch_rooms() {
     } catch(e){ el("loading").textContent=`Error: ${e.message}`; cur_rooms=[]; reload_rooms(); }
 }
 
+// Room UI rendering
 async function reload_rooms(){
      let rooms=[...cur_rooms]; if(!Array.isArray(rooms)) rooms=[];
      const rc=el("rooms-container"); rc.innerHTML=""; const url=new URL(location.href), ps=url.searchParams, fr=ps.get("room"); let rnf=true; const isFiltered = !!fr;
      el("filter-indicator").style.display= isFiltered ?"block":"none";
-     rooms = prioritize_rooms(rooms);
-     let final_rooms = fr ? rooms.filter(r => r.id == fr) : (!el("private-checkbox").checked ? rooms.filter(r => r.type === "anybody") : rooms);
-     rooms = fix_split_rooms(final_rooms);
      
-     let r_cnt=0, tp_cnt=0; let missing_miis_fcs=[];
+     let final_rooms = fr ? rooms.filter(r => r.id == fr) : (!el("private-checkbox").checked ? rooms.filter(r => {
+         if (r.type === "anybody") return true;
+         const p_keys = Object.keys(r.players);
+         return p_keys.some(pk => {
+             const p_fc = r.players[pk].fc;
+             return (USER_PROFILE && p_fc === USER_PROFILE.fc) || is_favorite(p_fc);
+         });
+     }) : rooms);
+     
+     rooms = prioritize_rooms(final_rooms);
+     rooms = fix_split_rooms(rooms);
+     
+     let r_cnt=0, tp_cnt=0;
      for(const room of rooms){
          r_cnt++; rnf=false;
          const sk=Object.keys(room.players).sort((a,b)=>{ const pA=room.players[a], pB=room.players[b]; const iA=USER_PROFILE&&pA.fc===USER_PROFILE.fc, iB=USER_PROFILE&&pB.fc===USER_PROFILE.fc; if(iA&&!iB) return -1; if(!iA&&iB) return 1; const fA=is_favorite(pA.fc), fB=is_favorite(pB.fc); if(fA&&!fB) return -1; if(!fA&&fB) return 1; return (parseInt(pB.ev,10)||0)-(parseInt(pA.ev,10)||0); });
@@ -329,7 +369,12 @@ async function reload_rooms(){
          else if (pc >= 12) { jn = "❌ Not Joinable"; jc = "not-joinable"; }
          var rk=room.rk||"", rk_k=rk.replace(/^(vs|bt)_/,""); if(rk_k==="vs"||rk_k==="bt") rk_k=""; var rk_h="", rk_t=""; const ti=ROOM_TYPES[rk_k]||ROOM_TYPES["-1"]; 
          if (room.type === "anybody" && (!rk || rk === "-1")) { rk_h = `<span style="color:#FFF">Public</span>`; rk_t = "Public Room"; } else if(ti){ rk_h=`<span title="${rk||'Unknown'}" style="color: ${ti.c};">${ti.l}</span>`; rk_t=ti.l; }
-         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">ⓘ</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
+         
+         let statusHTML = `<span class='${jc}'>${jn}</span>`;
+         let statusChanged = (ROOM_STATUS_CACHE[room.id] !== statusHTML);
+         ROOM_STATUS_CACHE[room.id] = statusHTML;
+         
+         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
          
          let rm_cnt=0, total_vr = 0, vr_count = 0;
          for(const p_idx of sk){
@@ -337,10 +382,18 @@ async function reload_rooms(){
              let nm=(p.mii&&p.mii.length>0)?p.mii.length:1;
              for(let cmi=0; cmi<nm; cmi++){
                  rm_cnt++; let pr=document.createElement("div"); pr.className="player-row"; const isGuest = cmi > 0; const iu=USER_PROFILE&&p.fc===USER_PROFILE.fc&&!isGuest;
+                 if (isGuest) pr.classList.add("is-guest");
                  if (!isGuest) pr.onclick = () => iu ? toggle_user_profile_modal() : show_player_info_modal(p.fc);
                  let mi=document.createElement("img"); mi.className="player-mii"; mi.alt="Mii"; mi.setAttribute("mii-data-fc", isGuest ? "guest" : p.fc);
-                 let cached = get_cached_mii_image(isGuest ? "guest" : p.fc);
-                 if(cached) mi.src = format_mii_src(cached); else { mi.src="./assets/loading.gif"; if(!isGuest) { if(p.mii&&p.mii[cmi]&&p.mii[cmi].data) fetch_mii_images([p.mii[cmi].data], p.fc); else missing_miis_fcs.push(p.fc); } }
+                 
+                 if (isGuest) {
+                     mi.src = "./assets/guest.png";
+                 } else {
+                     let cached = get_cached_mii_image(p.fc);
+                     if(cached) mi.src = format_mii_src(cached); else mi.src="./assets/loading.gif";
+                     if(p.mii && p.mii[cmi] && p.mii[cmi].data) fetch_mii_images([p.mii[cmi].data], p.fc);
+                 }
+                 
                  pr.appendChild(mi); let pi=document.createElement("div"); pi.className="player-info"; let pn=document.createElement("div"); pn.className="player-name"; const bn=(p.mii&&p.mii[cmi])?p.mii[cmi].name:p.name; pn.innerHTML=iu?`You <small>${handle_mii_name(bn)}</small>`:handle_mii_name(get_display_name(p.fc, bn)); pi.appendChild(pn); let pf=document.createElement("div"); pf.className="player-fc"; pf.textContent=isGuest?"Guest":p.fc; if(p.openhost==="true"&&!isGuest) pf.setAttribute("openhost",""); pi.appendChild(pf); pr.appendChild(pi);
                  if (!isGuest) { let pv=document.createElement("div"); pv.className="player-vrbr"; if (room.type === 'anybody' && (!p.ev && !p.eb)) pv.innerHTML = '<span class="player-info-loading-text">Joining...</span>'; else if(p.ev && p.eb){ pv.dataset.vr=p.ev; pv.dataset.br=p.eb; pv.textContent = (VRBR_STATE === 'vr') ? `${p.ev} VR` : `${p.eb} BR`; } else pv.textContent="🚫 VR/BR"; pr.appendChild(pv); }
                  let mb=document.createElement("button"); mb.className="player-menu-btn"; mb.innerHTML="⋮"; mb.onclick=(e)=>{ e.stopPropagation(); toggle_player_menu(mm); };
@@ -354,15 +407,19 @@ async function reload_rooms(){
              }
          }
          tp_cnt+=rm_cnt; const avg_vr = (vr_count > 0) ? Math.floor(total_vr / vr_count) : 0;
-         let statusHTML = `<span class='${jc}'>${jn}</span>`;
          let countHTML = `<span class='room-player-count excited'>${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'}`;
          let vrHTML = total_vr > 0 ? `🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.` : null;
-         det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${countHTML}</span></div>`;
+         det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${countHTML}</span></div>`;
          foot.innerHTML=`ID: <a href="${r_l}" class="room-link">${room.id} • Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";
      update_openhost_underline(); update_uptimes(!!uptimes_timer); start_vrbr_flipper(); start_room_detail_flipper(); update_header_stats(r_cnt, tp_cnt, isFiltered);
-     if(missing_miis_fcs.length > 0) fetch_miis_by_fc(missing_miis_fcs);
+     
+     setTimeout(() => {
+         document.querySelectorAll('.room-status-left[style*="opacity: 0"]').forEach(span => {
+             span.style.opacity = "1";
+         });
+     }, 50);
 }
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', on_load); else on_load();
