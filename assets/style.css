@@ -4,7 +4,7 @@ html { background-color: #24252d; min-height: 100vh; }
 
 /* --- Color Theme Variations --- */
 body { width: 100%; color: #fff; background: #1e1f25; display: flex; flex-direction: column; min-height: 100vh; text-align: center; font-size: 1rem; }
-body.theme-orange { background: linear-gradient(-45deg, #39ff0069, #ff4100, #ffc800, #dd4700, #0049ff69) 200% 200%; animation: Gradient 4s ease infinite; }
+body.theme-orange { background: linear-gradient(-45deg, #ff8800, #ff3c00, #dd7600, #ff880069) 200% 200%; animation: Gradient 4s ease infinite; }
 body.theme-blue { background: linear-gradient(-45deg, #00bcdd, #00dd55, #0055dd, #00dd69, #00ff22) 200% 200%; animation: Gradient 4s ease infinite; }
 @keyframes Gradient { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 

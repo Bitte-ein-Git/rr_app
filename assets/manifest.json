@@ -1,8 +1,8 @@
 {
-    "name": "🏎️ Retro Rewind",
-    "short_name": "🏎️ RWFC",
+    "name": "🏎️RetroRewind",
+    "short_name": "🏎️ RR",
     "description": "Live view of all public and private online rooms for Retro Rewind (RWFC).",
-    "start_url": "",
+    "start_url": "https://rr.heyfordy.de",
     "display": "standalone",
     "background_color": "#FE9900",
     "theme_color": "#FE9900",
@@ -40,13 +40,13 @@
         "src": "assets/apple-splash-1290-2796.jpg",
         "sizes": "1290x2796",
         "type": "image/jpeg",
-        "form_factor": "narrow",
+        "form_factor": "narrow"
       },
       {
         "src": "assets/apple-splash-2796-1290.jpg",
         "sizes": "2796x1290",
         "type": "image/jpeg",
-        "form_factor": "wide",
+        "form_factor": "wide"
       }
     ],
     "splash_screen_variations": [
