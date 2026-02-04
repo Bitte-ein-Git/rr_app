@@ -99,6 +99,37 @@ async function show_player_info_modal(fc) {
     } catch (e) { console.error("Error fetching player info:", e); }
 }
 
+// Opens modal with detailed room information
+function show_room_info_modal(roomId) {
+    const room = cur_rooms.find(r => r.id === roomId);
+    if (!room) return;
+    const content = el('room-info-content');
+    const rk_k = room.rk ? room.rk.replace(/^(vs|bt)_/, "") : "";
+    const ti = ROOM_TYPES[rk_k] || ROOM_TYPES["-1"];
+    const modeStr = `${ti.l} (${room.rk})`;
+    const hostPlayer = room.players[room.host];
+    const hostName = hostPlayer ? (hostPlayer.mii && hostPlayer.mii.length > 0 ? hostPlayer.mii[0].name : hostPlayer.name) : "Unknown";
+    const uptimeSpan = document.querySelector(`span[created="${room.created}"]`);
+    const currentUptime = uptimeSpan ? uptimeSpan.textContent : "0:00:00";
+    const pCount = Object.values(room.players).reduce((acc, p) => acc + (p.mii ? p.mii.length : 1), 0);
+
+    content.innerHTML = `
+        <div class="player-info-modal-stats-grid">
+            <div class="stat-item"><span class="stat-label">Room ID</span><span class="stat-value" style="color:#ff9900">${room.id}</span></div>
+            <div class="stat-item"><span class="stat-label">Uptime</span><span class="stat-value">${currentUptime}</span></div>
+            <div class="stat-item" style="grid-column: span 2;"><span class="stat-label">Mode</span><span class="stat-value">${modeStr}</span></div>
+            <div class="stat-item"><span class="stat-label">Type</span><span class="stat-value">${room.type}</span></div>
+            <div class="stat-item"><span class="stat-label">Suspended</span><span class="stat-value">${room.suspend ? 'YES' : 'NO'}</span></div>
+            <div class="stat-item" style="grid-column: span 2;"><span class="stat-label">Host</span><span class="stat-value">${handle_mii_name(hostName)}</span></div>
+            <div class="stat-item"><span class="stat-label">Players</span><span class="stat-value">${pCount}</span></div>
+            <div class="stat-item"><span class="stat-label">Race #</span><span class="stat-value">${room.race?.num || 0}</span></div>
+            <div class="stat-item"><span class="stat-label">Course ID</span><span class="stat-value">${room.race?.course || '-'}</span></div>
+            <div class="stat-item"><span class="stat-label">Class</span><span class="stat-value">${room.race?.cc === 1 ? '100cc' : room.race?.cc === 2 ? '150cc' : '200cc'}</span></div>
+        </div>
+    `;
+    toggle_modal('room-info-modal');
+}
+
 // User naming and copying
 function copy_fc(fc) { if (navigator.clipboard) navigator.clipboard.writeText(fc).catch(e => prompt("Manual copy:", fc)); else prompt("Manual copy:", fc); document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none'); }
 function get_display_name(fc, defaultName) { const fav = FAVORITES.find(f => f.fc === fc); return (fav && fav.nickname) ? fav.nickname : defaultName; }
@@ -295,7 +326,7 @@ async function fetch_miis_by_fc(fcs){
     }
 }
 
-// System version retrieval
+// RR + WW version retrieval
 async function fetch_versions() { try { const r=await fetch("https://api.heyfordy.de/rr_app/version-rr"); if(r.ok) el("info-rr-version").textContent=` v${(await r.json()).version}`; } catch(e){} try { const w=await fetch("https://api.heyfordy.de/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} }
 
 // Page load initialization
@@ -374,12 +405,18 @@ async function reload_rooms(){
          let statusChanged = (ROOM_STATUS_CACHE[room.id] !== statusHTML);
          ROOM_STATUS_CACHE[room.id] = statusHTML;
          
+         // Creates room card header with pin button
          let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
          
          let rm_cnt=0, total_vr = 0, vr_count = 0;
          for(const p_idx of sk){
              const p=room.players[p_idx]; if(p.ev) { let vr = parseInt(p.ev,10); if (!isNaN(vr)) { total_vr += vr; vr_count++; } }
              let nm=(p.mii&&p.mii.length>0)?p.mii.length:1;
+
+             // Groups primary player and guests in one container
+             let group = document.createElement("div"); group.className = "player-group";
+             if (USER_PROFILE && p.fc === USER_PROFILE.fc) group.classList.add("is-user"); else if (is_favorite(p.fc)) group.classList.add("highlighted");
+
              for(let cmi=0; cmi<nm; cmi++){
                  rm_cnt++; let pr=document.createElement("div"); pr.className="player-row"; const isGuest = cmi > 0; const iu=USER_PROFILE&&p.fc===USER_PROFILE.fc&&!isGuest;
                  if (isGuest) pr.classList.add("is-guest");
@@ -402,15 +439,17 @@ async function reload_rooms(){
                      if (iu) { let bc=document.createElement("button"); bc.innerHTML="🔗 Copy FC"; bc.onclick=(e)=>{e.stopPropagation(); copy_fc(fc);}; mm.appendChild(bc); let bl=document.createElement("button"); bl.innerHTML="👋 Logout"; bl.className="remove-highlight"; bl.onclick=(e)=>{e.stopPropagation(); logout_user();}; mm.appendChild(bl); } else { const iF=is_favorite(fc); if (iF) { const fav = FAVORITES.find(f => f.fc === fc); let bf_edit = document.createElement("button"); bf_edit.innerHTML = `✏️ ${fav?.nickname ? "Edit Nickname" : "Set Nickname"}`; bf_edit.onclick=(e)=>{ e.stopPropagation(); show_nickname_modal(fc, encodeURIComponent(bn), e); }; mm.appendChild(bf_edit); } let bf=document.createElement("button"); bf.innerHTML=iF?"🚫 Remove Favorite":"⭐ Add Favorite"; bf.onclick=(e)=>iF?remove_favorite(fc, false, e):add_favorite(fc, null, e); if(iF) bf.classList.add("remove-highlight"); mm.appendChild(bf); let bc=document.createElement("button"); bc.innerHTML="🔗 Copy FC"; bc.onclick=(e)=>{e.stopPropagation(); copy_fc(fc);}; mm.appendChild(bc); }
                      pr.appendChild(mb); pr.appendChild(mm); 
                  }
-                 if(iu) pr.classList.add("is-user"); else if(is_favorite(p.fc)) pr.classList.add("highlighted");
-                 pl.appendChild(pr);
+                 group.appendChild(pr);
              }
+             pl.appendChild(group);
          }
          tp_cnt+=rm_cnt; const avg_vr = (vr_count > 0) ? Math.floor(total_vr / vr_count) : 0;
          let countHTML = `<span class='room-player-count excited'>${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'}`;
          let vrHTML = total_vr > 0 ? `🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.` : null;
          det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${countHTML}</span></div>`;
-         foot.innerHTML=`ID: <a href="${r_l}" class="room-link">${room.id} • Uptime: <span created="${room.created}">0:00:00</span>`;
+         
+         // Formats room footer with clickable ID and uptime
+         foot.innerHTML=`ID: <a href="javascript:void(0)" onclick="show_room_info_modal('${room.id}')" class="room-link">${room.id}</a> • ⏰ Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";
      update_openhost_underline(); update_uptimes(!!uptimes_timer); start_vrbr_flipper(); start_room_detail_flipper(); update_header_stats(r_cnt, tp_cnt, isFiltered);

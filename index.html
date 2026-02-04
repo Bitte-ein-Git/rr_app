@@ -60,12 +60,12 @@
             </div>
             <div class="setting-row"> <label>View Mode:</label> <div><button id="view-mode-mobile-btn" class="view-mode-btn" onclick="set_view_mode('mobile')" title="Mobile">📱</button> <button id="view-mode-desktop-btn" class="view-mode-btn" onclick="set_view_mode('desktop')" title="Desktop">💻</button></div> </div>
             <div class="setting-row"> <button id="favorites-btn" onclick="toggle_favorites_modal()">⭐ Favorites</button> </div>
-            <div class="setting-row"> <label>Theme:</label> <select id="theme-select" onchange="on_theme_change()"> <option value="dark">Dark</option> <option value="orange">Orange</option> <option value="blue">Blue</option> </select> </div>
+            <div class="setting-row"> <label>Theme:</label> <select id="theme-select" onchange="on_theme_change()"> <option value="dark">Dark</option> <option value="orange">Orange-Blue</option> <option value="blue">Green-Blue</option> </select> </div>
             <div class="setting-row"> <label>Show counts</label> <label class="switch"><input type="checkbox" id="header-stats-checkbox" onchange="on_header_stats_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Sort by:</label> <select id="sort-order-select" onchange="on_sort_order_change()"> <option value="player_count">Player count</option> <option value="time_created">Time created</option> </select> </div>
             <div class="setting-row"> <label>Auto-Refresh</label> <label class="switch"><input type="checkbox" id="timeout-checkbox" onchange="on_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Private Rooms</label> <label class="switch"><input type="checkbox" id="private-checkbox" onchange="on_private_checkbox()" /><span class="slider round"></span></label> </div>
-            <div class="setting-row"> <label>Undl. OpenHost</label> <label class="switch"><input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /><span class="slider round"></span></label> </div>
+            <div class="setting-row"> <label>Underline OpenHost</label> <label class="switch"><input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Only VR</label> <label class="switch"><input type="checkbox" id="vr-only-checkbox" onchange="on_vr_only_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>History Time:</label> <input type="datetime-local" id="history-input" oninput="on_history_change()" /> </div>
         </div>
@@ -115,7 +115,14 @@
          </div>
      </div>
 
-     <!-- App Info Modal -->
+     <div id="room-info-modal" class="modal hidden">
+        <div class="modal-content small-modal">
+            <button class="modal-close-btn top-right" onclick="toggle_modal('room-info-modal')">X</button>
+            <h2>Room Details</h2>
+            <div id="room-info-content"></div>
+        </div>
+    </div>
+
      <div id="info-modal" class="modal hidden">
          <div class="modal-content small-modal">
              <button class="modal-close-btn top-right" onclick="toggle_info_modal()">X</button>

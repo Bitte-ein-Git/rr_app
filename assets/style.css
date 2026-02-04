@@ -10,20 +10,20 @@ body.theme-blue { background: linear-gradient(-45deg, #00bcdd, #00dd55, #0055dd,
 
 body.theme-dark header, body header { background: #111215a0; }
 body.theme-dark .room-card, body .room-card { background: #282a36; }
-body.theme-dark .player-row, body .player-row { background: #3a3d4d; }
+body.theme-dark .player-group, body .player-group { background: #3a3d4d; }
 body.theme-dark .modal-content, body .modal-content { background: rgba(30, 31, 37, 0.9); }
 body.theme-dark .stat-item, body .stat-item { background: #44475a; }
 body.theme-dark .player-info-modal-vrstats, body .player-info-modal-vrstats { background: #44475a; }
 body.theme-dark .player-info-modal-lastseen, body .player-info-modal-lastseen { color: #ccc; }
 
 body.theme-orange .room-card { background: #2e2f3680; }
-body.theme-orange .player-row { background: #2e2f36bf; }
+body.theme-orange .player-group { background: #2e2f36bf; }
 body.theme-orange .modal-content { background: rgba(0,0,0,0.6); }
 body.theme-orange .stat-item { background: #3a3d4d; }
 body.theme-orange .player-info-modal-vrstats { background: #3a3d4d; }
 
 body.theme-blue .room-card { background: #2e2f3680; }
-body.theme-blue .player-row { background: #2e2f36bf; }
+body.theme-blue .player-group { background: #2e2f36bf; }
 body.theme-blue .modal-content { background: rgba(0,0,0,0.6); }
 body.theme-blue .stat-item { background: #3a3d4d; }
 body.theme-blue .player-info-modal-vrstats { background: #3a3d4d; }
@@ -171,13 +171,17 @@ input:checked + .slider:before { transform: translateX(26px); }
 .room-details { font-size: 0.9rem; color: #aaa; margin-top: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid #444; text-align: center; }
 .room-detail-flipper-right, .room-status-left { transition: opacity 0.3s ease-in-out; display: inline-block; }
 .room-player-count { font-weight: bold; font-size: 1.2em; color: #fff; }
-.room-card-footer { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid #444; font-size: 0.8em; color: #ccc; text-align: center; }
-.room-card-footer a { color: #ff9900; font-weight: bold; }
+.room-card-footer { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid #444; font-size: 0.8em; color: #fff; text-align: center; }
+.room-card-footer a.room-link { color: #ff9900; font-weight: bold; text-decoration: none; }
+.room-card-footer a.room-link:hover { text-decoration: underline; }
 
 /* --- Player Entry UI --- */
-.player-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.player-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.4rem 0.5rem; border-radius: 0.4rem; position: relative; cursor: pointer; }
-.player-row.is-guest { margin-top: -0.5rem; }
+.player-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.player-group { border-radius: 0.6rem; display: flex; flex-direction: column; gap: 0; margin-bottom: 0.2rem; }
+.player-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.4rem 0.5rem; position: relative; cursor: pointer; background: none !important; }
+.player-row:first-child { border-top-left-radius: 0.6rem; border-top-right-radius: 0.6rem; }
+.player-row:last-child { border-bottom-left-radius: 0.6rem; border-bottom-right-radius: 0.6rem; }
+.player-row.is-guest { padding-left: 2rem; margin-top: -2px; }
 .player-mii { width: 40px; height: 40px; border-radius: 50%; background: #444; object-fit: cover; flex-shrink: 0; }
 .player-info { flex: 1; overflow: hidden; }
 .player-name { font-size: 1.1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'MK Retro Rewind Font for rr.heyfordy.de', 'CTMKF', 'Rubik', sans-serif; }
@@ -195,8 +199,8 @@ input:checked + .slider:before { transform: translateX(26px); }
 .player-menu .remove-highlight { color: #ff5555; }
 
 /* --- List Highlighting --- */
-.player-row.highlighted { background: #4a443a; border-left: 3px solid #ffcc00; }
-.player-row.is-user { background: #3a4a44; border-left: 3px solid #00cc66; }
+.player-group.highlighted { border-left: 4px solid #ffcc00; }
+.player-group.is-user { border-left: 4px solid #00cc66; }
 .joinable { color: #33ff33; } .not-joinable { color: #ff3333; } .course-selection { color: #ffff33; } .split-room { color: #ff9933; }
 
 /* --- Site Footer --- */
