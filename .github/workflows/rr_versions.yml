@@ -2,7 +2,7 @@ name: "🌀 RR Version Check"
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -12,32 +12,93 @@ jobs:
   update-version:
     runs-on: ubuntu-latest
     steps:
-      # check out the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # download the latest version file and overwrite target
-      - name: Update Version File
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Process Version and Changelog
+        env:
+          RR_DC_CHID: ${{ secrets.RR_DC_CHID }}
+          RR_DCBOT_KEY: ${{ secrets.RR_DCBOT_KEY }}
         run: |
-          URL="http://update.rwfc.net:8000/RetroRewind/RetroRewindVersion.txt"
-          TARGET="versions.txt"
+          python -c '
+          import os, requests, json, re
           
-          # Download with a specific user agent
-          curl -s -L -A "GitHub-Action-RR-Updater" -o "$TARGET" "$URL"
+          CHID = os.getenv("RR_DC_CHID")
+          TOKEN = os.getenv("RR_DCBOT_KEY")
           
-      # check for changes and commit only if git detects a difference
+          # Fetch remote version
+          try:
+              v_resp = requests.get("http://update.rwfc.net:8000/RetroRewind/RetroRewindVersion.txt", timeout=10)
+              v_resp.raise_for_status()
+              v_text = v_resp.text
+              new_v = v_text.strip().split("\n")[-1].split(" ")[0]
+          except Exception as e:
+              print(f"Error fetching version: {e}")
+              exit(1)
+          
+          # Read local state
+          old_v, old_c = "", ""
+          if os.path.exists("latest.json"):
+              try:
+                  with open("latest.json", "r") as f:
+                      data = json.load(f)
+                      old_v, old_c = data.get("version", ""), data.get("changelog", "")
+              except: pass
+
+          final_c = old_c
+          
+          # Search Discord if version is new or changelog is missing
+          if new_v != old_v or old_c == "No changelog released yet":
+              print("Searching Discord messages...")
+              d_url = f"https://discord.com/api/v10/channels/{CHID}/messages?limit=10"
+              d_headers = {"Authorization": f"Bot {TOKEN}"}
+              try:
+                  d_resp = requests.get(d_url, headers=d_headers, timeout=10)
+                  if d_resp.status_code == 200:
+                      messages = d_resp.json()
+                      found = False
+                      for msg in messages:
+                          # Check primary content or message snapshots (for forwarded messages)
+                          content = msg.get("content") or ""
+                          if not content and msg.get("message_snapshots"):
+                              content = msg["message_snapshots"][0].get("message", {}).get("content") or ""
+                          
+                          if "rwfc.net/updates" in content and "Changelog" in content:
+                              match = re.search(r"```(?:[Cc]hangelog:)?([\s\S]*?)```", content)
+                              if match:
+                                  final_c = match.group(1).strip()
+                                  found = True
+                                  break
+                      
+                      if not found and new_v != old_v:
+                          final_c = "No changelog released yet"
+                  else:
+                      if new_v != old_v: final_c = "No changelog released yet"
+              except:
+                  if new_v != old_v: final_c = "No changelog released yet"
+
+          # Write results
+          with open("latest.json", "w") as f:
+              json.dump({"version": new_v, "changelog": final_c}, f, indent=2)
+          
+          with open("versions.txt", "w") as f:
+              f.write(v_text)
+          '
+
       - name: Check and Push Changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git add versions.txt
-          
-          # Check if there is anything to commit
+          git add versions.txt latest.json
           if ! git diff --staged --quiet; then
-            echo "Changes detected, committing..."
-            git commit -m "🏎️ RR versions .txt updated"
+            git commit -m "🏎️ RR Version+Changelog updated"
             git push
-          else
-            echo "No content changes detected (ignoring line endings)."
           fi
