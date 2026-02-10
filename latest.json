@@ -1,4 +1,4 @@
 {
   "version": "6.8.3",
-  "changelog": "No changelog released yet"
+  "changelog": "- Added Nunchuk Input Viewer (Credits to Bodacious and Hintz for this!)\n - Added ranking details page when on the WFC Main Page, which can be accessed by pressing +.\n - Fixed an issue where selecting \"Next Race\" could cause the game to crash.\n - Fixed an issue where GP points would be wrong on NTSC-J.\n - Fixed an issue where randomizing a course in Battle Worldwides could select a CT.\n - Fixed an issue where the track repick prevention UI would remain when going offline.\n - Other minor bug fixes and improvements."
 }
