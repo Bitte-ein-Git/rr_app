@@ -548,7 +548,7 @@
   "78": {
     "name": "Beta Waluigi Pinball",
     "author": "TheBeefBai",
-    "version": "v1.1",
+    "version": "v1.2",
     "type": "Retro",
     "slot": "GCN Waluigi Stadium"
   },
@@ -905,7 +905,7 @@
   "129": {
     "name": "Wii U Mount Wario",
     "author": "TheGamingBram, Cats4Life",
-    "version": "v1.0",
+    "version": "v1.0-rr",
     "type": "Retro",
     "slot": "DK Summit"
   },
@@ -961,7 +961,7 @@
   "137": {
     "name": "Wii U Wild Woods",
     "author": "TheGamingBram",
-    "version": "v2.2-rr",
+    "version": "v2.2-rr2",
     "type": "Retro",
     "slot": "Maple Treeway"
   },
@@ -975,7 +975,7 @@
   "139": {
     "name": "Wii U Super Bell Subway",
     "author": "TheGamingBram",
-    "version": "v2.5-rr",
+    "version": "v2.5-rr2",
     "type": "Retro",
     "slot": "Coconut Mall"
   },
@@ -989,7 +989,7 @@
   "141": {
     "name": "SW Sky-High Sundae",
     "author": "ZPL",
-    "version": "v1.01",
+    "version": "v1.1",
     "type": "Retro",
     "slot": "Mario Circuit"
   },
@@ -1087,7 +1087,7 @@
   "155": {
     "name": "RMX Ghost Valley 1",
     "author": "Kozakura",
-    "version": "v1.1",
+    "version": "v1.2",
     "type": "Retro",
     "slot": "SNES Ghost Valley 2"
   },
@@ -1131,7 +1131,7 @@
     "author": "TheGamingBram",
     "version": "v1.0",
     "type": "Retro",
-    "slot": "Bowser's Castle"
+    "slot": "N64 Bowser's Castle"
   },
   "162": {
     "name": "GP Rainbow Coaster",
@@ -1157,14 +1157,14 @@
   "165": {
     "name": "SW2 Whistlestop Summit",
     "author": "Outlaw Runner",
-    "version": "v1.1",
+    "version": "v1.2",
     "type": "Retro",
     "slot": "Wario's Gold Mine"
   },
   "166": {
     "name": "SW2 Faraway Oasis",
     "author": "Iggy Ze Koopa, ZPL",
-    "version": "v3.1",
+    "version": "v3.11",
     "type": "Retro",
     "slot": "N64 DK's Jungle Parkway"
   },
@@ -1192,14 +1192,14 @@
   "170": {
     "name": "SW2 Ghost Valley",
     "author": "ZPL",
-    "version": "v1.0",
+    "version": "v1.01",
     "type": "Retro",
     "slot": "SNES Ghost Valley 2"
   },
   "171": {
     "name": "SW2 Bowser's Castle",
     "author": "FunkyRacer, TheGamingBram, Strobenz, KaneTheSnowman",
-    "version": "v1.0",
+    "version": "v1.02",
     "type": "Retro",
     "slot": "Bowser's Castle"
   },
@@ -1213,7 +1213,7 @@
   "173": {
     "name": "Beta Choco Island 3",
     "author": "ZPL",
-    "version": "v1.0",
+    "version": "v1.1",
     "type": "Retro",
     "slot": "GCN Mario Circuit"
   },
