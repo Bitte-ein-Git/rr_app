@@ -48,7 +48,7 @@
     <link rel="apple-touch-startup-image" href="./assets/apple-splash-2868-1320.jpg" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="🏎️RetroRewind" />
     
@@ -70,13 +70,11 @@
         </div>
     </header>
 
-    <!-- Box 1: Status & Exit -->
     <div id="history-indicator" style="display: none;">
         <span>ℹ️ Currently viewing history.</span>
         <button onclick="disable_history()">Back to Live</button>
     </div>
     
-    <!-- Box 2: Input & Controls -->
     <div id="history-controls-main" style="display: none;">
         <input type="datetime-local" id="history-input-main" class="history-date-input" oninput="on_history_main_change()" />
         <div class="history-indicator-controls">
@@ -104,7 +102,13 @@
             </div>
             <div class="setting-row"> <label>View Mode:</label> <div><button id="view-mode-mobile-btn" class="view-mode-btn" onclick="set_view_mode('mobile')" title="Mobile">📱</button> <button id="view-mode-desktop-btn" class="view-mode-btn" onclick="set_view_mode('desktop')" title="Desktop">💻</button></div> </div>
             <div class="setting-row"> <button id="favorites-btn" onclick="toggle_favorites_modal()">⭐ Favorites</button> </div>
-            <div class="setting-row"> <label>Theme:</label> <select id="theme-select" onchange="on_theme_change()"> <option value="dark">Dark</option> <option value="orange">Orange-Blue</option> <option value="blue">Green-Blue</option> </select> </div>
+            <div class="setting-row"> 
+                <label>Dark mode</label> 
+                <label class="switch">
+                    <input type="checkbox" id="darkmode-checkbox" onchange="on_darkmode_change()" />
+                    <span class="slider round"></span>
+                </label> 
+            </div>
             <div class="setting-row"> <label>Show counts</label> <label class="switch"><input type="checkbox" id="header-stats-checkbox" onchange="on_header_stats_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Sort by:</label> <select id="sort-order-select" onchange="on_sort_order_change()"> <option value="player_count">Player count</option> <option value="time_created">Time created</option> </select> </div>
             <div class="setting-row"> <label>Auto-Refresh</label> <label class="switch"><input type="checkbox" id="timeout-checkbox" onchange="on_checkbox()" /><span class="slider round"></span></label> </div>
@@ -115,7 +119,6 @@
         </div>
     </div>
 
-    <!-- Favorites Modal -->
     <div id="favorites-modal" class="modal hidden">
          <div class="modal-content">
              <button class="modal-close-btn top-right" onclick="toggle_favorites_modal()">X</button>
@@ -132,7 +135,6 @@
          </div>
      </div>
 
-     <!-- User Profile Modal -->
      <div id="user-profile-modal" class="modal hidden">
           <div class="modal-content">
               <button class="modal-close-btn top-right" onclick="toggle_user_profile_modal()">X</button>
@@ -151,7 +153,6 @@
           </div>
       </div>
 
-     <!-- Player Info Modal -->
      <div id="player-info-modal" class="modal hidden">
          <div class="modal-content small-modal">
              <button class="modal-close-btn top-right" onclick="hide_player_info_modal()">X</button>
@@ -183,7 +184,6 @@
          </div>
      </div>
 
-    <!-- Nickname Modal -->
     <div id="nickname-modal" class="modal hidden">
         <div class="modal-content small-modal">
             <button class="modal-close-btn top-right" onclick="close_nickname_modal()">X</button>

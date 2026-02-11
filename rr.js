@@ -270,8 +270,20 @@ function start_room_detail_flipper() {
 
 // User settings changes
 function on_vr_only_change() { const c=el("vr-only-checkbox").checked; localStorage.setItem("vr-only", c); if(c){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); } else start_vrbr_flipper(); }
-function on_theme_change() { const t=el("theme-select").value; localStorage.setItem("theme", t); apply_theme(t); }
-function apply_theme(t) { document.body.className=''; if(t==="blue") document.body.classList.add("theme-blue"); else if(t==="orange") document.body.classList.add("theme-orange"); else document.body.classList.add("theme-dark"); document.body.classList.add(CURRENT_VIEW_MODE==='desktop'?'desktop-view':'mobile-view'); }
+
+// Theme and Dark mode management
+function on_darkmode_change() {
+    const c = el("darkmode-checkbox").checked;
+    localStorage.setItem("dark-mode", c);
+    apply_theme(c ? "dark" : "orange");
+}
+function apply_theme(t) {
+    document.body.classList.remove("theme-dark", "theme-orange");
+    if(t === "dark") document.body.classList.add("theme-dark");
+    else document.body.classList.add("theme-orange");
+    document.body.classList.add(CURRENT_VIEW_MODE === 'desktop' ? 'desktop-view' : 'mobile-view');
+}
+
 function on_header_stats_change() { const c=el("header-stats-checkbox").checked; localStorage.setItem("show-header-stats", c); reload_rooms(); }
 function on_sort_order_change() { const s=el("sort-order-select").value; localStorage.setItem("sort-order", s); reload_rooms(); }
 function on_checkbox(){ const s=el("timeout-checkbox").checked; localStorage.setItem("auto-reload", s); if(RELOAD_TIMER) clearInterval(RELOAD_TIMER); if(s && !HISTORY_MODE) RELOAD_TIMER=setInterval(fetch_rooms, RELOAD_TIME); }
@@ -343,7 +355,12 @@ async function on_load(){
     el("vr-only-checkbox").checked=localStorage.getItem("vr-only")==="true";
     let h=localStorage.getItem("show-header-stats"); h=(h===null)?true:(h==="true"); el("header-stats-checkbox").checked=h;
     const s=localStorage.getItem("sort-order")||"player_count"; el("sort-order-select").value=s;
-    const t=localStorage.getItem("theme")||"dark"; el("theme-select").value=t; apply_theme(t);
+    
+    // Default theme logic (Orange)
+    let dm = localStorage.getItem("dark-mode") === "true";
+    el("darkmode-checkbox").checked = dm;
+    apply_theme(dm ? "dark" : "orange");
+    
     let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(Date.now() - z); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr;
     const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !window.MSStream);
     if (isIOS && !window.navigator.standalone) el('ios-homescreen-hint').style.display = 'block';
@@ -405,7 +422,6 @@ async function reload_rooms(){
          let statusChanged = (ROOM_STATUS_CACHE[room.id] !== statusHTML);
          ROOM_STATUS_CACHE[room.id] = statusHTML;
          
-         // Creates room card header with pin button
          let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
          
          let rm_cnt=0, total_vr = 0, vr_count = 0;
@@ -413,7 +429,6 @@ async function reload_rooms(){
              const p=room.players[p_idx]; if(p.ev) { let vr = parseInt(p.ev,10); if (!isNaN(vr)) { total_vr += vr; vr_count++; } }
              let nm=(p.mii&&p.mii.length>0)?p.mii.length:1;
 
-             // Groups primary player and guests in one container
              let group = document.createElement("div"); group.className = "player-group";
              if (USER_PROFILE && p.fc === USER_PROFILE.fc) group.classList.add("is-user"); else if (is_favorite(p.fc)) group.classList.add("highlighted");
 
@@ -448,7 +463,6 @@ async function reload_rooms(){
          let vrHTML = total_vr > 0 ? `🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.` : null;
          det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${countHTML}</span></div>`;
          
-         // Formats room footer with clickable ID and uptime
          foot.innerHTML=`ID: <a href="javascript:void(0)" onclick="show_room_info_modal('${room.id}')" class="room-link">${room.id}</a> • ⏰ Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";

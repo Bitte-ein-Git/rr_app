@@ -5,7 +5,6 @@ html { background-color: #24252d; min-height: 100vh; }
 /* --- Color Theme Variations --- */
 body { width: 100%; color: #fff; background: #1e1f25; display: flex; flex-direction: column; min-height: 100vh; text-align: center; font-size: 1rem; }
 body.theme-orange { background: linear-gradient(-45deg, #ff8800, #ff3c00, #dd7600, #ff880069) 200% 200%; animation: Gradient 4s ease infinite; }
-body.theme-blue { background: linear-gradient(-45deg, #00bcdd, #00dd55, #0055dd, #00dd69, #00ff22) 200% 200%; animation: Gradient 4s ease infinite; }
 @keyframes Gradient { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
 body.theme-dark header, body header { background: #111215a0; }
@@ -22,12 +21,6 @@ body.theme-orange .modal-content { background: rgba(0,0,0,0.6); }
 body.theme-orange .stat-item { background: #3a3d4d; }
 body.theme-orange .player-info-modal-vrstats { background: #3a3d4d; }
 
-body.theme-blue .room-card { background: #2e2f3680; }
-body.theme-blue .player-group { background: #2e2f36bf; }
-body.theme-blue .modal-content { background: rgba(0,0,0,0.6); }
-body.theme-blue .stat-item { background: #3a3d4d; }
-body.theme-blue .player-info-modal-vrstats { background: #3a3d4d; }
-
 hr { color: white; } p { margin-top: 0.5rem; margin-bottom: 0.25rem; } a { color: #ffdaa3; } a:hover { text-decoration: underline; }
 h1 { margin: 10px 0 0.5rem 0; font-size: 1.5em; text-decoration: none; } h2 { margin-bottom: 1rem; } button { cursor: pointer; } input, select { font-family: inherit; font-size: 1em; }
 body.no-scroll { overflow: hidden; }
@@ -36,8 +29,7 @@ body.no-scroll { overflow: hidden; }
 header { 
     display: flex; justify-content: space-between; align-items: center; 
     padding: 0.6rem 1rem 0.6rem 1rem;
-    padding-top: calc(0.6rem + constant(safe-area-inset-top)); 
-    padding-top: calc(0.6rem + env(safe-area-inset-top));
+    padding-top: calc(0.6rem + env(safe-area-inset-top)); 
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 5px; 
 }
