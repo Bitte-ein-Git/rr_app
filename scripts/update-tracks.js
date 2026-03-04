@@ -4,7 +4,7 @@ const AdmZip = require('adm-zip');
 const XLSX = require('xlsx');
 
 // --- CONFIGURATION ---
-const API_VERSION_URL = "https://api.heyfordy.de/rr_app/version-rr";
+const API_VERSION_URL = "https://api.heyfordy.dev/rr_app/version-rr";
 const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1FelOidNHL1bqSaKeycZux1eQcDyrosONFC_qWVTYoog/export?format=xlsx";
 const BASE_ZIP_URL = "http://update.rwfc.net:8000/RetroRewind/zip/";
 const OUTPUT_FILE = "tracks.json";

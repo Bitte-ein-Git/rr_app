@@ -2,7 +2,7 @@
     "name": "🏎️RetroRewind",
     "short_name": "🏎️ RR",
     "description": "Live view of all public and private online rooms for Retro Rewind (RWFC).",
-    "start_url": "https://rr.heyfordy.de",
+    "start_url": "https://rr.heyfordy.dev",
     "display": "standalone",
     "background_color": "#FE9900",
     "theme_color": "#FE9900",

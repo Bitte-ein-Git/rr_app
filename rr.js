@@ -1,11 +1,11 @@
 const el = (id) => document.getElementById(id);
 
 // API configuration
-const API_BASE_URL = "https://api.heyfordy.de/rr_app/player";
-const DISCORD_API_URL = "https://api.heyfordy.de/rr_app/discord";
-const RWFC_API_URL = "https://api.heyfordy.de/rwfc";
-const MII_API_URL = "https://api.heyfordy.de/rr_app/mii";
-const MII_BATCH_API_URL = "https://api.heyfordy.de/rr_app/mii_batch";
+const API_BASE_URL = "https://api.heyfordy.dev/rr_app/player";
+const DISCORD_API_URL = "https://api.heyfordy.dev/rr_app/discord";
+const RWFC_API_URL = "https://api.heyfordy.dev/rwfc";
+const MII_API_URL = "https://api.heyfordy.dev/rr_app/mii";
+const MII_BATCH_API_URL = "https://api.heyfordy.dev/rr_app/mii_batch";
 const MAX_MIIS_PER_REQUEST = 24;
 const MII_EXPIRE_TIME = 1000 * 60 * 60 * 24; 
 const PROFILE_EXPIRE_TIME = 1000 * 60 * 60 * 24; 
@@ -339,7 +339,7 @@ async function fetch_miis_by_fc(fcs){
 }
 
 // RR + WW version retrieval
-async function fetch_versions() { try { const r=await fetch("https://api.heyfordy.de/rr_app/version-rr"); if(r.ok) el("info-rr-version").textContent=` v${(await r.json()).version}`; } catch(e){} try { const w=await fetch("https://api.heyfordy.de/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} }
+async function fetch_versions() { try { const r=await fetch("https://api.heyfordy.dev/rr_app/version-rr"); if(r.ok) el("info-rr-version").textContent=` v${(await r.json()).version}`; } catch(e){} try { const w=await fetch("https://api.heyfordy.dev/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} }
 
 // Page load initialization
 async function on_load(){
