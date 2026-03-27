@@ -19,7 +19,7 @@ let HEADER_STATS_TIMER = null;
 let HISTORY_TIMER = null; let HISTORY_MODE = false; let HISTORY_DATE = null;
 let FAVORITES = []; let USER_PROFILE = null; let CURRENT_VIEW_MODE = 'mobile';
 let CURRENT_NICKNAME_FC = null;
-let ROOM_STATUS_CACHE = {};
+let ROOM_STATUS_CACHE = {}; let ROOM_TRACK_CACHE = {}; // track info cache for crossfades
 
 // Definitions for room categories
 const ROOM_TYPES = { "10":{l:"🕹️ Retro Tracks",c:"#FF8C00"},"11":{l:"⏰ Online TT",c:"#FF6347"},"12":{l:"🚀 200cc",c:"#DC143C"},"13":{l:"☂️ Item Rain",c:"#1E90FF"},"14":{l:"Regular Battle",c:"#B22222"},"15":{l:"Elimination Battle",c:"#8B0000"},"20":{l:"🚧 Custom Tracks",c:"#E800A3"},"21":{l:"Vanilla Tracks",c:"#7B68EE"},"22":{l:"CT 200cc",c:"#DA70D6"},"666":{l:"Luminous 150cc",c:"#FFD700"},"667":{l:"Luminous Online TT",c:"#BDB76B"},"668":{l:"CTGP-C",c:"#32CD32"},"751":{l:"Versus",c:"#A9A9A9"},"-1":{l:"Regular",c:"#A9A9A9"},"":{l:"Private",c:"#A9A9A9"},"69":{l:"IKW Default",c:"#ADD8E6"},"70":{l:"IKW Ultras VS",c:"#008080"},"71":{l:"IKW Countdown",c:"#00FFFF"},"72":{l:"IKW Bob-omb Blast",c:"#696969"},"73":{l:"IKW Infinite Accel",c:"#4B0082"},"74":{l:"IKW Banana Slip",c:"#FFFFE0"},"75":{l:"IKW Random Items",c:"#FF00FF"},"76":{l:"IKW Unfair Items",c:"#800000"},"77":{l:"IKW Blue Shell Madness",c:"#0000CD"},"78":{l:"IKW Mushroom Dash",c:"#2E8B57"},"79":{l:"IKW Bumper Karts",c:"#A52A2A"},"80":{l:"IKW Item Rampage",c:"#FA8072"},"81":{l:"IKW Item Rain",c:"#4169E1"},"82":{l:"IKW Shell Break",c:"#2E8B57"},"83":{l:"IKW Riibalanced",c:"#C0C0C0"},"875":{l:"OptPack 150cc",c:"#7CFC00"},"876":{l:"OptPack Online TT",c:"#556B2F"},"877":{l:"OptPack",c:"#000080"},"878":{l:"OptPack",c:"#000080"},"879":{l:"OptPack",c:"#000080"},"880":{l:"OptPack",c:"#000080"},"1312":{l:"WTP 150cc",c:"#008B8B"},"1313":{l:"WTP 200cc",c:"#483D8B"},"1314":{l:"WTP Online TT",c:"#8FBC8F"},"1315":{l:"WTP Item Rain",c:"#00CED1"},"1316":{l:"WTP STYD",c:"#9400D3"} };
@@ -270,6 +270,8 @@ function start_room_detail_flipper() {
 
 // User settings changes
 function on_vr_only_change() { const c=el("vr-only-checkbox").checked; localStorage.setItem("vr-only", c); if(c){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); } else start_vrbr_flipper(); }
+// save track-names setting
+function on_track_names_change() { const c=el("track-names-checkbox").checked; localStorage.setItem("show-track-names", c); reload_rooms(); }
 
 // Theme and Dark mode management
 function on_darkmode_change() {
@@ -293,6 +295,29 @@ function update_openhost_underline() { const s=el("openhost-checkbox").checked; 
 function set_view_mode(m) { CURRENT_VIEW_MODE=(m==='desktop')?'desktop':'mobile'; localStorage.setItem("view-mode", CURRENT_VIEW_MODE); apply_view_mode_styling(); }
 function apply_view_mode_styling() { const d=(CURRENT_VIEW_MODE==='desktop'); document.body.classList.toggle('desktop-view', d); document.body.classList.toggle('mobile-view', !d); el('view-mode-desktop-btn').classList.toggle('active', d); el('view-mode-mobile-btn').classList.toggle('active', !d); }
 function detect_initial_view_mode() { const s=localStorage.getItem("view-mode"); if(s) CURRENT_VIEW_MODE=s; else CURRENT_VIEW_MODE=window.innerWidth>768?'desktop':'mobile'; apply_view_mode_styling(); }
+
+// Backup Export & Import logic
+function export_data() {
+    const data = { favorites: localStorage.getItem("favorites"), userProfile: localStorage.getItem("userProfile"), settings: { "auto-reload": localStorage.getItem("auto-reload"), "show-private": localStorage.getItem("show-private"), "openhost": localStorage.getItem("openhost"), "vr-only": localStorage.getItem("vr-only"), "show-header-stats": localStorage.getItem("show-header-stats"), "sort-order": localStorage.getItem("sort-order"), "dark-mode": localStorage.getItem("dark-mode"), "view-mode": localStorage.getItem("view-mode"), "show-track-names": localStorage.getItem("show-track-names") } };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "rr_backup.json"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function import_data(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (data.favorites) localStorage.setItem("favorites", data.favorites);
+            if (data.userProfile) localStorage.setItem("userProfile", data.userProfile);
+            if (data.settings) { for (const [k, v] of Object.entries(data.settings)) { if (v !== null) localStorage.setItem(k, v); } }
+            alert("Backup imported successfully! Reloading..."); location.reload();
+        } catch (err) { alert("Invalid backup file format."); }
+    };
+    reader.readAsText(file);
+}
 
 // Advanced Mii image caching
 function remove_expired_mii_images(){
@@ -356,6 +381,9 @@ async function on_load(){
     let h=localStorage.getItem("show-header-stats"); h=(h===null)?true:(h==="true"); el("header-stats-checkbox").checked=h;
     const s=localStorage.getItem("sort-order")||"player_count"; el("sort-order-select").value=s;
     
+    // Default Track Name Toggle Setup
+    let tn=localStorage.getItem("show-track-names"); tn=(tn===null)?true:(tn==="true"); el("track-names-checkbox").checked=tn;
+    
     // Default theme logic (Orange)
     let dm = localStorage.getItem("dark-mode") === "true";
     el("darkmode-checkbox").checked = dm;
@@ -369,6 +397,10 @@ async function on_load(){
         HISTORY_MODE=true; const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); localDate = new Date(tsMillis - z); const histIso = localDate.toISOString().slice(0, 16); el("history-input").value = histIso; if(el("history-input-main")) el("history-input-main").value = histIso;
         change_history(); return; 
     }
+    
+    // start flippers ONLY once on load to avoid jumpy animations during refresh
+    start_vrbr_flipper(); start_room_detail_flipper();
+    
     fetch_rooms(); on_checkbox();
 }
 
@@ -422,7 +454,26 @@ async function reload_rooms(){
          let statusChanged = (ROOM_STATUS_CACHE[room.id] !== statusHTML);
          ROOM_STATUS_CACHE[room.id] = statusHTML;
          
-         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
+         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
+         
+         let trackInfo = document.createElement("div"); trackInfo.className = "track-info-container";
+         let trackNameStr = room.track || "Unknown Track";
+         let isSuspended = room.suspend === true || room.suspend === "1" || room.suspend === "true";
+         let showTracks = el("track-names-checkbox").checked;
+         
+         // Fix track logic: show ONLY when NOT suspended (in race) and handle unknown track and user setting
+         let showTrackElement = !isSuspended && trackNameStr !== "Unknown Track" && showTracks;
+         let needsCrossfade = (showTrackElement && ROOM_TRACK_CACHE[room.id] && ROOM_TRACK_CACHE[room.id] !== trackNameStr);
+         ROOM_TRACK_CACHE[room.id] = trackNameStr;
+         
+         // Fix text spacing around the track name bullet point (use &nbsp;)
+         trackInfo.innerHTML = `🗺️ &nbsp; <span>${trackNameStr}</span>`;
+         
+         if (showTrackElement) trackInfo.classList.add("visible");
+         if (needsCrossfade) { trackInfo.classList.add("crossfade-active"); setTimeout(() => trackInfo.classList.remove("crossfade-active"), 50); }
+         card.appendChild(trackInfo);
+
+         let pl=document.createElement("div"); pl.className="player-list"; card.appendChild(pl); let foot=document.createElement("div"); foot.className="room-card-footer"; card.appendChild(foot); rc.appendChild(card);
          
          let rm_cnt=0, total_vr = 0, vr_count = 0;
          for(const p_idx of sk){
@@ -447,7 +498,19 @@ async function reload_rooms(){
                  }
                  
                  pr.appendChild(mi); let pi=document.createElement("div"); pi.className="player-info"; let pn=document.createElement("div"); pn.className="player-name"; const bn=(p.mii&&p.mii[cmi])?p.mii[cmi].name:p.name; pn.innerHTML=iu?`You <small>${handle_mii_name(bn)}</small>`:handle_mii_name(get_display_name(p.fc, bn)); pi.appendChild(pn); let pf=document.createElement("div"); pf.className="player-fc"; pf.textContent=isGuest?"Guest":p.fc; if(p.openhost==="true"&&!isGuest) pf.setAttribute("openhost",""); pi.appendChild(pf); pr.appendChild(pi);
-                 if (!isGuest) { let pv=document.createElement("div"); pv.className="player-vrbr"; if (room.type === 'anybody' && (!p.ev && !p.eb)) pv.innerHTML = '<span class="player-info-loading-text">Joining...</span>'; else if(p.ev && p.eb){ pv.dataset.vr=p.ev; pv.dataset.br=p.eb; pv.textContent = (VRBR_STATE === 'vr') ? `${p.ev} VR` : `${p.eb} BR`; } else pv.textContent="🚫 VR/BR"; pr.appendChild(pv); }
+                 
+                 if (!isGuest) { 
+                     let pv=document.createElement("div"); pv.className="player-vrbr"; 
+                     if (room.type === 'anybody' && (!p.ev && !p.eb)) {
+                         pv.innerHTML = '<span class="player-info-loading-text">Joining...</span>'; 
+                     } else if(p.ev && p.eb){ 
+                         pv.dataset.vr=p.ev; pv.dataset.br=p.eb; 
+                         // Apply correct flipper state initially to avoid jumps
+                         pv.textContent = (VRBR_STATE === 'vr' || el("vr-only-checkbox").checked) ? `${p.ev} VR` : `${p.eb} BR`; 
+                     } else pv.textContent="🚫 VR/BR"; 
+                     pr.appendChild(pv); 
+                 }
+                 
                  let mb=document.createElement("button"); mb.className="player-menu-btn"; mb.innerHTML="⋮"; mb.onclick=(e)=>{ e.stopPropagation(); toggle_player_menu(mm); };
                  let mm=document.createElement("div"); mm.className="player-menu"; const fc=isGuest?null:p.fc;
                  if(fc){
@@ -461,12 +524,16 @@ async function reload_rooms(){
          tp_cnt+=rm_cnt; const avg_vr = (vr_count > 0) ? Math.floor(total_vr / vr_count) : 0;
          let countHTML = `<span class='room-player-count excited'>${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'}`;
          let vrHTML = total_vr > 0 ? `🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.` : null;
-         det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${countHTML}</span></div>`;
+         
+         // Pre-calculate correct flipper state for DOM recreation
+         let initialDetail = (ROOM_DETAIL_STATE === 'players' || !vrHTML) ? countHTML : vrHTML;
+         det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${initialDetail}</span></div>`;
          
          foot.innerHTML=`ID: <a href="javascript:void(0)" onclick="show_room_info_modal('${room.id}')" class="room-link">${room.id}</a> • ⏰ Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";
-     update_openhost_underline(); update_uptimes(!!uptimes_timer); start_vrbr_flipper(); start_room_detail_flipper(); update_header_stats(r_cnt, tp_cnt, isFiltered);
+     update_openhost_underline(); update_uptimes(!!uptimes_timer); update_header_stats(r_cnt, tp_cnt, isFiltered);
+     // Flipper start functions removed from here to prevent interval resets & choppy animations
      
      setTimeout(() => {
          document.querySelectorAll('.room-status-left[style*="opacity: 0"]').forEach(span => {

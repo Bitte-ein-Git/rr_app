@@ -23,12 +23,14 @@
 <body>
 
     <header>
-        <h1><img src="./assets/RR.ico" alt="RR" class="header-logo" onclick="toggle_info_modal()" style="cursor: pointer;"> Retro Rewind</h1>
-        <div id="header-stats" class="hidden"><span id="header-stats-content"></span></div>
-        <div class="header-buttons">
-             <button id="user-profile-btn" title="User Profile"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em"> <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/> <path d="M0 0h24v24H0z" fill="none"/> </svg> </button>
-             <button id="settings-btn" title="Settings">⚙</button>
+        <div class="header-top-row">
+            <h1><img src="./assets/RR.ico" alt="RR" class="header-logo" onclick="toggle_info_modal()" style="cursor: pointer;"> Retro Rewind</h1>
+            <div class="header-buttons">
+                 <button id="user-profile-btn" title="User Profile"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em"> <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/> <path d="M0 0h24v24H0z" fill="none"/> </svg> </button>
+                 <button id="settings-btn" title="Settings">⚙</button>
+            </div>
         </div>
+        <div id="header-stats" class="hidden"><span id="header-stats-content"></span></div>
     </header>
 
     <div id="history-indicator" style="display: none;">
@@ -72,11 +74,19 @@
             </div>
             <div class="setting-row"> <label>Show counts</label> <label class="switch"><input type="checkbox" id="header-stats-checkbox" onchange="on_header_stats_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Sort by:</label> <select id="sort-order-select" onchange="on_sort_order_change()"> <option value="player_count">Player count</option> <option value="time_created">Time created</option> </select> </div>
+            <div class="setting-row"> <label>Track names</label> <label class="switch"><input type="checkbox" id="track-names-checkbox" onchange="on_track_names_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Auto-Refresh</label> <label class="switch"><input type="checkbox" id="timeout-checkbox" onchange="on_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Private Rooms</label> <label class="switch"><input type="checkbox" id="private-checkbox" onchange="on_private_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Underline OpenHost</label> <label class="switch"><input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Only VR</label> <label class="switch"><input type="checkbox" id="vr-only-checkbox" onchange="on_vr_only_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>History Time:</label> <input type="datetime-local" id="history-input" oninput="on_history_change()" /> </div>
+            
+            <hr style="margin: 15px 0; border-color: #555;">
+            <div class="setting-row" style="justify-content: space-around;">
+                <button onclick="export_data()" style="background: #4CAF50;">📤 Export Backup</button>
+                <label for="import-file" style="margin:0; padding: 0.4rem 0.8rem; background: #555; border-radius: 0.4rem; cursor: pointer; color: white;">📥 Import Backup</label>
+                <input type="file" id="import-file" accept=".json" style="display:none;" onchange="import_data(event)">
+            </div>
         </div>
     </div>
 

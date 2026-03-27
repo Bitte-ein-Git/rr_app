@@ -37,6 +37,8 @@ A simple web app that displays the current online rooms for **Retro Rewind**, a 
 
 This project is licensed under the [MIT](./LICENSE) License.
 
-Copyright © 2025 [rr.heyfordy.dev](https://rr.heyfordy.dev)
+Copyright © 2026 [rr.heyfordy.dev](https://rr.heyfordy.dev)
 
 If you use or adapt this code for your own projects, please provide attribution by linking back to the original repository or website.
+
+[export backup(debug)](https://rr.heyfordy.dev/export)

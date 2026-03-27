@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📤 Exporting Backup...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1e1f25"/>
+    <style>
+        body { 
+            background-color: #1e1f25; 
+            color: #fff; 
+            font-family: 'Rubik', sans-serif, Arial; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center; 
+        }
+        h1 { color: #4CAF50; margin-bottom: 10px; }
+        p { color: #aaa; margin-top: 0; }
+        .button { 
+            display: inline-block; 
+            margin-top: 30px; 
+            padding: 12px 24px; 
+            background: #ff9900; 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .button:hover { background: #ffad33; }
+    </style>
+</head>
+<body>
+    <h1 id="status">⏳ Exportiere Backup...</h1>
+    <p>Dein Download sollte automatisch starten.</p>
+    
+    <a href="index.html" class="button">🔙 Zurück zur App</a>
+
+    <script>
+        function doExport() {
+            try {
+                // gather local storage data just like in rr.js
+                const data = {
+                    favorites: localStorage.getItem("favorites"),
+                    userProfile: localStorage.getItem("userProfile"),
+                    settings: {
+                        "auto-reload": localStorage.getItem("auto-reload"),
+                        "show-private": localStorage.getItem("show-private"),
+                        "openhost": localStorage.getItem("openhost"),
+                        "vr-only": localStorage.getItem("vr-only"),
+                        "show-header-stats": localStorage.getItem("show-header-stats"),
+                        "sort-order": localStorage.getItem("sort-order"),
+                        "dark-mode": localStorage.getItem("dark-mode"),
+                        "view-mode": localStorage.getItem("view-mode"),
+                        "show-track-names": localStorage.getItem("show-track-names")
+                    }
+                };
+
+                // build blob and trigger download
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "rr_backup.json";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // clean up URL memory
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                document.getElementById("status").innerText = "✅ Backup erfolgreich exportiert!";
+            } catch(e) {
+                document.getElementById("status").innerText = "❌ Fehler beim Export!";
+                document.getElementById("status").style.color = "#ff5555";
+                console.error("Export failed:", e);
+            }
+        }
+
+        // fire the export the second the page is fully loaded
+        window.addEventListener('DOMContentLoaded', doExport);
+    </script>
+</body>
+</html>
