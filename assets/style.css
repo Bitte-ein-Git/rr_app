@@ -8,7 +8,7 @@ body.theme-orange { background: linear-gradient(-45deg, #ff8800, #ff3c00, #dd760
 @keyframes Gradient { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
 body.theme-dark { background: #000000 !important; }
-body.theme-dark header { background: rgba(0, 0, 0, 0.85); }
+body.theme-dark header, body header { background: #111215a0; }
 body.theme-dark .room-card { background: #0c0c0c; border: 1px solid #1a1a1a; }
 body.theme-dark .player-group { background: #141414; }
 body.theme-dark .modal-content { background: rgba(0, 0, 0, 0.95); border: 1px solid #222; }
@@ -35,8 +35,8 @@ header {
     position: sticky; top: 0; z-index: 10; gap: 5px; 
 }
 .header-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: nowrap; }
-header h1 { font-size: 1.5em; display: flex; align-items: center; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.header-logo { height: 1.6em; width: 1.6em; margin-right: 0.5rem; }
+header h1 { font-size: 1.6em; display: flex; align-items: center; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-logo { height: 1.8em; width: 1.8em; margin-right: 0.5rem; }
 .header-buttons { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
 #user-profile-btn, #settings-btn { font-size: 1.6em; background: none; border: none; color: white; cursor: pointer; transition: transform 0.2s; padding: 0.3em; line-height: 1; display: flex; align-items: center; justify-content: center; }
 #user-profile-btn:hover, #settings-btn:hover { transform: rotate(15deg); }
@@ -215,7 +215,7 @@ body.desktop-view main { max-width: none; padding: 20px; }
 body.desktop-view #rooms-container { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; }
 body.desktop-view .room-card { width: 420px; flex-grow: 0; flex-shrink: 0; }
 body.desktop-view { font-size: 1.05rem; }
-body.desktop-view header h1 { font-size: 1.6rem; }
+body.desktop-view header h1 { font-size: 2rem; }
 body.desktop-view #header-stats { font-size: 1.2em; }
 body.desktop-view .room-name { font-size: 1.3em; }
 body.desktop-view .room-details { font-size: 1.0em; }
