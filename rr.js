@@ -19,7 +19,7 @@ let HEADER_STATS_TIMER = null;
 let HISTORY_TIMER = null; let HISTORY_MODE = false; let HISTORY_DATE = null;
 let FAVORITES = []; let USER_PROFILE = null; let CURRENT_VIEW_MODE = 'mobile';
 let CURRENT_NICKNAME_FC = null;
-let ROOM_STATUS_CACHE = {}; let ROOM_TRACK_CACHE = {}; // track info cache for crossfades
+let ROOM_STATUS_CACHE = {}; let ROOM_TRACK_CACHE = {}; 
 
 // Definitions for room categories
 const ROOM_TYPES = { "10":{l:"🕹️ Retro Tracks",c:"#FF8C00"},"11":{l:"⏰ Online TT",c:"#FF6347"},"12":{l:"🚀 200cc",c:"#DC143C"},"13":{l:"☂️ Item Rain",c:"#1E90FF"},"14":{l:"Regular Battle",c:"#B22222"},"15":{l:"Elimination Battle",c:"#8B0000"},"20":{l:"🚧 Custom Tracks",c:"#E800A3"},"21":{l:"Vanilla Tracks",c:"#7B68EE"},"22":{l:"CT 200cc",c:"#DA70D6"},"666":{l:"Luminous 150cc",c:"#FFD700"},"667":{l:"Luminous Online TT",c:"#BDB76B"},"668":{l:"CTGP-C",c:"#32CD32"},"751":{l:"Versus",c:"#A9A9A9"},"-1":{l:"Regular",c:"#A9A9A9"},"":{l:"Private",c:"#A9A9A9"},"69":{l:"IKW Default",c:"#ADD8E6"},"70":{l:"IKW Ultras VS",c:"#008080"},"71":{l:"IKW Countdown",c:"#00FFFF"},"72":{l:"IKW Bob-omb Blast",c:"#696969"},"73":{l:"IKW Infinite Accel",c:"#4B0082"},"74":{l:"IKW Banana Slip",c:"#FFFFE0"},"75":{l:"IKW Random Items",c:"#FF00FF"},"76":{l:"IKW Unfair Items",c:"#800000"},"77":{l:"IKW Blue Shell Madness",c:"#0000CD"},"78":{l:"IKW Mushroom Dash",c:"#2E8B57"},"79":{l:"IKW Bumper Karts",c:"#A52A2A"},"80":{l:"IKW Item Rampage",c:"#FA8072"},"81":{l:"IKW Item Rain",c:"#4169E1"},"82":{l:"IKW Shell Break",c:"#2E8B57"},"83":{l:"IKW Riibalanced",c:"#C0C0C0"},"875":{l:"OptPack 150cc",c:"#7CFC00"},"876":{l:"OptPack Online TT",c:"#556B2F"},"877":{l:"OptPack",c:"#000080"},"878":{l:"OptPack",c:"#000080"},"879":{l:"OptPack",c:"#000080"},"880":{l:"OptPack",c:"#000080"},"1312":{l:"WTP 150cc",c:"#008B8B"},"1313":{l:"WTP 200cc",c:"#483D8B"},"1314":{l:"WTP Online TT",c:"#8FBC8F"},"1315":{l:"WTP Item Rain",c:"#00CED1"},"1316":{l:"WTP STYD",c:"#9400D3"} };
@@ -82,6 +82,23 @@ function load_discord_for_profile(fc, container) {
     if (cachedDiscord) render(cachedDiscord.data); else { fetch(`${DISCORD_API_URL}?fc=${fc}`).then(res => res.json()).then(discordData => { set_cached_item(discordCacheKey, discordData.profile); render(discordData.profile); }).catch(err => console.error("Discord fetch err", err)); }
 }
 
+// Fetch and apply race stats
+async function fetch_and_apply_race_stats(fc, container) {
+    try {
+        const r = await fetch(`${API_BASE_URL}?race=${fc}`);
+        if (!r.ok) return;
+        const d = await r.json();
+        const tr = container.querySelector('#race-stat-track');
+        const ch = container.querySelector('#race-stat-char');
+        const vh = container.querySelector('#race-stat-veh');
+        const co = container.querySelector('#race-stat-combo');
+        if (tr) tr.textContent = d.favTrack || 'N/A';
+        if (ch) ch.textContent = d.favChar || 'N/A';
+        if (vh) vh.textContent = d.vehicleFav || 'N/A';
+        if (co) co.textContent = d.favCombo || 'N/A';
+    } catch (e) { console.error("Race stats fetch error", e); }
+}
+
 // Main player info modal
 async function show_player_info_modal(fc) {
     const mc = el('player-info-content'); el('player-info-modal').classList.remove('hidden'); updateScrollLock();
@@ -96,6 +113,7 @@ async function show_player_info_modal(fc) {
         if (d.miiData) { fetch_mii_images([d.miiData], fc); } else { fetch_miis_by_fc([fc]); }
         mc.innerHTML = _get_player_profile_html(d, miiSrc, fc, false, false); 
         load_discord_for_profile(fc, mc); 
+        fetch_and_apply_race_stats(fc, mc);
     } catch (e) { console.error("Error fetching player info:", e); }
 }
 
@@ -175,7 +193,7 @@ function _get_player_profile_html(d, miiSrc, fc, isUserProfile = false, isPlaceh
     const vrClass = (v) => isPlaceholder || v === 0 ? '' : (v > 0 ? 'vr-positive' : 'vr-negative');
     const val = (v) => isPlaceholder ? '-' : (v || 'N/A');
     const legacyRow = (!isPlaceholder && d.legacyVR) ? `<div class="stat-item"> <span class="stat-label">Legacy VR</span> <span class="stat-value">${d.legacyVR}</span> </div>` : '';
-    return `<div class="player-info-modal-header"><img class="player-mii-large" src="${miiSrc}" alt="Mii" mii-data-fc="${fc}"><div><div class="player-name">${handle_mii_name(d.name)}</div><div class="player-fc">${d.FC || fc}</div></div></div><div class="player-info-modal-lastseen"> <div>Last Seen: ${format_last_seen(d.lastSeen)}</div>${isPlaceholder ? '<div class="player-info-loading-text">Loading profile...</div>' : ''}</div><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">Rank</span> <span class="stat-value">${d.rank ? `#${d.rank}` : '-'}</span> </div><div class="stat-item"> <span class="stat-label">VR</span> <span class="stat-value">${val(d.vr)}</span> </div>${legacyRow}</div><h3 class="vr-stats-heading">VR Stats</h3><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">24h</span> <span class="stat-value ${vrClass(vr24)}">${formatVRStat(vr24)}</span> </div><div class="stat-item"> <span class="stat-label">7d</span> <span class="stat-value ${vrClass(vr7)}">${formatVRStat(vr7)}</span> </div><div class="stat-item"> <span class="stat-label">30d</span> <span class="stat-value ${vrClass(vr30)}">${formatVRStat(vr30)}</span> </div></div><div class="player-info-modal-buttons"><button class="modal-close-btn visit-btn" onclick="window.open('https://rwfc.net/player/${d.FC||fc}', '_blank')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-btn-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Visit rwfc.net</button></div>${isUserProfile ? '<div id="user-profile-cache-status" class="player-info-modal-cache-status"></div>' : ''}`;
+    return `<div class="player-info-modal-header"><img class="player-mii-large" src="${miiSrc}" alt="Mii" mii-data-fc="${fc}"><div><div class="player-name">${handle_mii_name(d.name)}</div><div class="player-fc">${d.FC || fc}</div></div></div><div class="player-info-modal-lastseen"> <div>Last Seen: ${format_last_seen(d.lastSeen)}</div>${isPlaceholder ? '<div class="player-info-loading-text">Loading profile...</div>' : ''}</div><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">Rank</span> <span class="stat-value">${d.rank ? `#${d.rank}` : '-'}</span> </div><div class="stat-item"> <span class="stat-label">VR</span> <span class="stat-value">${val(d.vr)}</span> </div>${legacyRow}</div><h3 class="vr-stats-heading">VR Stats</h3><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">24h</span> <span class="stat-value ${vrClass(vr24)}">${formatVRStat(vr24)}</span> </div><div class="stat-item"> <span class="stat-label">7d</span> <span class="stat-value ${vrClass(vr7)}">${formatVRStat(vr7)}</span> </div><div class="stat-item"> <span class="stat-label">30d</span> <span class="stat-value ${vrClass(vr30)}">${formatVRStat(vr30)}</span> </div></div><h3 class="vr-stats-heading">Race Stats</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="grid-column: span 2;"> <span class="stat-label">Most Played Track</span> <span class="stat-value" id="race-stat-track">-</span> </div><div class="stat-item"> <span class="stat-label">Character</span> <span class="stat-value" id="race-stat-char">-</span> </div><div class="stat-item"> <span class="stat-label">Vehicle</span> <span class="stat-value" id="race-stat-veh">-</span> </div><div class="stat-item" style="grid-column: span 2;"> <span class="stat-label">Combo</span> <span class="stat-value" id="race-stat-combo">-</span> </div></div><div class="player-info-modal-buttons"><button class="modal-close-btn visit-btn" onclick="window.open('https://rwfc.net/player/${d.FC||fc}', '_blank')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-btn-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Visit rwfc.net</button></div>${isUserProfile ? '<div id="user-profile-cache-status" class="player-info-modal-cache-status"></div>' : ''}`;
 }
 
 async function render_user_profile() {
@@ -185,6 +203,7 @@ async function render_user_profile() {
     if (cached) {
         dc.innerHTML = _get_player_profile_html(cached.data, miiSrc, fc, true);
         const cst = el('user-profile-cache-status'); if(cst) cst.textContent = `Cached: ${new Date(cached.timestamp).toLocaleString()}. Refreshing...`;
+        fetch_and_apply_race_stats(fc, dc);
     } else dc.innerHTML = 'Loading...';
     try {
         const r = await fetch(`${API_BASE_URL}?info=${fc}`); if (!r.ok) throw new Error(`API error: ${r.status}`); const d = await r.json(); set_cached_item(`profile_${fc}`, d);
@@ -192,6 +211,7 @@ async function render_user_profile() {
         dc.innerHTML = _get_player_profile_html(d, miiSrc, fc, true);
         const cst = el('user-profile-cache-status'); if(cst) cst.textContent = `Updated: ${new Date().toLocaleString()}`;
         load_discord_for_profile(fc, dc);
+        fetch_and_apply_race_stats(fc, dc);
     } catch (e) { if (!cached) dc.innerHTML = `<p style="color:red;">Error loading profile.</p>`; }
  }
  
@@ -200,12 +220,19 @@ async function render_user_profile() {
      if (USER_PROFILE) { lv.classList.add('hidden'); sc.style.display = 'none'; sr.style.display = 'none'; pv.classList.remove('hidden'); lb.style.display = 'block'; render_user_profile(); } else { pv.classList.add('hidden'); lv.classList.remove('hidden'); sc.style.display = 'flex'; sr.style.display = 'block'; lb.style.display = 'none'; el('user-search-input').value = ''; sr.innerHTML = ''; }
  }
 
+// Helper to update current time in history inputs
+function reset_history_inputs() {
+    let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(Date.now() - z); const isoStr = localDate.toISOString().slice(0, 16); 
+    if (el("history-input")) el("history-input").value = isoStr; 
+    if (el("history-input-main")) el("history-input-main").value = isoStr;
+}
+
 // Room history and filters
 function on_history_change() { if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
 function on_history_main_change() { const val = el("history-input-main").value; if(el("history-input")) el("history-input").value = val; if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
 function add_history(m) { let i=el("history-input"),t=new Date(i.value).getTime() + m*60*1000 - new Date().getTimezoneOffset()*60000; const newVal = new Date(t).toISOString().slice(0,16); i.value = newVal; if(el("history-input-main")) el("history-input-main").value = newVal; on_history_change(); }
 function change_history() { HISTORY_MODE = true; on_checkbox(); fetch_rooms(); }
-function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); let localDate = new Date(Date.now() - new Date().getTimezoneOffset()*60000); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr; on_checkbox(); fetch_rooms(); }
+function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); reset_history_inputs(); on_checkbox(); fetch_rooms(); }
 function disable_filter() { let p=new URL(location.href).searchParams; p.delete("room"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); reload_rooms(); }
 
 // Special character filtering
@@ -270,7 +297,6 @@ function start_room_detail_flipper() {
 
 // User settings changes
 function on_vr_only_change() { const c=el("vr-only-checkbox").checked; localStorage.setItem("vr-only", c); if(c){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); } else start_vrbr_flipper(); }
-// save track-names setting
 function on_track_names_change() { const c=el("track-names-checkbox").checked; localStorage.setItem("show-track-names", c); reload_rooms(); }
 
 // Theme and Dark mode management
@@ -381,26 +407,22 @@ async function on_load(){
     let h=localStorage.getItem("show-header-stats"); h=(h===null)?true:(h==="true"); el("header-stats-checkbox").checked=h;
     const s=localStorage.getItem("sort-order")||"player_count"; el("sort-order-select").value=s;
     
-    // Default Track Name Toggle Setup
     let tn=localStorage.getItem("show-track-names"); tn=(tn===null)?true:(tn==="true"); el("track-names-checkbox").checked=tn;
     
-    // Default theme logic (Orange)
     let dm = localStorage.getItem("dark-mode") === "true";
     el("darkmode-checkbox").checked = dm;
     apply_theme(dm ? "dark" : "orange");
     
-    let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(Date.now() - z); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr;
+    reset_history_inputs();
     const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !window.MSStream);
     if (isIOS && !window.navigator.standalone) el('ios-homescreen-hint').style.display = 'block';
     fetch_versions(); const url=new URL(location.href), ps=url.searchParams, ts=ps.get("time");
     if(ts){ 
-        HISTORY_MODE=true; const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); localDate = new Date(tsMillis - z); const histIso = localDate.toISOString().slice(0, 16); el("history-input").value = histIso; if(el("history-input-main")) el("history-input-main").value = histIso;
+        HISTORY_MODE=true; const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(tsMillis - z); const histIso = localDate.toISOString().slice(0, 16); el("history-input").value = histIso; if(el("history-input-main")) el("history-input-main").value = histIso;
         change_history(); return; 
     }
     
-    // start flippers ONLY once on load to avoid jumpy animations during refresh
     start_vrbr_flipper(); start_room_detail_flipper();
-    
     fetch_rooms(); on_checkbox();
 }
 
@@ -410,7 +432,7 @@ async function fetch_rooms() {
     if(HISTORY_MODE){ 
         let dt=el("history-input").value; let ht=Math.max(0, new Date(dt).getTime()); if(isNaN(ht)) ht=0; let hd=new Date(ht); HISTORY_DATE=hd; let us=Math.floor(hd.getTime()/1000); 
         let ps=new URL(location.href).searchParams; ps.set("time", us); history.replaceState(null, null, location.pathname+`?${ps.toString()}`); 
-        tp=`?time=${us}`; cb.disabled=true; hi.style.display="block"; hc_main.style.display="flex"; el("rooms-container").innerHTML=""; el("loading").style.display="block"; 
+        tp=`?time=${us}`; cb.disabled=true; hi.style.display="block"; hc_main.style.display="flex"; el("rooms-container").innerHTML=""; el("loading").textContent = "⏳ Loading history data..."; el("loading").style.display="block"; 
     } else { cb.disabled=false; hi.style.display="none"; hc_main.style.display="none"; } 
     try { 
         const r=await fetch(RWFC_API_URL+tp); if(!r.ok) throw new Error(`RWFC API: ${r.status}`); let rd=await r.json(), rms, dt=new Date(); 
@@ -423,7 +445,6 @@ async function fetch_rooms() {
 async function reload_rooms(){
      let rooms=[...cur_rooms]; if(!Array.isArray(rooms)) rooms=[];
      const rc=el("rooms-container"); rc.innerHTML=""; const url=new URL(location.href), ps=url.searchParams, fr=ps.get("room"); let rnf=true; const isFiltered = !!fr;
-     el("filter-indicator").style.display= isFiltered ?"block":"none";
      
      let final_rooms = fr ? rooms.filter(r => r.id == fr) : (!el("private-checkbox").checked ? rooms.filter(r => {
          if (r.type === "anybody") return true;
@@ -454,21 +475,17 @@ async function reload_rooms(){
          let statusChanged = (ROOM_STATUS_CACHE[room.id] !== statusHTML);
          ROOM_STATUS_CACHE[room.id] = statusHTML;
          
-         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${r_l}" class="room-info-link" title="Filter this room">📌</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
+         let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; 
+         head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${isFiltered ? 'javascript:disable_filter()' : r_l}" class="room-info-link" title="${isFiltered ? 'Remove filter' : 'Filter this room'}">${isFiltered ? '❌' : '📌'}</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
          
          let trackInfo = document.createElement("div"); trackInfo.className = "track-info-container";
          let trackNameStr = room.track || "Unknown Track";
          let isSuspended = room.suspend === true || room.suspend === "1" || room.suspend === "true";
          let showTracks = el("track-names-checkbox").checked;
-         
-         // Fix track logic: show ONLY when NOT suspended (in race) and handle unknown track and user setting
          let showTrackElement = !isSuspended && trackNameStr !== "Unknown Track" && showTracks;
          let needsCrossfade = (showTrackElement && ROOM_TRACK_CACHE[room.id] && ROOM_TRACK_CACHE[room.id] !== trackNameStr);
          ROOM_TRACK_CACHE[room.id] = trackNameStr;
-         
-         // Fix text spacing around the track name bullet point (use &nbsp;)
          trackInfo.innerHTML = `🗺️ &nbsp; <span>${trackNameStr}</span>`;
-         
          if (showTrackElement) trackInfo.classList.add("visible");
          if (needsCrossfade) { trackInfo.classList.add("crossfade-active"); setTimeout(() => trackInfo.classList.remove("crossfade-active"), 50); }
          card.appendChild(trackInfo);
@@ -489,9 +506,8 @@ async function reload_rooms(){
                  if (!isGuest) pr.onclick = () => iu ? toggle_user_profile_modal() : show_player_info_modal(p.fc);
                  let mi=document.createElement("img"); mi.className="player-mii"; mi.alt="Mii"; mi.setAttribute("mii-data-fc", isGuest ? "guest" : p.fc);
                  
-                 if (isGuest) {
-                     mi.src = "./assets/guest.png";
-                 } else {
+                 if (isGuest) mi.src = "./assets/guest.png";
+                 else {
                      let cached = get_cached_mii_image(p.fc);
                      if(cached) mi.src = format_mii_src(cached); else mi.src="./assets/loading.gif";
                      if(p.mii && p.mii[cmi] && p.mii[cmi].data) fetch_mii_images([p.mii[cmi].data], p.fc);
@@ -501,11 +517,9 @@ async function reload_rooms(){
                  
                  if (!isGuest) { 
                      let pv=document.createElement("div"); pv.className="player-vrbr"; 
-                     if (room.type === 'anybody' && (!p.ev && !p.eb)) {
-                         pv.innerHTML = '<span class="player-info-loading-text">Joining...</span>'; 
-                     } else if(p.ev && p.eb){ 
+                     if (room.type === 'anybody' && (!p.ev && !p.eb)) pv.innerHTML = '<span class="player-info-loading-text">Joining...</span>'; 
+                     else if(p.ev && p.eb){ 
                          pv.dataset.vr=p.ev; pv.dataset.br=p.eb; 
-                         // Apply correct flipper state initially to avoid jumps
                          pv.textContent = (VRBR_STATE === 'vr' || el("vr-only-checkbox").checked) ? `${p.ev} VR` : `${p.eb} BR`; 
                      } else pv.textContent="🚫 VR/BR"; 
                      pr.appendChild(pv); 
@@ -524,22 +538,13 @@ async function reload_rooms(){
          tp_cnt+=rm_cnt; const avg_vr = (vr_count > 0) ? Math.floor(total_vr / vr_count) : 0;
          let countHTML = `<span class='room-player-count excited'>${rm_cnt}</span> ${rm_cnt===1?'Player':'Players'}`;
          let vrHTML = total_vr > 0 ? `🏆 • <span class='room-player-count excited'>${avg_vr}</span> VR Avg.` : null;
-         
-         // Pre-calculate correct flipper state for DOM recreation
          let initialDetail = (ROOM_DETAIL_STATE === 'players' || !vrHTML) ? countHTML : vrHTML;
          det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${initialDetail}</span></div>`;
-         
          foot.innerHTML=`ID: <a href="javascript:void(0)" onclick="show_room_info_modal('${room.id}')" class="room-link">${room.id}</a> • ⏰ Uptime: <span created="${room.created}">0:00:00</span>`;
      }
      el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";
      update_openhost_underline(); update_uptimes(!!uptimes_timer); update_header_stats(r_cnt, tp_cnt, isFiltered);
-     // Flipper start functions removed from here to prevent interval resets & choppy animations
-     
-     setTimeout(() => {
-         document.querySelectorAll('.room-status-left[style*="opacity: 0"]').forEach(span => {
-             span.style.opacity = "1";
-         });
-     }, 50);
+     setTimeout(() => { document.querySelectorAll('.room-status-left[style*="opacity: 0"]').forEach(span => { span.style.opacity = "1"; }); }, 50);
 }
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', on_load); else on_load();

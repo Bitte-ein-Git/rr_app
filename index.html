@@ -48,11 +48,13 @@
         </div>
     </div>
 
-    <div id="filter-indicator" style="display: none;"> <span>ℹ️</span> Room filter applied. <button onclick="disable_filter()">Show all</button> </div>
-
     <main>
         <div id="loading">⏳ Loading data...</div>
-        <div id="not-found-container" style="display: none;">Room not found or closed.</div>
+        <div id="not-found-container" style="display: none;">
+            Room not found or closed.
+            <br>
+            <button onclick="disable_filter()" class="modal-close-btn" style="margin-top: 10px;">Remove filter</button>
+        </div>
         <div id="rooms-container"></div>
     </main>
 

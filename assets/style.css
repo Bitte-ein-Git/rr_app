@@ -7,13 +7,14 @@ body { width: 100%; color: #fff; background: #1e1f25; display: flex; flex-direct
 body.theme-orange { background: linear-gradient(-45deg, #ff8800, #ff3c00, #dd7600, #ff880069) 200% 200%; animation: Gradient 4s ease infinite; }
 @keyframes Gradient { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-body.theme-dark header, body header { background: #111215a0; }
-body.theme-dark .room-card, body .room-card { background: #282a36; }
-body.theme-dark .player-group, body .player-group { background: #3a3d4d; }
-body.theme-dark .modal-content, body .modal-content { background: rgba(30, 31, 37, 0.9); }
-body.theme-dark .stat-item, body .stat-item { background: #44475a; }
-body.theme-dark .player-info-modal-vrstats, body .player-info-modal-vrstats { background: #44475a; }
-body.theme-dark .player-info-modal-lastseen, body .player-info-modal-lastseen { color: #ccc; }
+body.theme-dark { background: #000000 !important; }
+body.theme-dark header { background: rgba(0, 0, 0, 0.85); }
+body.theme-dark .room-card { background: #0c0c0c; border: 1px solid #1a1a1a; }
+body.theme-dark .player-group { background: #141414; }
+body.theme-dark .modal-content { background: rgba(0, 0, 0, 0.95); border: 1px solid #222; }
+body.theme-dark .stat-item { background: #1a1a1a; }
+body.theme-dark .player-info-modal-vrstats, body.theme-dark .player-info-modal-lastseen { color: #888; }
+body.theme-dark header h1, body.theme-dark .header-buttons button { color: #fff; }
 
 body.theme-orange .room-card { background: #2e2f3680; }
 body.theme-orange .player-group { background: #2e2f36bf; }
@@ -52,7 +53,7 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 #not-found-container { display: none; color: #ffaaaa; }
 
 /* --- Status Boxes --- */
-#history-indicator, #filter-indicator, #history-controls-main { display: none; padding: 10px; text-align: center; font-style: italic; background: #333; margin: 0 auto 1rem auto; border-radius: 8px; max-width: 90%; color: #fff; }
+#history-indicator, #history-controls-main { display: none; padding: 10px; text-align: center; font-style: italic; background: #333; margin: 0 auto 1rem auto; border-radius: 8px; max-width: 90%; color: #fff; }
 
 #history-indicator { display: none; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; background-color: #ff000040; }
 #history-indicator button { margin-left: 0; padding: 5px 12px; background: #555; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
@@ -63,9 +64,6 @@ main { flex: 1; padding: 1rem; max-width: 600px; margin: 0 auto; width: 100%; }
 #history-controls-main button { margin: 0; padding: 8px 12px; background: #555; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 0.9em; flex: 1; }
 #history-controls-main button:hover { background: #777; }
 .history-date-input { padding: 8px; background: #2e2f36; border: 1px solid #555; color: white; border-radius: 4px; font-family: inherit; width: 100%; max-width: 300px; text-align: center; }
-
-#filter-indicator { background-color: #00aaff40; }
-#filter-indicator button { margin-left: 10px; padding: 5px 12px; background: #555; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
 
 /* --- Popup Modals --- */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 20; opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0.3s ease; }
