@@ -82,20 +82,20 @@ function load_discord_for_profile(fc, container) {
     if (cachedDiscord) render(cachedDiscord.data); else { fetch(`${DISCORD_API_URL}?fc=${fc}`).then(res => res.json()).then(discordData => { set_cached_item(discordCacheKey, discordData.profile); render(discordData.profile); }).catch(err => console.error("Discord fetch err", err)); }
 }
 
-// Fetch and apply race stats
+// Fetch and apply race stats from API
 async function fetch_and_apply_race_stats(fc, container) {
     try {
         const r = await fetch(`${API_BASE_URL}?race=${fc}`);
         if (!r.ok) return;
         const d = await r.json();
-        const tr = container.querySelector('#race-stat-track');
-        const ch = container.querySelector('#race-stat-char');
-        const vh = container.querySelector('#race-stat-veh');
-        const co = container.querySelector('#race-stat-combo');
-        if (tr) tr.textContent = d.favTrack || 'N/A';
-        if (ch) ch.textContent = d.favChar || 'N/A';
-        if (vh) vh.textContent = d.vehicleFav || 'N/A';
-        if (co) co.textContent = d.favCombo || 'N/A';
+        const tr = container.querySelector('#race-stat-track'), trc = container.querySelector('#race-stat-track-count');
+        const ch = container.querySelector('#race-stat-char'), chc = container.querySelector('#race-stat-char-count');
+        const vh = container.querySelector('#race-stat-veh'), vhc = container.querySelector('#race-stat-veh-count');
+        const co = container.querySelector('#race-stat-combo'), coc = container.querySelector('#race-stat-combo-count');
+        if (tr) tr.innerHTML = format_track_name(d.favTrack) || 'N/A'; if (trc) trc.textContent = d.favTrackRaces ? `races: ${d.favTrackRaces}` : '';
+        if (ch) ch.textContent = d.favChar || 'N/A'; if (chc) chc.textContent = d.favCharRaces ? `races: ${d.favCharRaces}` : '';
+        if (vh) vh.textContent = d.vehicleFav || 'N/A'; if (vhc) vhc.textContent = d.vehicleFavRaces ? `races: ${d.vehicleFavRaces}` : '';
+        if (co) co.textContent = d.favCombo || 'N/A'; if (coc) coc.textContent = d.favComboRaces ? `races: ${d.favComboRaces}` : '';
     } catch (e) { console.error("Race stats fetch error", e); }
 }
 
@@ -186,14 +186,14 @@ async function search_user() { const q = el('user-search-input').value.trim(), r
 function set_user_profile(fc, en) { const n = decodeURIComponent(en); USER_PROFILE = { fc, n }; save_user_profile(); update_user_profile_modal_state(); reload_rooms(); }
 function logout_user() { USER_PROFILE = null; save_user_profile(); location.reload(); }
 
-// Helper for profile HTML
+// Helper for profile HTML template
 function _get_player_profile_html(d, miiSrc, fc, isUserProfile = false, isPlaceholder = false) {
     const vr24 = d.vrStats?.last24Hours ?? 0; const vr7 = d.vrStats?.lastWeek ?? 0; const vr30 = d.vrStats?.lastMonth ?? 0;
     const formatVRStat = (v) => isPlaceholder ? '-' : (v === 0 ? '0' : (v > 0 ? `+${v}` : `${v}`));
     const vrClass = (v) => isPlaceholder || v === 0 ? '' : (v > 0 ? 'vr-positive' : 'vr-negative');
     const val = (v) => isPlaceholder ? '-' : (v || 'N/A');
     const legacyRow = (!isPlaceholder && d.legacyVR) ? `<div class="stat-item"> <span class="stat-label">Legacy VR</span> <span class="stat-value">${d.legacyVR}</span> </div>` : '';
-    return `<div class="player-info-modal-header"><img class="player-mii-large" src="${miiSrc}" alt="Mii" mii-data-fc="${fc}"><div><div class="player-name">${handle_mii_name(d.name)}</div><div class="player-fc">${d.FC || fc}</div></div></div><div class="player-info-modal-lastseen"> <div>Last Seen: ${format_last_seen(d.lastSeen)}</div>${isPlaceholder ? '<div class="player-info-loading-text">Loading profile...</div>' : ''}</div><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">Rank</span> <span class="stat-value">${d.rank ? `#${d.rank}` : '-'}</span> </div><div class="stat-item"> <span class="stat-label">VR</span> <span class="stat-value">${val(d.vr)}</span> </div>${legacyRow}</div><h3 class="vr-stats-heading">VR Stats</h3><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">24h</span> <span class="stat-value ${vrClass(vr24)}">${formatVRStat(vr24)}</span> </div><div class="stat-item"> <span class="stat-label">7d</span> <span class="stat-value ${vrClass(vr7)}">${formatVRStat(vr7)}</span> </div><div class="stat-item"> <span class="stat-label">30d</span> <span class="stat-value ${vrClass(vr30)}">${formatVRStat(vr30)}</span> </div></div><h3 class="vr-stats-heading">MOST USED TRACK</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="grid-column: span 2;"><span class="stat-value" id="race-stat-track">-</span></div></div><h3 class="vr-stats-heading">CHARACTER/VEHICLE STATS</h3><div class="player-info-modal-stats-grid"><div class="stat-item"><span class="stat-label">Character</span><span class="stat-value" id="race-stat-char">-</span></div><div class="stat-item"><span class="stat-label">Vehicle</span><span class="stat-value" id="race-stat-veh">-</span></div></div><h3 class="vr-stats-heading">MOST USED COMBO</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="grid-column: span 2;"><span class="stat-value" id="race-stat-combo">-</span></div></div><div class="player-info-modal-buttons"><button class="modal-close-btn visit-btn" onclick="window.open('https://rwfc.net/player/${d.FC||fc}', '_blank')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-btn-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Visit rwfc.net</button></div>${isUserProfile ? '<div id="user-profile-cache-status" class="player-info-modal-cache-status"></div>' : ''}`;
+    return `<div class="player-info-modal-header"><img class="player-mii-large" src="${miiSrc}" alt="Mii" mii-data-fc="${fc}"><div><div class="player-name">${handle_mii_name(d.name)}</div><div class="player-fc">${d.FC || fc}</div></div></div><div class="player-info-modal-lastseen"> <div>Last Seen: ${format_last_seen(d.lastSeen)}</div>${isPlaceholder ? '<div class="player-info-loading-text">Loading profile...</div>' : ''}</div><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">Rank</span> <span class="stat-value">${d.rank ? `#${d.rank}` : '-'}</span> </div><div class="stat-item"> <span class="stat-label">VR</span> <span class="stat-value">${val(d.vr)}</span> </div>${legacyRow}</div><h3 class="vr-stats-heading">VR Stats</h3><div class="player-info-modal-stats-grid"><div class="stat-item"> <span class="stat-label">24h</span> <span class="stat-value ${vrClass(vr24)}">${formatVRStat(vr24)}</span> </div><div class="stat-item"> <span class="stat-label">7d</span> <span class="stat-value ${vrClass(vr7)}">${formatVRStat(vr7)}</span> </div><div class="stat-item"> <span class="stat-label">30d</span> <span class="stat-value ${vrClass(vr30)}">${formatVRStat(vr30)}</span> </div></div><h3 class="vr-stats-heading">MOST PLAYED TRACK</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="grid-column: span 2; display: flex; flex-direction: column;"><span class="stat-value" id="race-stat-track">-</span><span class="stat-label" id="race-stat-track-count" style="text-transform: none;"></span></div></div><h3 class="vr-stats-heading">MOST USED ...</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="display: flex; flex-direction: column;"><span class="stat-label">Character</span><span class="stat-value" id="race-stat-char">-</span><span class="stat-label" id="race-stat-char-count" style="text-transform: none;"></span></div><div class="stat-item" style="display: flex; flex-direction: column;"><span class="stat-label">Vehicle</span><span class="stat-value" id="race-stat-veh">-</span><span class="stat-label" id="race-stat-veh-count" style="text-transform: none;"></span></div></div><h3 class="vr-stats-heading">MOST USED COMBO</h3><div class="player-info-modal-stats-grid"><div class="stat-item" style="grid-column: span 2; display: flex; flex-direction: column;"><span class="stat-value" id="race-stat-combo">-</span><span class="stat-label" id="race-stat-combo-count" style="text-transform: none;"></span></div></div><div class="player-info-modal-buttons"><button class="modal-close-btn visit-btn" onclick="window.open('https://rwfc.net/player/${d.FC||fc}', '_blank')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-btn-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Visit rwfc.net</button></div>${isUserProfile ? '<div id="user-profile-cache-status" class="player-info-modal-cache-status"></div>' : ''}`;
 }
 
 async function render_user_profile() {
@@ -240,6 +240,21 @@ function _escape(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace
 function handle_mii_name(n){ if (!n) return "Guest"; if (n.length > 10) n=n.substring(0, 10); return filter_mii_name(_escape(n)); }
 function char_code_is_wide(c){ return (c >= 0xF103 && c <= 0xF12F) || c == 0x2026; }
 function filter_mii_name(n){ let nw="", sp=false; for(let i=0; i<n.length; i++){ const c=n.charCodeAt(i); if(char_code_is_wide(c)){ if(!sp){ nw+="<span class=\"wide-char\">"; sp=true; } } else { if(sp){ nw+="</span>"; sp=false; } } nw+=n[i]; } if(sp) nw+="</span>"; return nw; }
+
+// Format track names with consolidation logic
+function format_track_name(n) {
+    if (!n || n === "Unknown Track") return n;
+    const pfx = { "SNES":"#EBF716","N64":"#00B100","GBA":"#77ADE5","GCN":"#E43B45","DS":"#E57D1D","Wii":"#FFFFFF","3DS":"#D10019","Wii U":"#0076E5","Tour":"#E54500","RMX":"#E43C00","GP":"#FFFF00","SW2":"#E56F88","Beta":"#F2AF3A" };
+    const parts = n.split(" / ").map(s => {
+        const k = Object.keys(pfx).sort((a,b)=>b.length-a.length).find(x => s.startsWith(x + " "));
+        return k ? { p: k, n: s.substring(k.length+1).trim() } : { p: null, n: s.trim() };
+    });
+    if (parts.length > 1 && parts.every(x => x.p && x.n === parts[0].n)) {
+        const ps = parts.map(x => `<span style="color:${pfx[x.p]}">${x.p}</span>`).join(' / ');
+        return `${ps} <span style="color:#FFFFFF">${parts[0].n}</span>`;
+    }
+    return parts.map(x => x.p ? `<span style="color:${pfx[x.p]}">${x.p}</span> <span style="color:#FFFFFF">${x.n}</span>` : `<span style="color:#FFFFFF">${x.n}</span>`).join(' / ');
+}
 
 // Room connectivity processing
 function fix_split_rooms(rooms){
@@ -479,12 +494,13 @@ async function reload_rooms(){
          head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${isFiltered ? 'javascript:disable_filter()' : r_l}" class="room-info-link" title="${isFiltered ? 'Remove filter' : 'Filter this room'}">${isFiltered ? '❌' : '📌'}</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
          
          let trackInfo = document.createElement("div"); trackInfo.className = "track-info-container";
-         let trackNameStr = room.track || "Unknown Track";
+         let trackNameRaw = room.track || "Unknown Track";
+         let trackNameStr = format_track_name(trackNameRaw);
          let isSuspended = room.suspend === true || room.suspend === "1" || room.suspend === "true";
          let showTracks = el("track-names-checkbox").checked;
-         let showTrackElement = !isSuspended && trackNameStr !== "Unknown Track" && showTracks;
-         let needsCrossfade = (showTrackElement && ROOM_TRACK_CACHE[room.id] && ROOM_TRACK_CACHE[room.id] !== trackNameStr);
-         ROOM_TRACK_CACHE[room.id] = trackNameStr;
+         let showTrackElement = !isSuspended && trackNameRaw !== "Unknown Track" && showTracks;
+         let needsCrossfade = (showTrackElement && ROOM_TRACK_CACHE[room.id] && ROOM_TRACK_CACHE[room.id] !== trackNameRaw);
+         ROOM_TRACK_CACHE[room.id] = trackNameRaw;
          trackInfo.innerHTML = `🗺️ &nbsp; <span>${trackNameStr}</span>`;
          if (showTrackElement) trackInfo.classList.add("visible");
          if (needsCrossfade) { trackInfo.classList.add("crossfade-active"); setTimeout(() => trackInfo.classList.remove("crossfade-active"), 50); }
