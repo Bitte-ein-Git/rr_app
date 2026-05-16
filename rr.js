@@ -28,7 +28,7 @@ const ROOM_TYPES = { "10":{l:"🕹️ Retro Tracks",c:"#FF8C00"},"11":{l:"⏰ On
 const updateScrollLock = () => document.body.classList.toggle('no-scroll', document.querySelectorAll('.modal:not(.hidden)').length > 0);
 const toggle_modal = (m) => { el(m).classList.toggle('hidden'); updateScrollLock(); };
 const toggle_settings_modal = () => toggle_modal('settings-modal');
-const toggle_favorites_modal = () => { render_favorites_list(); toggle_modal('favorites-modal'); }
+const toggle_favorites_modal = async () => { const fcs = FAVORITES.map(f => f.fc); if (fcs.length > 0) await fetch_miis_by_fc(fcs); render_favorites_list(); toggle_modal('favorites-modal'); }
 const toggle_user_profile_modal = () => { update_user_profile_modal_state(); toggle_modal('user-profile-modal'); }
 const hide_player_info_modal = () => { el('player-info-modal').classList.add('hidden'); updateScrollLock(); };
 const toggle_info_modal = () => toggle_modal('info-modal');
@@ -327,6 +327,7 @@ function apply_theme(t) {
     document.body.classList.add(CURRENT_VIEW_MODE === 'desktop' ? 'desktop-view' : 'mobile-view');
 }
 
+// State control handlers
 function on_header_stats_change() { const c=el("header-stats-checkbox").checked; localStorage.setItem("show-header-stats", c); reload_rooms(); }
 function on_sort_order_change() { const s=el("sort-order-select").value; localStorage.setItem("sort-order", s); reload_rooms(); }
 function on_checkbox(){ const s=el("timeout-checkbox").checked; localStorage.setItem("auto-reload", s); if(RELOAD_TIMER) clearInterval(RELOAD_TIMER); if(s && !HISTORY_MODE) RELOAD_TIMER=setInterval(fetch_rooms, RELOAD_TIME); }
@@ -452,7 +453,21 @@ async function fetch_rooms() {
     try { 
         const r=await fetch(RWFC_API_URL+tp); if(!r.ok) throw new Error(`RWFC API: ${r.status}`); let rd=await r.json(), rms, dt=new Date(); 
         if(HISTORY_MODE){ if(rd&&typeof rd.data !=='undefined'&&typeof rd.timestamp !=='undefined'){ dt=new Date(rd.timestamp*1000); rms=rd.data; let z=new Date().getTimezoneOffset()*60000; let localDate = new Date(rd.timestamp*1000 - z); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr; HISTORY_DATE = new Date(rd.timestamp*1000); } else { rms=rd; dt=HISTORY_DATE; } } else rms=rd;
-        if(!Array.isArray(rms)) rms=[]; cur_rooms=rms; reload_rooms(); 
+        if(!Array.isArray(rms)) rms=[]; cur_rooms=rms; 
+        
+        let online_fcs = [];
+        rms.forEach(room => {
+            if (room.players) {
+                Object.values(room.players).forEach(p => {
+                    if (p.fc && p.fc !== "guest") online_fcs.push(p.fc);
+                });
+            }
+        });
+        if (online_fcs.length > 0) {
+            await fetch_miis_by_fc(online_fcs);
+        }
+        
+        reload_rooms(); 
     } catch(e){ el("loading").textContent=`Error: ${e.message}`; cur_rooms=[]; reload_rooms(); }
 }
 
@@ -526,7 +541,7 @@ async function reload_rooms(){
                  else {
                      let cached = get_cached_mii_image(p.fc);
                      if(cached) mi.src = format_mii_src(cached); else mi.src="./assets/loading.gif";
-                     if(p.mii && p.mii[cmi] && p.mii[cmi].data) fetch_mii_images([p.mii[cmi].data], p.fc);
+                     if(p.mii && p.mii[cmi] && p.mii[cmi].data && !cached) fetch_mii_images([p.mii[cmi].data], p.fc);
                  }
                  
                  pr.appendChild(mi); let pi=document.createElement("div"); pi.className="player-info"; let pn=document.createElement("div"); pn.className="player-name"; const bn=(p.mii&&p.mii[cmi])?p.mii[cmi].name:p.name; pn.innerHTML=iu?`You <small>${handle_mii_name(bn)}</small>`:handle_mii_name(get_display_name(p.fc, bn)); pi.appendChild(pn); let pf=document.createElement("div"); pf.className="player-fc"; pf.textContent=isGuest?"Guest":p.fc; if(p.openhost==="true"&&!isGuest) pf.setAttribute("openhost",""); pi.appendChild(pf); pr.appendChild(pi);
