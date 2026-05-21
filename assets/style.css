@@ -180,8 +180,8 @@ input:checked + .slider:before { transform: translateX(26px); }
 .player-row.is-guest { padding-left: 2rem; margin-top: -2px; }
 .player-mii { width: 32px; height: 32px; border-radius: 50%; background: #444; object-fit: cover; flex-shrink: 0; }
 .player-info { flex: 1; overflow: hidden; }
-.player-name { font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'MK Retro Rewind Font for rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; }
-.player-name small { font-size: 0.8em; font-weight: normal; opacity: 0.8; font-family: 'MK Retro Rewind Font for rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; }
+.player-name { font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Retro Rewind App -  rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; }
+.player-name small { font-size: 0.8em; font-weight: normal; opacity: 0.8; font-family: 'Retro Rewind App -  rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; }
 .player-fc { font-size: 0.8em; color: #aaa; }
 .player-vrbr { font-size: 0.9em; font-weight: 400; color: #ddd; white-space: nowrap; width: 70px; text-align: right; transition: opacity 0.3s ease-in-out; flex-shrink: 0; }
 .openhost { text-decoration: underline; text-decoration-color: #00aeff; text-decoration-style: wavy; }
@@ -208,7 +208,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 
 .excited { font-weight: bold; animation: excited 1s infinite; }
 @keyframes excited { 0%,100%{color:#cba6f7} 17%{color:#f38ba8} 33%{color:#fab387} 50%{color:#f9e2af} 67%{color:#a6e3a1} 83%{color:#89b4fa} }
-.wide-char { font-family: 'MK Retro Rewind Font for rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; font-size: 0.5rem; transform: scaleY(2); display: inline-block; }
+.wide-char { font-family: 'Retro Rewind App -  rr.heyfordy.dev', 'CTMKF', 'Rubik', sans-serif; font-size: 0.5rem; transform: scaleY(2); display: inline-block; }
 
 /* --- Layout For Desktop --- */
 body.desktop-view main { max-width: none; padding: 20px; }

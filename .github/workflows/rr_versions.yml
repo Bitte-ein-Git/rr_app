@@ -66,17 +66,21 @@ jobs:
                       messages = d_resp.json()
                       found = False
                       for msg in messages:
-                          # Check primary content or message snapshots (for forwarded messages)
+                          # Check primary content or message snapshots
                           content = msg.get("content") or ""
                           if not content and msg.get("message_snapshots"):
                               content = msg["message_snapshots"][0].get("message", {}).get("content") or ""
                           
-                          if "rwfc.net/updates" in content and "Changelog" in content:
-                              match = re.search(r"```(?:[Cc]hangelog:)?([\s\S]*?)```", content)
-                              if match:
-                                  final_c = match.group(1).strip()
-                                  found = True
-                                  break
+                          # Identify release message and extract full content
+                          if str(new_v) in content or "change log" in content.lower() or "changelog" in content.lower():
+                              # Remove download links
+                              content = re.sub(r"Main Download:\s*https?://\S+\n?", "", content, flags=re.IGNORECASE)
+                              content = re.sub(r"New files since[^\n:]+:\s*https?://\S+\n?", "", content, flags=re.IGNORECASE)
+                              
+                              # Clean up whitespaces
+                              final_c = content.strip()
+                              found = True
+                              break
                       
                       if not found and new_v != old_v:
                           final_c = "No changelog released yet"

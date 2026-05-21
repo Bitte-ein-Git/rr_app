@@ -3,7 +3,7 @@
  */
 
 @font-face {
-    font-family: "MK Retro Rewind Font for rr.heyfordy.dev";
+    font-family: "Retro Rewind App -  rr.heyfordy.dev";
     src: url("./RR-Font/rr.eot"); /* IE9 */
     src: url("./RR-Font/rr.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
     url("./RR-Font/rr.woff2") format("woff2"), /* chrome、firefox、opera、Safari, Android, iOS */
@@ -14,7 +14,7 @@
 
 
 .icon {
-    font-family: "MK Retro Rewind Font for rr.heyfordy.dev" !important;
+    font-family: "Retro Rewind App -  rr.heyfordy.dev" !important;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -593,3 +593,10 @@
 .icon-uniF086:before {
   content: "\f086";
 }
+
+.icon-uniF087:before {
+  content: "\f087";
+}
+
+
+
