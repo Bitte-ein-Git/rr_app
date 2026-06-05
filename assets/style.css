@@ -43,6 +43,7 @@ header h1 { font-size: 1.6em; display: flex; align-items: center; margin: 0; whi
 #user-profile-btn svg { width: 1em; height: 1em; fill: currentColor; }
 
 #header-stats { width: 100%; text-align: center; font-size: 1.1em; font-weight: 300; color: #FFF; opacity: 1; height: auto; margin-top: 0; padding-bottom: 5px; transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out; }
+#header-stats-content { transition: opacity 0.3s ease-in-out; display: inline-block; }
 #header-stats.hidden { opacity: 0; height: 0; padding-bottom: 0; overflow: hidden; margin-top: 0; }
 #header-stats .excited { animation: excited 1s infinite; display: inline-block; font-weight: bold; }
 

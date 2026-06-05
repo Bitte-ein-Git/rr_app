@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#FE9900"/>
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <script src="./assets/pwa.js"></script>
+    <script>navigator.serviceWorker.register("assets/sw.js")</script>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -16,7 +17,7 @@
     <link rel="icon" href="./assets/favicon.ico" sizes="any" />
     <link rel="stylesheet" href="./assets/style.css" type="text/css" />
     <link href="./assets/rr.css" rel="Stylesheet" type="text/css" />
-    <link href="./assets/ctmkf.css" rel="Stylesheet" type="text/css" />
+    <link href="./assets/ctmkf.css" rel="Stylesheet" type="text/css" /> 
     <link href="./assets/Rubik.css" rel="Stylesheet" type="text/css" />
 </head>
 
@@ -50,6 +51,13 @@
 
     <main>
         <div id="loading">⏳ Loading data...</div>
+        
+        <div id="fc-filter-container" style="display: none; background: #3a3d4d; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
+            Tracking Player: <span id="fc-filter-text" style="font-weight: bold; color: #ff9900;"></span>
+            <br>
+            <button onclick="disable_fc_filter()" class="modal-close-btn" style="margin-top: 10px;">Remove filter</button>
+        </div>
+
         <div id="not-found-container" style="display: none;">
             Room not found or closed.
             <br>
@@ -74,7 +82,7 @@
                     <span class="slider round"></span>
                 </label> 
             </div>
-            <div class="setting-row"> <label>Show counts</label> <label class="switch"><input type="checkbox" id="header-stats-checkbox" onchange="on_header_stats_change()" /><span class="slider round"></span></label> </div>
+            <div class="setting-row"> <label>Show Stats/Events</label> <label class="switch"><input type="checkbox" id="header-stats-checkbox" onchange="on_header_stats_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Sort by:</label> <select id="sort-order-select" onchange="on_sort_order_change()"> <option value="player_count">Player count</option> <option value="time_created">Time created</option> </select> </div>
             <div class="setting-row"> <label>Track names</label> <label class="switch"><input type="checkbox" id="track-names-checkbox" onchange="on_track_names_change()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Auto-Refresh</label> <label class="switch"><input type="checkbox" id="timeout-checkbox" onchange="on_checkbox()" /><span class="slider round"></span></label> </div>
@@ -133,6 +141,14 @@
          </div>
      </div>
 
+     <div id="friend-link-modal" class="modal hidden">
+         <div class="modal-content small-modal">
+             <button class="modal-close-btn top-right" onclick="close_friend_link_modal()">X</button>
+             <h2>🔗 Friend Link</h2>
+             <div id="friend-link-content" style="text-align: center;"></div>
+         </div>
+     </div>
+
      <div id="room-info-modal" class="modal hidden">
         <div class="modal-content small-modal">
             <button class="modal-close-btn top-right" onclick="toggle_modal('room-info-modal')">X</button>
@@ -170,6 +186,18 @@
                     <button class="modal-close-btn" onclick="apply_nickname()">Apply</button>
                     <button class="modal-close-btn" onclick="reset_nickname()" style="background: #777;">Reset</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="update-modal" class="modal hidden">
+        <div class="modal-content small-modal">
+            <button class="modal-close-btn top-right" onclick="close_update_modal()">X</button>
+            <img src="./assets/Logo.png" alt="Retro Rewind" style="width: 50%; max-width: 280px; height: auto; display: block; margin: 0 auto 15px auto;">
+            <h2>RR Update released!</h2>
+            <div style="text-align: center;">
+                <p id="update-modal-version" style="font-size: 1.5em; font-weight: bold; margin: 15px 0; color: #ff9900;"></p>
+                <button class="modal-close-btn" onclick="close_update_modal()">Got it!</button>
             </div>
         </div>
     </div>

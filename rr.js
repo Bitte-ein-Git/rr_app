@@ -20,6 +20,8 @@ let HISTORY_TIMER = null; let HISTORY_MODE = false; let HISTORY_DATE = null;
 let FAVORITES = []; let USER_PROFILE = null; let CURRENT_VIEW_MODE = 'mobile';
 let CURRENT_NICKNAME_FC = null;
 let ROOM_STATUS_CACHE = {}; let ROOM_TRACK_CACHE = {}; 
+let TARGET_FC = null;
+let EVENT_DATA = null; let HEADER_STATS_FLIPPER_TIMER = null; let HEADER_STATS_STATE = 'counts'; let LAST_RC = 0; let LAST_PC = 0;
 
 // Definitions for room categories
 const ROOM_TYPES = { "10":{l:"🕹️ Retro Tracks",c:"#FF8C00"},"11":{l:"⏰ Online TT",c:"#FF6347"},"12":{l:"🚀 200cc",c:"#DC143C"},"13":{l:"☂️ Item Rain",c:"#1E90FF"},"14":{l:"Regular Battle",c:"#B22222"},"15":{l:"Elimination Battle",c:"#8B0000"},"20":{l:"🚧 Custom Tracks",c:"#E800A3"},"21":{l:"Vanilla Tracks",c:"#7B68EE"},"22":{l:"CT 200cc",c:"#DA70D6"},"666":{l:"Luminous 150cc",c:"#FFD700"},"667":{l:"Luminous Online TT",c:"#BDB76B"},"668":{l:"CTGP-C",c:"#32CD32"},"751":{l:"Versus",c:"#A9A9A9"},"-1":{l:"Regular",c:"#A9A9A9"},"":{l:"Private",c:"#A9A9A9"},"69":{l:"IKW Default",c:"#ADD8E6"},"70":{l:"IKW Ultras VS",c:"#008080"},"71":{l:"IKW Countdown",c:"#00FFFF"},"72":{l:"IKW Bob-omb Blast",c:"#696969"},"73":{l:"IKW Infinite Accel",c:"#4B0082"},"74":{l:"IKW Banana Slip",c:"#FFFFE0"},"75":{l:"IKW Random Items",c:"#FF00FF"},"76":{l:"IKW Unfair Items",c:"#800000"},"77":{l:"IKW Blue Shell Madness",c:"#0000CD"},"78":{l:"IKW Mushroom Dash",c:"#2E8B57"},"79":{l:"IKW Bumper Karts",c:"#A52A2A"},"80":{l:"IKW Item Rampage",c:"#FA8072"},"81":{l:"IKW Item Rain",c:"#4169E1"},"82":{l:"IKW Shell Break",c:"#2E8B57"},"83":{l:"IKW Riibalanced",c:"#C0C0C0"},"875":{l:"OptPack 150cc",c:"#7CFC00"},"876":{l:"OptPack Online TT",c:"#556B2F"},"877":{l:"OptPack",c:"#000080"},"878":{l:"OptPack",c:"#000080"},"879":{l:"OptPack",c:"#000080"},"880":{l:"OptPack",c:"#000080"},"1312":{l:"WTP 150cc",c:"#008B8B"},"1313":{l:"WTP 200cc",c:"#483D8B"},"1314":{l:"WTP Online TT",c:"#8FBC8F"},"1315":{l:"WTP Item Rain",c:"#00CED1"},"1316":{l:"WTP STYD",c:"#9400D3"} };
@@ -33,7 +35,42 @@ const toggle_user_profile_modal = () => { update_user_profile_modal_state(); tog
 const hide_player_info_modal = () => { el('player-info-modal').classList.add('hidden'); updateScrollLock(); };
 const toggle_info_modal = () => toggle_modal('info-modal');
 const close_nickname_modal = () => { CURRENT_NICKNAME_FC = null; toggle_modal('nickname-modal'); }
+const close_update_modal = () => { el('update-modal').classList.add('hidden'); updateScrollLock(); }
 const toggle_fav_search = () => { const w = el('fav-search-wrapper'); w.classList.toggle('visible'); if(w.classList.contains('visible')) el('fav-search-input').focus(); };
+const close_friend_link_modal = () => { el('friend-link-modal').classList.add('hidden'); updateScrollLock(); };
+
+// Friend Link logic
+async function show_friend_link_modal(fc) {
+    let p = new URLSearchParams(location.search); p.delete("fc"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : ''));
+    let isOnline = false; let pName = "Unknown"; let miiSrc = "./assets/loading.gif";
+    const room = cur_rooms.find(r => r.players && Object.values(r.players).some(pl => pl.fc === fc));
+    
+    if (room) {
+        isOnline = true; const pl = Object.values(room.players).find(p => p.fc === fc);
+        pName = (pl.mii && pl.mii.length > 0) ? pl.mii[0].name : pl.name;
+        let cached = get_cached_mii_image(fc); if (cached) miiSrc = format_mii_src(cached);
+    } else {
+        try {
+            const r = await fetch(`${API_BASE_URL}?info=${fc}`);
+            if (!r.ok) throw new Error("Not found");
+            const d = await r.json(); pName = d.name;
+            if (d.miiData) fetch_mii_images([d.miiData], fc); else fetch_miis_by_fc([fc]);
+            let cached = get_cached_mii_image(fc); if (cached) miiSrc = format_mii_src(cached);
+        } catch (e) {
+            el("friend-link-content").innerHTML = `<div style="color: #F44336; font-size: 1.2em; font-weight: bold; margin: 20px 0;">❌ Player not found</div><div style="color: #aaa; margin-bottom: 20px;">The Friend Code ${fc} does not exist or has never played online.</div><button class="modal-close-btn" onclick="close_friend_link_modal()">Close</button>`;
+            el("friend-link-modal").classList.remove("hidden"); updateScrollLock(); return;
+        }
+    }
+    
+    el("friend-link-content").innerHTML = `<div class="player-info-modal-header" style="justify-content: center; flex-direction: column; align-items: center; text-align: center;"><img class="player-mii-large" src="${miiSrc}" alt="Mii" mii-data-fc="${fc}" style="width: 80px; height: 80px; border-radius: 8px;"><div style="margin-top: 10px;"><div class="player-name" style="font-size: 1.4em;">${handle_mii_name(pName)}</div><div class="player-fc">${fc}</div></div></div><div style="font-size: 1.2em; font-weight: bold; margin: 15px 0; color: ${isOnline ? '#4CAF50' : '#F44336'};">${isOnline ? '🟢 Online' : '🔴 Offline'}</div><div class="player-info-modal-buttons">${isOnline ? `<button class="modal-close-btn" style="background: #4CAF50;" onclick="activate_fc_filter('${fc}')">🚪 Go to room</button>` : ''}<button class="modal-close-btn visit-btn" onclick="show_player_info_modal('${fc}'); close_friend_link_modal()">👤 Full profile</button></div>`;
+    el("friend-link-modal").classList.remove("hidden"); updateScrollLock();
+}
+
+function activate_fc_filter(fc) {
+    TARGET_FC = fc; close_friend_link_modal();
+    let p = new URLSearchParams(location.search); p.set("fc", fc); history.replaceState(null, null, location.pathname + `?${p.toString()}`);
+    reload_rooms();
+}
 
 // Cache retrieval and storage
 function get_cached_item(key, expireTime) {
@@ -158,7 +195,7 @@ function reset_nickname() { if (!CURRENT_NICKNAME_FC) return; const fav = FAVORI
 // Persistent favorite list
 function load_favorites() { const f = localStorage.getItem("favorites"); FAVORITES = f ? JSON.parse(f) : []; }
 function save_favorites() { localStorage.setItem("favorites", JSON.stringify(FAVORITES)); }
-function is_favorite(fc) { return FAVORITES.some(f => f.fc === fc); }
+function is_favorite(fc) { return FAVORITES.some(f => f.fc === fc) || fc === TARGET_FC; }
 
 async function add_favorite(fc, name = null, e) { 
     if (e) e.stopPropagation(); document.querySelectorAll('.player-menu').forEach(m => m.style.display = 'none');
@@ -232,8 +269,9 @@ function on_history_change() { if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); H
 function on_history_main_change() { const val = el("history-input-main").value; if(el("history-input")) el("history-input").value = val; if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
 function add_history(m) { let i=el("history-input"),t=new Date(i.value).getTime() + m*60*1000 - new Date().getTimezoneOffset()*60000; const newVal = new Date(t).toISOString().slice(0,16); i.value = newVal; if(el("history-input-main")) el("history-input-main").value = newVal; on_history_change(); }
 function change_history() { HISTORY_MODE = true; on_checkbox(); fetch_rooms(); }
-function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); reset_history_inputs(); on_checkbox(); fetch_rooms(); }
-function disable_filter() { let p=new URL(location.href).searchParams; p.delete("room"); history.replaceState(null, null, location.pathname + `?${p.toString()}`); reload_rooms(); }
+function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); reset_history_inputs(); on_checkbox(); fetch_rooms(); }
+function disable_filter() { let p=new URL(location.href).searchParams; p.delete("room"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); reload_rooms(); }
+function disable_fc_filter() { let p=new URL(location.href).searchParams; p.delete("fc"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); TARGET_FC = null; el("fc-filter-container").style.display = "none"; reload_rooms(); }
 
 // Special character filtering
 function _escape(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/(?:\r\n|\r|\n)/g,''); }
@@ -274,6 +312,7 @@ function fix_split_rooms(rooms){
 // Room sorting order
 function prioritize_rooms(rooms) {
     let user_fc = USER_PROFILE ? USER_PROFILE.fc : null; let fav_fcs = FAVORITES.map(f => f.fc).filter(f => f !== user_fc);
+    if(TARGET_FC && !fav_fcs.includes(TARGET_FC) && TARGET_FC !== user_fc) fav_fcs.push(TARGET_FC);
     let user_rooms = [], fav_rooms = [], public_rooms = [], private_rooms = [];
     for (let room of rooms) {
         let is_user_room = false; let is_fav_room = false;
@@ -289,7 +328,41 @@ function prioritize_rooms(rooms) {
 let prev_uptime_update_date = null; let uptimes_timer = null;
 function update_uptimes(sr=false){ const ss=document.querySelectorAll("span[created]"); if(!HISTORY_MODE||sr||FIRST_LOAD){ FIRST_LOAD=false; for(const s of ss){ const c=new Date(s.getAttribute("created")); let n=HISTORY_MODE?HISTORY_DATE:new Date(); const d=n-c; let sc=Math.floor(d/1000),m=Math.floor(sc/60),h=Math.floor(m/60),dy=Math.floor(h/24); h%=24; m%=60; sc%=60; let ps=sc.toString().padStart(2,"0"),pm=m.toString().padStart(2,"0"),ph=h.toString().padStart(2,"0"); let str=`${h}:${pm}:${ps}`; if(dy>0) str=`${dy}:${ph}:${pm}:${ps}`; s.textContent=str; }} if(sr) return; let ms=1000; if(prev_uptime_update_date) ms-=(Date.now()-prev_uptime_update_date); prev_uptime_update_date=Date.now(); if(uptimes_timer) clearTimeout(uptimes_timer); uptimes_timer=setTimeout(update_uptimes, Math.max(0,ms)); }
 
-function update_header_stats(rc, pc, isFiltered) { const s=el("header-stats-checkbox").checked, c=el("header-stats"), cs=el("header-stats-content"); if(!s||isFiltered){ c.classList.add('hidden'); if(HEADER_STATS_TIMER) clearTimeout(HEADER_STATS_TIMER); HEADER_STATS_TIMER=null; return; } c.classList.remove('hidden'); cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}`; }
+function _render_header_stats_content(cs, rc, pc) {
+    if (HEADER_STATS_STATE === 'counts') {
+        cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}`;
+    } else {
+        cs.innerHTML=`<span class="excited" style="color: #ffcc00;">🎉 ${EVENT_DATA.eventInfo}</span>`;
+    }
+}
+
+function update_header_stats(rc, pc, isFiltered) { 
+    const s = el("header-stats-checkbox").checked, c = el("header-stats"), cs = el("header-stats-content"); 
+    if(!s || isFiltered) { 
+        c.classList.add('hidden'); 
+        if(HEADER_STATS_TIMER) clearTimeout(HEADER_STATS_TIMER); HEADER_STATS_TIMER = null; 
+        if(HEADER_STATS_FLIPPER_TIMER) { clearInterval(HEADER_STATS_FLIPPER_TIMER); HEADER_STATS_FLIPPER_TIMER = null; }
+        return; 
+    } 
+    c.classList.remove('hidden'); LAST_RC = rc; LAST_PC = pc;
+    
+    if (EVENT_DATA && EVENT_DATA.eventActive && EVENT_DATA.eventInfo) {
+        if (!HEADER_STATS_FLIPPER_TIMER) {
+            _render_header_stats_content(cs, rc, pc);
+            HEADER_STATS_FLIPPER_TIMER = setInterval(() => {
+                HEADER_STATS_STATE = HEADER_STATS_STATE === 'counts' ? 'event' : 'counts';
+                cs.style.opacity = 0;
+                setTimeout(() => { _render_header_stats_content(cs, LAST_RC, LAST_PC); cs.style.opacity = 1; }, 300);
+            }, 5000);
+        } else {
+            _render_header_stats_content(cs, rc, pc);
+        }
+    } else {
+        if (HEADER_STATS_FLIPPER_TIMER) { clearInterval(HEADER_STATS_FLIPPER_TIMER); HEADER_STATS_FLIPPER_TIMER = null; }
+        cs.style.opacity = 1;
+        cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}`; 
+    }
+}
 
 function start_vrbr_flipper() { if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); if(el("vr-only-checkbox").checked){ document.querySelectorAll('.player-vrbr[data-vr][data-br]').forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); return; } const u=()=>{ const es=document.querySelectorAll('.player-vrbr[data-vr][data-br]'); if(el("vr-only-checkbox").checked){ if(VRBR_FLIPPER_TIMER) clearInterval(VRBR_FLIPPER_TIMER); es.forEach(e=>{e.textContent=`${e.dataset.vr} VR`; e.style.opacity=1;}); return; } VRBR_STATE=VRBR_STATE==='vr'?'br':'vr'; for(const e of es) e.style.opacity=0; setTimeout(()=>{ for(const e of es) { e.textContent=(VRBR_STATE==='vr')?`${e.dataset.vr} VR`:`${e.dataset.br} BR`; e.style.opacity=1; }}, 300); }; u(); VRBR_FLIPPER_TIMER=setInterval(u, 3000); }
 
@@ -405,8 +478,29 @@ async function fetch_miis_by_fc(fcs){
     }
 }
 
+async function fetch_event_data() { 
+    try { const r = await fetch("https://api.heyfordy.dev/rr_app/event"); if(r.ok) EVENT_DATA = await r.json(); } catch(e){} 
+}
+
 // RR + WW version retrieval
-async function fetch_versions() { try { const r=await fetch("https://api.heyfordy.dev/rr_app/version-rr"); if(r.ok) el("info-rr-version").textContent=` v${(await r.json()).version}`; } catch(e){} try { const w=await fetch("https://api.heyfordy.dev/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} }
+async function fetch_versions() { 
+    try { 
+        const r=await fetch("https://api.heyfordy.dev/rr_app/version-rr"); 
+        if(r.ok) {
+            const d = await r.json();
+            el("info-rr-version").textContent=` v${d.version}`; 
+            
+            const cachedVer = localStorage.getItem("cached_rr_version");
+            if (cachedVer && cachedVer !== d.version) {
+                const uv = el("update-modal-version");
+                if (uv) uv.textContent = `v${d.version}`;
+                toggle_modal('update-modal');
+            }
+            localStorage.setItem("cached_rr_version", d.version);
+        }
+    } catch(e){} 
+    try { const w=await fetch("https://api.heyfordy.dev/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} 
+}
 
 // Page load initialization
 async function on_load(){
@@ -432,10 +526,19 @@ async function on_load(){
     reset_history_inputs();
     const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !window.MSStream);
     if (isIOS && !window.navigator.standalone) el('ios-homescreen-hint').style.display = 'block';
-    fetch_versions(); const url=new URL(location.href), ps=url.searchParams, ts=ps.get("time");
+    fetch_versions(); fetch_event_data(); setInterval(fetch_event_data, 60000);
+    
+    const url=new URL(location.href), ps=url.searchParams, ts=ps.get("time");
     if(ts){ 
         HISTORY_MODE=true; const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(tsMillis - z); const histIso = localDate.toISOString().slice(0, 16); el("history-input").value = histIso; if(el("history-input-main")) el("history-input-main").value = histIso;
         change_history(); return; 
+    }
+
+    let startFc = ps.get("fc");
+    if (startFc) {
+        el("timeout-checkbox").checked = true;
+        localStorage.setItem("auto-reload", "true");
+        window.INITIAL_FRIEND_FC = startFc;
     }
     
     start_vrbr_flipper(); start_room_detail_flipper();
@@ -474,9 +577,18 @@ async function fetch_rooms() {
 // Room UI rendering
 async function reload_rooms(){
      let rooms=[...cur_rooms]; if(!Array.isArray(rooms)) rooms=[];
-     const rc=el("rooms-container"); rc.innerHTML=""; const url=new URL(location.href), ps=url.searchParams, fr=ps.get("room"); let rnf=true; const isFiltered = !!fr;
+     const rc=el("rooms-container"); rc.innerHTML=""; const url=new URL(location.href), ps=url.searchParams, fr=ps.get("room"); 
      
-     let final_rooms = fr ? rooms.filter(r => r.id == fr) : (!el("private-checkbox").checked ? rooms.filter(r => {
+     let targetRoomId = null;
+     if (TARGET_FC) {
+         const targetRoom = rooms.find(r => r.players && Object.values(r.players).some(p => p.fc === TARGET_FC));
+         if (targetRoom) targetRoomId = targetRoom.id;
+     }
+
+     const activeFilterRoom = fr || targetRoomId;
+     let rnf = true; const isFiltered = !!activeFilterRoom;
+     
+     let final_rooms = activeFilterRoom ? rooms.filter(r => r.id == activeFilterRoom) : (!el("private-checkbox").checked ? rooms.filter(r => {
          if (r.type === "anybody") return true;
          const p_keys = Object.keys(r.players);
          return p_keys.some(pk => {
@@ -506,7 +618,9 @@ async function reload_rooms(){
          ROOM_STATUS_CACHE[room.id] = statusHTML;
          
          let r_ps=new URL(location.href).searchParams; r_ps.set("room", room.id); let r_l=location.pathname+`?${r_ps.toString()}`; let card=document.createElement("div"); card.className="room-card"; let head=document.createElement("div"); head.className="room-card-header"; 
-         head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${isFiltered ? 'javascript:disable_filter()' : r_l}" class="room-info-link" title="${isFiltered ? 'Remove filter' : 'Filter this room'}">${isFiltered ? '❌' : '📌'}</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
+         
+         let headerLinkHref = TARGET_FC ? 'javascript:disable_fc_filter()' : (fr ? 'javascript:disable_filter()' : r_l);
+         head.innerHTML=`<span class="room-name">${icon} ${rk_t?'| '+rk_h+' Room':''}</span><a href="${headerLinkHref}" class="room-info-link" title="${isFiltered ? 'Remove filter' : 'Filter this room'}">${isFiltered ? '❌' : '📌'}</a>`; card.appendChild(head); let det=document.createElement("div"); det.className="room-details"; card.appendChild(det); 
          
          let trackInfo = document.createElement("div"); trackInfo.className = "track-info-container";
          let trackNameRaw = room.track || "Unknown Track";
@@ -573,9 +687,37 @@ async function reload_rooms(){
          det.innerHTML = `<div style="display:flex; justify-content:space-between; width:100%;"><span class="room-status-left" style="${statusChanged ? 'opacity: 0;' : 'opacity: 1;'}" data-status="${statusHTML}">${statusHTML}</span><span class="room-detail-flipper-right" data-players="${countHTML}" ${vrHTML?`data-vr="${vrHTML}"`:''}>${initialDetail}</span></div>`;
          foot.innerHTML=`ID: <a href="javascript:void(0)" onclick="show_room_info_modal('${room.id}')" class="room-link">${room.id}</a> • ⏰ Uptime: <span created="${room.created}">0:00:00</span>`;
      }
-     el("loading").style.display="none"; if(rnf&&fr) el("not-found-container").style.display="block"; else el("not-found-container").style.display="none";
+     
+     el("loading").style.display="none"; 
+     
+     // Anzeige der Not Found / Filter Hinweise
+     if (TARGET_FC) {
+         el("fc-filter-container").style.display = "block";
+         el("fc-filter-text").textContent = TARGET_FC;
+         if (rnf) {
+             el("not-found-container").style.display = "block";
+             el("not-found-container").innerHTML = `Player not found or offline.<br><button onclick="disable_fc_filter()" class="modal-close-btn" style="margin-top: 10px;">Remove filter</button>`;
+         } else {
+             el("not-found-container").style.display = "none";
+         }
+     } else {
+         el("fc-filter-container").style.display = "none";
+         if (rnf && fr) {
+             el("not-found-container").style.display = "block";
+             el("not-found-container").innerHTML = `Room not found or closed.<br><button onclick="disable_filter()" class="modal-close-btn" style="margin-top: 10px;">Remove filter</button>`;
+         } else {
+             el("not-found-container").style.display = "none";
+         }
+     }
+     
      update_openhost_underline(); update_uptimes(!!uptimes_timer); update_header_stats(r_cnt, tp_cnt, isFiltered);
      setTimeout(() => { document.querySelectorAll('.room-status-left[style*="opacity: 0"]').forEach(span => { span.style.opacity = "1"; }); }, 50);
+
+     if (window.INITIAL_FRIEND_FC) {
+         const fcToLoad = window.INITIAL_FRIEND_FC;
+         window.INITIAL_FRIEND_FC = null;
+         show_friend_link_modal(fcToLoad);
+     }
 }
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', on_load); else on_load();
