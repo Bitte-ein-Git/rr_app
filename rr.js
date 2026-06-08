@@ -6,6 +6,7 @@ const DISCORD_API_URL = "https://api.heyfordy.dev/rr_app/discord";
 const RWFC_API_URL = "https://api.heyfordy.dev/rwfc";
 const MII_API_URL = "https://api.heyfordy.dev/rr_app/mii";
 const MII_BATCH_API_URL = "https://api.heyfordy.dev/rr_app/mii_batch";
+const EVENT_API_URL = "https://api.heyfordy.dev/rr_app/event";
 const MAX_MIIS_PER_REQUEST = 24;
 const MII_EXPIRE_TIME = 1000 * 60 * 60 * 24; 
 const PROFILE_EXPIRE_TIME = 1000 * 60 * 60 * 24; 
@@ -36,6 +37,7 @@ const hide_player_info_modal = () => { el('player-info-modal').classList.add('hi
 const toggle_info_modal = () => toggle_modal('info-modal');
 const close_nickname_modal = () => { CURRENT_NICKNAME_FC = null; toggle_modal('nickname-modal'); }
 const close_update_modal = () => { el('update-modal').classList.add('hidden'); updateScrollLock(); }
+const close_announcement_modal = () => { el('announcement-modal').classList.add('hidden'); updateScrollLock(); }
 const toggle_fav_search = () => { const w = el('fav-search-wrapper'); w.classList.toggle('visible'); if(w.classList.contains('visible')) el('fav-search-input').focus(); };
 const close_friend_link_modal = () => { el('friend-link-modal').classList.add('hidden'); updateScrollLock(); };
 
@@ -478,8 +480,57 @@ async function fetch_miis_by_fc(fcs){
     }
 }
 
+function handle_event_announcement(data) {
+    const cacheKey = "event_cache";
+    let cached = localStorage.getItem(cacheKey);
+    let cachedObj = { event: false, tag: "" };
+    if (cached) { try { cachedObj = JSON.parse(cached); } catch(e) {} }
+
+    let isCurrentlyActive = data && data.eventActive === true;
+    let currentInfo = (data && data.eventInfo) ? data.eventInfo : "";
+    
+    let tag = "";
+    if (currentInfo) {
+        let match = currentInfo.match(/(.*?event)/i);
+        tag = match ? match[1] : currentInfo;
+    } else {
+        tag = cachedObj.tag || "The Event";
+    }
+
+    let showModal = false;
+    let modalText = "";
+
+    if (isCurrentlyActive && !cachedObj.event) {
+        showModal = true;
+        modalText = currentInfo;
+        cachedObj = { event: true, tag: tag };
+        localStorage.setItem(cacheKey, JSON.stringify(cachedObj));
+    } else if (!isCurrentlyActive && cachedObj.event) {
+        showModal = true;
+        modalText = `${cachedObj.tag} has ended!`;
+        cachedObj = { event: false, tag: "" };
+        localStorage.setItem(cacheKey, JSON.stringify(cachedObj));
+    } else if (isCurrentlyActive && cachedObj.event) {
+        cachedObj.tag = tag;
+        localStorage.setItem(cacheKey, JSON.stringify(cachedObj));
+    }
+
+    if (showModal) {
+        const mt = el("announcement-modal-text");
+        if(mt) mt.textContent = modalText;
+        el('announcement-modal').classList.remove('hidden');
+        updateScrollLock();
+    }
+}
+
 async function fetch_event_data() { 
-    try { const r = await fetch("https://api.heyfordy.dev/rr_app/event"); if(r.ok) EVENT_DATA = await r.json(); } catch(e){} 
+    try { 
+        const r = await fetch(EVENT_API_URL); 
+        if(r.ok) {
+            EVENT_DATA = await r.json();
+            handle_event_announcement(EVENT_DATA);
+        }
+    } catch(e){} 
 }
 
 // RR + WW version retrieval
