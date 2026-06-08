@@ -262,16 +262,55 @@ async function render_user_profile() {
 // Helper to update current time in history inputs
 function reset_history_inputs() {
     let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(Date.now() - z); const isoStr = localDate.toISOString().slice(0, 16); 
-    if (el("history-input")) el("history-input").value = isoStr; 
     if (el("history-input-main")) el("history-input-main").value = isoStr;
 }
 
 // Room history and filters
-function on_history_change() { if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
-function on_history_main_change() { const val = el("history-input-main").value; if(el("history-input")) el("history-input").value = val; if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
-function add_history(m) { let i=el("history-input"),t=new Date(i.value).getTime() + m*60*1000 - new Date().getTimezoneOffset()*60000; const newVal = new Date(t).toISOString().slice(0,16); i.value = newVal; if(el("history-input-main")) el("history-input-main").value = newVal; on_history_change(); }
-function change_history() { HISTORY_MODE = true; on_checkbox(); fetch_rooms(); }
-function disable_history() { HISTORY_MODE = false; let p=new URL(location.href).searchParams; p.delete("time"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); reset_history_inputs(); on_checkbox(); fetch_rooms(); }
+function on_history_main_change() { if (HISTORY_TIMER) clearTimeout(HISTORY_TIMER); HISTORY_TIMER = setTimeout(change_history, 1000); }
+function add_history(m) { let i=el("history-input-main"),t=new Date(i.value).getTime() + m*60*1000 - new Date().getTimezoneOffset()*60000; const newVal = new Date(t).toISOString().slice(0,16); i.value = newVal; on_history_main_change(); }
+function change_history() { HISTORY_MODE = true; fetch_rooms(); }
+
+function activate_history_mode_from_settings() {
+    toggle_settings_modal();
+    HISTORY_MODE = true;
+    
+    // Auto-Refresh vorrübergehend ausschalten, ohne den localStorage zu überschreiben
+    el("timeout-checkbox").checked = false;
+    if (RELOAD_TIMER) clearInterval(RELOAD_TIMER);
+    
+    // Header-Button für Settings in ein Schließen-Kreuz verwandeln
+    let sb = el("settings-btn");
+    sb.textContent = "❌";
+    sb.classList.add("no-hover-anim");
+    sb.onclick = disable_history;
+    sb.title = "Disable History Mode";
+
+    reset_history_inputs();
+    fetch_rooms();
+}
+
+function disable_history() { 
+    HISTORY_MODE = false; 
+    
+    // Settings Button wiederherstellen
+    let sb = el("settings-btn");
+    sb.textContent = "⚙";
+    sb.classList.remove("no-hover-anim");
+    sb.onclick = toggle_settings_modal;
+    sb.title = "Settings";
+
+    let p=new URL(location.href).searchParams; 
+    p.delete("time"); 
+    history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); 
+    reset_history_inputs(); 
+    
+    // Auto-Refresh falls gewünscht wieder aktivieren (aus localStorage)
+    el("timeout-checkbox").checked = localStorage.getItem("auto-reload") === "true";
+    on_checkbox(); 
+    
+    fetch_rooms(); 
+}
+
 function disable_filter() { let p=new URL(location.href).searchParams; p.delete("room"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); reload_rooms(); }
 function disable_fc_filter() { let p=new URL(location.href).searchParams; p.delete("fc"); history.replaceState(null, null, location.pathname + (p.toString() ? `?${p.toString()}` : '')); TARGET_FC = null; el("fc-filter-container").style.display = "none"; reload_rooms(); }
 
@@ -331,7 +370,9 @@ let prev_uptime_update_date = null; let uptimes_timer = null;
 function update_uptimes(sr=false){ const ss=document.querySelectorAll("span[created]"); if(!HISTORY_MODE||sr||FIRST_LOAD){ FIRST_LOAD=false; for(const s of ss){ const c=new Date(s.getAttribute("created")); let n=HISTORY_MODE?HISTORY_DATE:new Date(); const d=n-c; let sc=Math.floor(d/1000),m=Math.floor(sc/60),h=Math.floor(m/60),dy=Math.floor(h/24); h%=24; m%=60; sc%=60; let ps=sc.toString().padStart(2,"0"),pm=m.toString().padStart(2,"0"),ph=h.toString().padStart(2,"0"); let str=`${h}:${pm}:${ps}`; if(dy>0) str=`${dy}:${ph}:${pm}:${ps}`; s.textContent=str; }} if(sr) return; let ms=1000; if(prev_uptime_update_date) ms-=(Date.now()-prev_uptime_update_date); prev_uptime_update_date=Date.now(); if(uptimes_timer) clearTimeout(uptimes_timer); uptimes_timer=setTimeout(update_uptimes, Math.max(0,ms)); }
 
 function _render_header_stats_content(cs, rc, pc) {
-    if (HEADER_STATS_STATE === 'counts') {
+    if (HISTORY_MODE) {
+        cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}<br><span style="font-size: 0.8em; color: #4fc3f7;">ℹ️ History-mode enabled</span>`;
+    } else if (HEADER_STATS_STATE === 'counts') {
         cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}`;
     } else {
         cs.innerHTML=`<span class="excited" style="color: #ffcc00;">🎉 ${EVENT_DATA.eventInfo}</span>`;
@@ -348,6 +389,13 @@ function update_header_stats(rc, pc, isFiltered) {
     } 
     c.classList.remove('hidden'); LAST_RC = rc; LAST_PC = pc;
     
+    if (HISTORY_MODE) {
+        if (HEADER_STATS_FLIPPER_TIMER) { clearInterval(HEADER_STATS_FLIPPER_TIMER); HEADER_STATS_FLIPPER_TIMER = null; }
+        cs.style.opacity = 1;
+        _render_header_stats_content(cs, rc, pc);
+        return;
+    }
+
     if (EVENT_DATA && EVENT_DATA.eventActive && EVENT_DATA.eventInfo) {
         if (!HEADER_STATS_FLIPPER_TIMER) {
             _render_header_stats_content(cs, rc, pc);
@@ -550,7 +598,7 @@ async function fetch_versions() {
             localStorage.setItem("cached_rr_version", d.version);
         }
     } catch(e){} 
-    try { const w=await fetch("https://api.heyfordy.dev/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` v${(await w.json()).version}`; } catch(e){} 
+    try { const w=await fetch("https://api.heyfordy.dev/rr_app/version-ww"); if(w.ok) el("info-ww-version").textContent=` ${(await w.json()).version}`; } catch(e){} 
 }
 
 // Page load initialization
@@ -581,7 +629,21 @@ async function on_load(){
     
     const url=new URL(location.href), ps=url.searchParams, ts=ps.get("time");
     if(ts){ 
-        HISTORY_MODE=true; const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); let z = new Date().getTimezoneOffset() * 60000; let localDate = new Date(tsMillis - z); const histIso = localDate.toISOString().slice(0, 16); el("history-input").value = histIso; if(el("history-input-main")) el("history-input-main").value = histIso;
+        HISTORY_MODE=true; 
+        const tsMillis = parseInt(ts) * 1000; HISTORY_DATE = new Date(tsMillis); 
+        let z = new Date().getTimezoneOffset() * 60000; 
+        let localDate = new Date(tsMillis - z); 
+        const histIso = localDate.toISOString().slice(0, 16); 
+        if(el("history-input-main")) el("history-input-main").value = histIso;
+
+        el("timeout-checkbox").checked = false; // Disable auto-reload visually
+
+        let sb = el("settings-btn");
+        sb.textContent = "❌";
+        sb.classList.add("no-hover-anim");
+        sb.onclick = disable_history;
+        sb.title = "Disable History Mode";
+
         change_history(); return; 
     }
 
@@ -598,15 +660,32 @@ async function on_load(){
 
 // Data fetch handler
 async function fetch_rooms() {
-    clear_expired_cache(); let cb=el("timeout-checkbox"), hi=el("history-indicator"), hc_main=el("history-controls-main"), tp=""; 
+    clear_expired_cache(); let cb=el("timeout-checkbox"), hc_main=el("history-controls-main"), tp=""; 
     if(HISTORY_MODE){ 
-        let dt=el("history-input").value; let ht=Math.max(0, new Date(dt).getTime()); if(isNaN(ht)) ht=0; let hd=new Date(ht); HISTORY_DATE=hd; let us=Math.floor(hd.getTime()/1000); 
+        let dt=el("history-input-main").value; let ht=Math.max(0, new Date(dt).getTime()); if(isNaN(ht)) ht=0; let hd=new Date(ht); HISTORY_DATE=hd; let us=Math.floor(hd.getTime()/1000); 
         let ps=new URL(location.href).searchParams; ps.set("time", us); history.replaceState(null, null, location.pathname+`?${ps.toString()}`); 
-        tp=`?time=${us}`; cb.disabled=true; hi.style.display="block"; hc_main.style.display="flex"; el("rooms-container").innerHTML=""; el("loading").textContent = "⏳ Loading history data..."; el("loading").style.display="block"; 
-    } else { cb.disabled=false; hi.style.display="none"; hc_main.style.display="none"; } 
+        tp=`?time=${us}`; cb.disabled=true; hc_main.style.display="flex"; el("rooms-container").innerHTML=""; el("loading").textContent = "⏳ Loading history data..."; el("loading").style.display="block"; 
+    } else { cb.disabled=false; hc_main.style.display="none"; } 
     try { 
         const r=await fetch(RWFC_API_URL+tp); if(!r.ok) throw new Error(`RWFC API: ${r.status}`); let rd=await r.json(), rms, dt=new Date(); 
-        if(HISTORY_MODE){ if(rd&&typeof rd.data !=='undefined'&&typeof rd.timestamp !=='undefined'){ dt=new Date(rd.timestamp*1000); rms=rd.data; let z=new Date().getTimezoneOffset()*60000; let localDate = new Date(rd.timestamp*1000 - z); const isoStr = localDate.toISOString().slice(0, 16); el("history-input").value = isoStr; if(el("history-input-main")) el("history-input-main").value = isoStr; HISTORY_DATE = new Date(rd.timestamp*1000); } else { rms=rd; dt=HISTORY_DATE; } } else rms=rd;
+        if(HISTORY_MODE){ 
+            if(rd&&typeof rd.data !=='undefined'&&typeof rd.timestamp !=='undefined'){ 
+                dt=new Date(rd.timestamp*1000); 
+                rms=rd.data; 
+                let z=new Date().getTimezoneOffset()*60000; 
+                let localDate = new Date(rd.timestamp*1000 - z); 
+                const isoStr = localDate.toISOString().slice(0, 16); 
+                if(el("history-input-main")) el("history-input-main").value = isoStr; 
+                HISTORY_DATE = new Date(rd.timestamp*1000); 
+
+                // Update URL to exactly match the snapshot's actual timestamp
+                let ps_updated = new URL(location.href).searchParams;
+                ps_updated.set("time", rd.timestamp);
+                history.replaceState(null, null, location.pathname+`?${ps_updated.toString()}`);
+            } else { 
+                rms=rd; dt=HISTORY_DATE; 
+            } 
+        } else rms=rd;
         if(!Array.isArray(rms)) rms=[]; cur_rooms=rms; 
         
         let online_fcs = [];

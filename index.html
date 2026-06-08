@@ -33,11 +33,6 @@
         </div>
         <div id="header-stats" class="hidden"><span id="header-stats-content"></span></div>
     </header>
-
-    <div id="history-indicator" style="display: none;">
-        <span>ℹ️ Currently viewing history.</span>
-        <button onclick="disable_history()">Back to Live</button>
-    </div>
     
     <div id="history-controls-main" style="display: none;">
         <input type="datetime-local" id="history-input-main" class="history-date-input" oninput="on_history_main_change()" />
@@ -75,6 +70,7 @@
             </div>
             <div class="setting-row"> <label>View Mode:</label> <div><button id="view-mode-mobile-btn" class="view-mode-btn" onclick="set_view_mode('mobile')" title="Mobile">📱</button> <button id="view-mode-desktop-btn" class="view-mode-btn" onclick="set_view_mode('desktop')" title="Desktop">💻</button></div> </div>
             <div class="setting-row"> <button id="favorites-btn" onclick="toggle_favorites_modal()">⭐ Favorites</button> </div>
+            <div class="setting-row"> <button id="history-btn" onclick="activate_history_mode_from_settings()">↩️ Browse history</button> </div>
             <div class="setting-row"> 
                 <label>Dark mode</label> 
                 <label class="switch">
@@ -89,11 +85,10 @@
             <div class="setting-row"> <label>Private Rooms</label> <label class="switch"><input type="checkbox" id="private-checkbox" onchange="on_private_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Underline OpenHost</label> <label class="switch"><input type="checkbox" id="openhost-checkbox" onchange="on_openhost_checkbox()" /><span class="slider round"></span></label> </div>
             <div class="setting-row"> <label>Only VR</label> <label class="switch"><input type="checkbox" id="vr-only-checkbox" onchange="on_vr_only_change()" /><span class="slider round"></span></label> </div>
-            <div class="setting-row"> <label>History Time:</label> <input type="datetime-local" id="history-input" oninput="on_history_change()" /> </div>
             
             <hr style="margin: 15px 0; border-color: #555;">
             <div class="setting-row" style="justify-content: space-around;">
-                <button onclick="export_data()" style="background: #4CAF50;">📤 Export Backup</button>
+                <button onclick="export_data()" style="margin:0; padding: 0.4rem 0.8rem; background: #4CAF50; border-radius: 0.4rem; cursor: pointer; color: white;">📤 Export Backup</button>
                 <label for="import-file" style="margin:0; padding: 0.4rem 0.8rem; background: #555; border-radius: 0.4rem; cursor: pointer; color: white;">📥 Import Backup</label>
                 <input type="file" id="import-file" accept=".json" style="display:none;" onchange="import_data(event)">
             </div>
