@@ -79,4 +79,4 @@
 6.11.2 http://update.rwfc.net:8000/RetroRewind/zip/6.11.2.zip /6.11.2.zip Assets
 6.11.3 http://update.rwfc.net:8000/RetroRewind/zip/6.11.3.zip /6.11.3.zip Assets
 6.11.4 http://update.rwfc.net:8000/RetroRewind/zip/6.11.4.zip /6.11.4.zip Assets
-6.11.5 http://update.rwfc.net:8000/RetroRewind/zip/6.11.5.zip /6.11.5.zip Assets
+6.11.6 http://update.rwfc.net:8000/RetroRewind/zip/6.11.6.zip /6.11.6.zip Assets
