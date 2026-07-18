@@ -36,7 +36,7 @@ jobs:
           
           # Fetch remote version
           try:
-              v_resp = requests.get("http://update.rwfc.net:8000/RetroRewind/RetroRewindVersion.txt", timeout=10)
+              v_resp = requests.get("https://update.rwfc.net/RetroRewind/RetroRewindVersion.txt", timeout=10)
               v_resp.raise_for_status()
               v_text = v_resp.text
               new_v = v_text.strip().split("\n")[-1].split(" ")[0]
