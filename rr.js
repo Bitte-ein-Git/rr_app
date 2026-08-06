@@ -375,7 +375,8 @@ function _render_header_stats_content(cs, rc, pc) {
     } else if (HEADER_STATS_STATE === 'counts') {
         cs.innerHTML=`<span class="excited">${rc}</span> ${rc===1?'Room':'Rooms'} • <span class="excited">${pc}</span> ${pc===1?'Player':'Players'}`;
     } else {
-        cs.innerHTML=`<span class="excited" style="color: #ffcc00;">🎉 ${EVENT_DATA.eventInfo}</span>`;
+        const eventTitle = EVENT_DATA.eventInfo.split('\n').find(line => line.toLowerCase().includes('event')) || EVENT_DATA.eventInfo.split('\n')[0];
+        cs.innerHTML=`<span class="excited" style="color: #ffcc00;">🎉 ${eventTitle}</span>`;
     }
 }
 
