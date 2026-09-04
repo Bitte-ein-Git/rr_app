@@ -1,4 +1,4 @@
 {
-  "version": "6.12.5",
-  "changelog": "@Announcements Ping Retro Rewind v6.12.5 has been released! This hotfix IS required to continue to play online (when the servers come back)!\n\n# \u2699\ufe0f Other Updates \u2699\ufe0f \n```- Replaced offline mirror mode with 100cc.\n- Reordered and changed the grand prix engine class selection menu.\n- When making a new license, the default engine class selection for offline VS is now 150cc.\n- Reordered some of the settings in the offline menus.```\n\n# \ud83d\udc1c Bug Fixes \ud83d\udc1c \n```- Fixed an issue where the award ceremony would occur on the last played track, sometimes causing a crash.\n- Other minor bug fixes and improvements.```\n\nYou're welcome Patchzy.\nFull Download: https://update.rwfc.net/RetroRewind/zip/RetroRewind.zip\n\n(Note: Updating on the recomp might not be possible right now since it cant grab a specific file in the server, if this happens im sorry)"
+  "version": "6.12.6",
+  "changelog": "No changelog released yet"
 }
