@@ -1,4 +1,4 @@
 {
-  "version": "6.12.8",
+  "version": "6.13.1",
   "changelog": "@Announcements Ping Hi I released a very small hotfix for Retro Rewind, mainly for wii users to fix the stuttering online lol. The changelog is below:\n\n```- The Framerate option for 30 fps now applies in menus as well as races.\n- Optimized the custom character related code. This should have no difference in actual gameplay.\n- Fixed an issue where specific custom revo kart files would cause SW2 Rainbow Road to crash.\n- Fixed an issue where the player count changing would cause wii players to freeze for a second or two on the WFC menus.\n- Other minor bug fixes and improvements.```\n\nFull Download: https://update.rwfc.net/RetroRewind/zip/RetroRewind.zip\nNew files only since 6.12.7: https://cdn.update.rwfc.net/RetroRewind/zip/6.12.8.zip\n\nNext update will be a track update finally, this should be it for the hotfixes LOL"
 }
